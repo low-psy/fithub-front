@@ -1,13 +1,16 @@
 import React from 'react';
 // import logo from './logo.svg';
 import './App.css';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Root from './pages/Root';
+import Post from './pages/NewPost';
 
 function App() {
-  return (
-    <div className="min-h-screen flex justify-center items-center">
-      <h1 className="text-3xl font-bold text-blue-600">Test Test Test</h1>
-    </div>
-  );
+  const router = createBrowserRouter([
+    { path: '/', element: <Root /> },
+    { path: '/post', element: <Post /> },
+  ]);
+  return <RouterProvider router={router} />;
 }
 
 export default App;
