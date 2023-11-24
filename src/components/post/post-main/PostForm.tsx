@@ -30,7 +30,7 @@ const PostForm = () => {
           htmlFor="image"
           titleText="이미지 선택"
         >
-          <InputComponent name="content" type="file" />
+          <InputComponent name="content" type="file" accept=".jpeg, .png" />
         </PostInput>
       </div>
       <div>
