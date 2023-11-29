@@ -1,16 +1,10 @@
-import React, {
+import {
+  ButtonHTMLAttributes,
   InputHTMLAttributes,
   ReactElement,
-  ReactPropTypes,
   TextareaHTMLAttributes,
 } from 'react';
-
-export interface PostInputProps {
-  children: ReactElement;
-  spanText: string;
-  htmlFor: string;
-  titleText: string;
-}
+import { JsxAttribute } from 'typescript';
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   customProp?: string;
@@ -21,9 +15,10 @@ export interface TextAreaProps
   customProp?: string;
 }
 
-export interface PForm {
-  title: string;
-  content: string;
-  image: string;
-  keyword: string;
+export interface SubmitButtonProps
+  extends ButtonHTMLAttributes<HTMLButtonElement> {}
+
+export interface DivProps {
+  children?: any;
+  className?: string;
 }
