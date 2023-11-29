@@ -12,19 +12,19 @@ const NavMenu: React.FunctionComponent<NavMenuProps> = ({ icons }) => {
         switch (iconString) {
           case 'bookmark':
             return (
-              <li>
+              <li key={iconString}>
                 <BookmarkIcon />
               </li>
             );
           case 'chat':
             return (
-              <li>
+              <li key={iconString}>
                 <ChatIcon />
               </li>
             );
           case 'profile':
             return (
-              <li>
+              <li key={iconString}>
                 <ProfileIcon />
               </li>
             );
