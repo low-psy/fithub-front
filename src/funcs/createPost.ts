@@ -10,7 +10,15 @@ interface createPost {
 }
 
 const cratePost: createPost = (data) => {
-  return axios.post('/user', data, {});
+  return axios({
+    url: '/user/post',
+    method: 'post',
+    baseURL: 'http://15.165.22.187',
+    headers: {
+      Authorization: 'any',
+    },
+    data: data,
+  });
 };
 
 export default cratePost;

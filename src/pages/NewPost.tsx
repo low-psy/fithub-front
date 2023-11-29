@@ -1,16 +1,12 @@
 import React from 'react';
 import { ActionFunctionArgs, redirect } from 'react-router-dom';
 
-import Post from '../components/post/Post';
-import RootComponent from '../components/RootComponent';
+import PostForm from '../components/post/PostForm';
 
 const NewPost = () => {
-  return (
-    <RootComponent>
-      <Post />
-    </RootComponent>
-  );
+  return <PostForm />;
 };
+
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const title = formData.get('title');

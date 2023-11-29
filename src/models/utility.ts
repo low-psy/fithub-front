@@ -1,10 +1,8 @@
 import {
   ButtonHTMLAttributes,
   InputHTMLAttributes,
-  ReactElement,
   TextareaHTMLAttributes,
 } from 'react';
-import { JsxAttribute } from 'typescript';
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   customProp?: string;

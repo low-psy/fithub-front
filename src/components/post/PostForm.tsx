@@ -1,10 +1,10 @@
 import React from 'react';
 import { Form, useActionData } from 'react-router-dom';
 import PostInput from './PostInput';
-import InputComponent from '../../utilities/input/InputComponent';
-import TextareaComponent from '../../utilities/input/TextareaComponent';
-import SubmitButton from '../../utilities/SubmitButton';
-import ErrorMessage from '../../utilities/ErrorMessage';
+import InputComponent from '../utilities/input/InputComponent';
+import TextareaComponent from '../utilities/input/TextareaComponent';
+import SubmitButton from '../utilities/SubmitButton';
+import ErrorMessage from '../utilities/ErrorMessage';
 
 const PostForm = () => {
   const errors = useActionData() as { message: string };
