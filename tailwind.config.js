@@ -7,7 +7,7 @@ module.exports = {
         main: '#9766FF',
         sub: '#E0D1FF',
         input_bg: '#ECEEEF ',
-        accent: '#FFA5A5',
+        accent: '#FF8B8B',
         accent_sub: '#FFECEC',
       },
       screens: {
