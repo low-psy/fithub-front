@@ -1,11 +1,24 @@
 import React from 'react';
-// import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import FindPassword from './pages/help/password';
+
+import Home from './pages/home';
+import Login from './pages/login';
+import LoginRedirect from './pages/login/LoginRedirect';
+import Signup from './pages/signup';
 
 function App() {
   return (
-    <div className="min-h-screen flex justify-center items-center">
-      <h1 className="text-3xl font-bold text-blue-600">Test Test Test</h1>
+    <div className="App">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/login/redirect/*" element={<LoginRedirect />} />
+          <Route path="/help/password" element={<FindPassword />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
