@@ -20,3 +20,7 @@ export interface DivProps {
   children?: any;
   className?: string;
 }
+
+export interface EventListener {
+  (e: Event): void;
+}

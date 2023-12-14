@@ -1,7 +1,6 @@
 import React, {
   InputHTMLAttributes,
   ReactElement,
-  ReactPropTypes,
   TextareaHTMLAttributes,
 } from 'react';
 

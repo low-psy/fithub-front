@@ -18,7 +18,7 @@ const NavComponent = () => {
       title = '핏헙';
   }
   return (
-    <div className="flex h-14 justify-between ">
+    <div className="flex h-16 justify-between ">
       <NavTitle title={title} />
       {isNavSearch ? <NavSearch /> : null}
       <NavMenu icons={['bookmark', 'chat', 'profile']} />
