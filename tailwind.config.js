@@ -4,7 +4,17 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        main: '#9766ff',
+        main: '#9766FF',
+        sub: '#E0D1FF',
+        input_bg: '#ECEEEF ',
+        accent: '#FF8B8B',
+        accent_sub: '#FFECEC',
+      },
+      screens: {
+        start: '0px',
+      },
+      minWidth: {
+        400: '400px',
       },
     },
   },

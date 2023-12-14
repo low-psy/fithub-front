@@ -4,7 +4,11 @@ import './index.css';
 import { Provider } from 'react-redux';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+<<<<<<< HEAD
 import store from './redux/store';
+=======
+import { store } from './store';
+>>>>>>> post
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
