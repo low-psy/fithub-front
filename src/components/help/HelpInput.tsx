@@ -25,7 +25,7 @@ function HelpInput({
       id={id}
       type={type}
       placeholder={placeholder}
-      className={`bg-[#eaeaea] rounded h-10 hover:outlined-none focus:outline-none p-2 text-black mt-2 w-full ${
+      className={`hover:outlined-none mt-2 h-10 w-full rounded bg-[#eaeaea] p-2 text-black focus:outline-none ${
         isError && 'border border-red-400'
       }`}
       value={value}

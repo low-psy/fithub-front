@@ -24,3 +24,10 @@ export interface DivProps {
 export interface EventListener {
   (e: Event): void;
 }
+
+export interface LinkButtonProps {
+  children?: any;
+  className?: string;
+  to: string;
+  bg?: string;
+}

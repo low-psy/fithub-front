@@ -31,7 +31,7 @@ const NavSearch = () => {
   });
 
   return (
-    <Form className=" flex basis-1/3 justify-center start:max-lg:hidden">
+    <Form className="hidden basis-1/3 justify-center lg:flex" method="post">
       <div
         className="text-md relative flex
         w-96  items-center rounded-full bg-sub font-medium hover:shadow"

@@ -14,6 +14,13 @@ const NavComponent = () => {
       title = '게시물 작성하기';
       isNavSearch = false;
       break;
+    case '/login':
+    case '/signup':
+    case '/login/redirect':
+    case '/help/password':
+      title = '핏헙';
+      isNavSearch = false;
+      break;
     default:
       title = '핏헙';
   }

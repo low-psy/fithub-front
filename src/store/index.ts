@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import newpost from './newpost';
+import newpost from '../redux/slices/newpost';
 
 export const store = configureStore({
   reducer: { newpost },

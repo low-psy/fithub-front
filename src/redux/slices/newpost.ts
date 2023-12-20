@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { newpost } from '../models/store/newpost';
+import { newpost } from '../../models/store/newpost';
 
 const initialCounterState: newpost = {
   title: '',

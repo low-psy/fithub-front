@@ -1,9 +1,12 @@
 import React from 'react';
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Root from './pages/Root';
-import Post, { action as newPostAction } from './pages/NewPost';
-import Home from './pages/Home';
+import Root, { action as rootAction } from './pages/Root';
+import NewPost, {
+  loader as newPostLoader,
+  action as newPostAction,
+} from './pages/NewPost';
+import Home, { loader as homeLoader, action as homeAction } from './pages/Home';
 
 import FindPassword from './pages/help/password';
 
@@ -16,9 +19,20 @@ function App() {
     {
       path: '/',
       element: <Root />,
+      action: rootAction,
       children: [
-        { index: true, element: <Home /> },
-        { path: 'post', element: <Post />, action: newPostAction },
+        {
+          index: true,
+          element: <Home />,
+          loader: homeLoader,
+          action: homeAction,
+        },
+        {
+          path: 'newpost',
+          element: <NewPost />,
+          loader: newPostLoader,
+          action: newPostAction,
+        },
         {
           path: 'login',
           element: <Login />,
