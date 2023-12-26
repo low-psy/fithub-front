@@ -68,4 +68,5 @@ export interface IInputProps {
   placeholder: string;
   onChange: (id: string, value: string) => void;
   error: ILoginFormError;
+  disabled?: boolean;
 }
