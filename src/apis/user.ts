@@ -1,6 +1,6 @@
 import { defaultAxios } from './axios';
 
-import { ISignupProps } from '../types/user';
+import { Gender, ISignupProps } from '../types/user';
 
 /**
  * [POST] 일반 로그인
@@ -38,23 +38,30 @@ export const socialLogin = async (platform: string, code: string) => {
  * @param props nickname, email, password, phone, gender를 담은 객체
  * @returns 일단 response 반환
  */
-export const signup = async (props: ISignupProps) => {
-  const data = {
-    ...props,
-    bio: 'dummy',
-  };
-  const response = await defaultAxios.post('/auth/sign-up', data);
+export const signup = async (props: ISignupProps, profileImg = '') => {
+  const signupDto = { ...props, bio: 'dummyBio' };
+  const blob = new Blob([JSON.stringify(signupDto)], {
+    type: 'application/json',
+  });
+  console.log(signupDto);
+  console.log(blob);
+
+  const formData = new FormData();
+  formData.append('signUpDto', blob);
+  formData.append('profileImg', profileImg);
+
+  const response = await defaultAxios.post('/auth/sign-up', formData);
 
   return response;
 };
 
 /**
- * [POST] 비밀번호 찾기를 위한 인증번호 요청
+ * [POST] 이메일 인증 (인증번호 전송)
  * email을 인자로 받아 서버로 전송
  * @param email
  * @returns 일단 response 반환
  */
-export const sendAuthentication = async (email: string) => {
+export const sendCertifyNumber = async (email: string) => {
   const response = defaultAxios.post('/auth/email/send', { to: email });
 
   return response;
@@ -66,8 +73,33 @@ export const sendAuthentication = async (email: string) => {
  * @param number 이메일로 받은 인증번호
  * @returns 일단 response 반환
  */
-export const certifyNumber = async (number: string) => {
-  const response = defaultAxios.post('/auth/email/check', { number });
+export const compareCertifyNumber = async (
+  certificationNumber: string,
+  email: string,
+) => {
+  const response = defaultAxios.post('/auth/email/check', {
+    certificationNumber,
+    email,
+  });
+
+  return response;
+};
+
+export const socialSignup = async (
+  name: string,
+  phone: string,
+  gender: Gender,
+  email: string,
+) => {
+  const data = {
+    name,
+    phone,
+    gender,
+    bio: 'dummyBio',
+  };
+  const response = defaultAxios.post('/auth/oauth/regist', data, {
+    params: email,
+  });
 
   return response;
 };

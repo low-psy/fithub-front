@@ -9,6 +9,7 @@ function LoginRedirect() {
 
   const login = async (platform: string, code: string) => {
     try {
+      console.log('인가코드 : ', code);
       await socialLogin(platform, code);
       // eslint-disable-next-line no-alert
       alert('소셜 로그인 완료');
