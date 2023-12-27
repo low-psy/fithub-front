@@ -11,7 +11,7 @@ import lookupFilter from '../../assets/lookupFilter.png';
 import mapFilter from '../../assets/mapFilter.png';
 import newpostFilter from '../../assets/newpostFilter.png';
 import FilterIcon from '../../assets/icons/filterIcon';
-import MainSection from '../../components/item/GridItem';
+import MainSection from '../../components/item/TrainerItem';
 import { LoaderData } from '../../types/training';
 
 export const loader = (async () => {

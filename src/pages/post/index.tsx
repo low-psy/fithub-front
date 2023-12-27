@@ -1,11 +1,12 @@
 import React from 'react';
 import { redirect } from 'react-router-dom';
 import store from '../../redux/store';
+import SideFilter from '../../components/aside/SideFilter';
 
 const Post = () => {
   return (
     <section>
-      <aside>yes</aside>
+      <SideFilter />
     </section>
   );
 };
