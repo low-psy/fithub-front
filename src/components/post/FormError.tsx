@@ -1,5 +1,5 @@
 import React from 'react';
-import { DivProps } from '../../models/utility';
+import { DivProps } from '../../types/common';
 
 const ErrorMessage: React.FC<DivProps> = ({ children, className }) => {
   return (

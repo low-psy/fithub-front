@@ -10,7 +10,7 @@ const NavComponent = () => {
   let isNavSearch = true;
 
   switch (location.pathname) {
-    case '/post':
+    case '/newpost':
       title = '게시물 작성하기';
       isNavSearch = false;
       break;
@@ -28,7 +28,7 @@ const NavComponent = () => {
     <div className="flex h-16 justify-between ">
       <NavTitle title={title} />
       {isNavSearch ? <NavSearch /> : null}
-      <NavMenu icons={['bookmark', 'chat', 'profile']} />
+      <NavMenu />
     </div>
   );
 };

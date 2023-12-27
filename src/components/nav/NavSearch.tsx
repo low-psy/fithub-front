@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Form } from 'react-router-dom';
-import SearchIcon from '../utilities/icons/SearchIcon';
-import SearchModule from '../utilities/module/SearchModule';
-import { EventListener } from '../../models/utility';
+import SearchIcon from '../../assets/icons/SearchIcon';
+import SearchModule from '../common/module/SearchModule';
+import { EventListener } from '../../types/common';
 
 const NavSearch = () => {
   // NavSearch 컴포넌트의 렌더링 로직

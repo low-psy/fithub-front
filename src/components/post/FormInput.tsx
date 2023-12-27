@@ -1,5 +1,5 @@
 import React from 'react';
-import { InputProps } from '../../../models/post/post_model';
+import { InputProps } from '../../types/post';
 
 const InputComponent: React.FC<InputProps> = ({ className, ...rest }) => {
   let classProps;
@@ -18,6 +18,7 @@ const InputComponent: React.FC<InputProps> = ({ className, ...rest }) => {
       name={rest.name}
       id={rest.id}
       accept={rest.accept}
+      multiple={rest.multiple}
     />
   );
 };

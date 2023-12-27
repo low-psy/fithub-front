@@ -1,5 +1,5 @@
 import React from 'react';
-import { PostInputProps } from '../../models/post/post_model';
+import { PostInputProps } from '../../types/post';
 
 const PostInput: React.FC<PostInputProps> = ({
   children,

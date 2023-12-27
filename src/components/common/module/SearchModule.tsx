@@ -1,5 +1,5 @@
 import React from 'react';
-import { SearchModuleProps } from '../../../models/nav/nav_model';
+import { SearchModuleProps } from '../../../types/nav';
 
 const SearchModule: React.FC<SearchModuleProps> = ({ onClick, onFocusOut }) => {
   const gridArray = ['요가', '헬스', '필라테스', '건대', '홍대'];

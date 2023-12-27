@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActionFunctionArgs, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import NavComponent from '../components/nav/NavComponent';
 
 const Root = () => {
@@ -11,10 +11,5 @@ const Root = () => {
       </main>
     </div>
   );
-};
-
-export const action = ({ request }: ActionFunctionArgs) => {
-  console.log(request);
-  return null;
 };
 export default Root;
