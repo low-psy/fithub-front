@@ -25,6 +25,10 @@ import { ILoginFormError, ILoginFormValue } from '../../types/form';
 import validateLoginForm from '../../validation/login/loginFormValidation';
 
 function Login() {
+  const kakaoSocialLoginRequestUrl = `${process.env.REACT_APP_BASE_SERVER_URL}/oauth2/authorization/kakao`;
+  const naverSocialLoginRequestUrl = `${process.env.REACT_APP_BASE_SERVER_URL}/oauth2/authorization/naver`;
+  const googleSocialLoginRequestUrl = `${process.env.REACT_APP_BASE_SERVER_URL}/oauth2/authorization/google`;
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -125,20 +129,20 @@ function Login() {
       <div className="flex flex-row justify-center mt-4 gap-8">
         {/* 카카오 */}
         <SocialLoginButton
-          to={`https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_CLIENT_KEY}&redirect_uri=${process.env.REACT_APP_KAKAO_LOGIN_REDIRECT_URI}&response_type=code`}
+          to={kakaoSocialLoginRequestUrl}
           alt="kakao_login_btn"
           src={kakaoBtn}
           className="bg-[#FEE500] rounded-full flex items-center justify-center"
         />
         {/* 네이버 */}
         <SocialLoginButton
-          to={`https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${process.env.REACT_APP_NAVER_CLIENT_KEY}&state=false&redirect_uri=${process.env.REACT_APP_NAVER_LOGIN_REDIRECT_URI}`}
+          to={naverSocialLoginRequestUrl}
           alt="naver_login_btn"
           src={naverBtn}
         />
         {/* 구글 */}
         <SocialLoginButton
-          to={`https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${process.env.REACT_APP_GOOGLE_CLIENT_KEY}&redirect_uri=${process.env.REACT_APP_GOOGLE_LOGIN_REDIRECT_URI}&scope=email profile`}
+          to={googleSocialLoginRequestUrl}
           alt="google_login_button"
           src={googleBtn}
         />
