@@ -7,7 +7,7 @@ export function DefaultButton({ text, onClick }: IDefaultButtonProps) {
   return (
     <button
       type="button"
-      className="bg-main h-10 rounded text-white text-xl font-semibold hover:bg-[#976fff] mt-2 whitespace-nowrap py-2 px-6 text-center leading-6"
+      className="mt-2 h-10 whitespace-nowrap rounded bg-main px-6 py-2 text-center text-xl font-semibold leading-6 text-white hover:bg-[#976fff]"
       onClick={onClick}
     >
       {text}

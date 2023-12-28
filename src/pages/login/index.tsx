@@ -6,8 +6,6 @@ import { SET_TOKEN } from '../../redux/slices/tokenSlice';
 
 import { defaultLogin } from '../../apis/user';
 
-import Layout from '../../components/form/Layout';
-import FormLogo from '../../components/form/FormLogo';
 import FormLabel from '../../components/form/FormLabel';
 import FormInput from '../../components/form/FormInput';
 import FormError, { ErrorText } from '../../components/form/FormError';
@@ -76,9 +74,8 @@ function Login() {
   };
 
   return (
-    <Layout>
+    <>
       {/* 로고 영역. 클릭 시 home으로 navigate */}
-      <FormLogo width="w-20" fontSize="text-2xl md:text-3xl" />
       {/* 이메일, 비밀번호 입력 form */}
       <form className="flex flex-col gap-6" onSubmit={handleSubmit} noValidate>
         {/* 이메일 */}
@@ -112,8 +109,8 @@ function Login() {
         </FormLabel>
 
         {/* 회원가입하기 <-> 아이디, 비밀번호 찾기 */}
-        <div className="flex flex-row justify-between text-[#575757] mt-8">
-          <FormHelperLink to="/signup/email" content="이메일로 회원가입하기" />
+        <div className="mt-8 flex flex-row justify-between text-[#575757]">
+          <FormHelperLink to="/signup" content="이메일로 회원가입하기" />
           <FormHelperLink to="/help/password" content="비밀번호 찾기" />
         </div>
 
@@ -122,13 +119,13 @@ function Login() {
 
       {/* 소셜로그인 */}
       <SocialLoginHeader />
-      <div className="flex flex-row justify-center mt-4 gap-8">
+      <div className="mt-4 flex flex-row justify-center gap-8">
         {/* 카카오 */}
         <SocialLoginButton
           to={`https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_CLIENT_KEY}&redirect_uri=${process.env.REACT_APP_KAKAO_LOGIN_REDIRECT_URI}&response_type=code`}
           alt="kakao_login_btn"
           src={kakaoBtn}
-          className="bg-[#FEE500] rounded-full flex items-center justify-center"
+          className="flex items-center justify-center rounded-full bg-[#FEE500]"
         />
         {/* 네이버 */}
         <SocialLoginButton
@@ -143,7 +140,7 @@ function Login() {
           src={googleBtn}
         />
       </div>
-    </Layout>
+    </>
   );
 }
 

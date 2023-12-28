@@ -6,7 +6,7 @@ function FormLabel({ htmlFor, text, children }: ILabelProps) {
   return (
     <label
       htmlFor={htmlFor}
-      className="flex flex-col text-[#7f7f7f] font-semibold w-full"
+      className="flex flex-col font-semibold text-[#7f7f7f]"
     >
       {text}
       {children}
