@@ -9,6 +9,7 @@ const getTraining = async () => {
   const { data, status } = await defaultAxios.get<TrainingDto>(
     '/users/training/all',
   );
+  console.log(data);
   return { data, status };
 };
 

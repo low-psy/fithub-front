@@ -5,7 +5,7 @@ import SideFilter from '../../components/aside/SideFilter';
 
 const Post = () => {
   return (
-    <section>
+    <section className="">
       <SideFilter />
     </section>
   );

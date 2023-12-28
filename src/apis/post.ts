@@ -16,13 +16,8 @@ export const createPost = async (
   image: FormDataEntryValue[],
   hashtag: string,
 ) => {
-  const data = {
-    content,
-    image,
-    hashtag,
-  };
-  const response = await authAxios.post('/post', data);
-
+  const data = { content, images: image, hashtags: hashtag };
+  const response = await authAxios.post('/posts', data);
   return response;
 };
 

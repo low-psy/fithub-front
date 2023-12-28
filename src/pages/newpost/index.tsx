@@ -3,7 +3,7 @@ import React from 'react';
 import { ActionFunctionArgs, redirect } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import PostForm from './PostForm';
-import store from '../../redux/store';
+// import store from '../../redux/store';
 import { createPost } from '../../apis/post';
 
 function NewPost() {
@@ -11,10 +11,10 @@ function NewPost() {
 }
 
 export const loader = async () => {
-  const { accessToken } = store.getState().token;
-  if (accessToken === 'initial access token') {
-    return redirect('/login');
-  }
+  // const { accessToken } = store.getState().token;
+  // if (accessToken === 'initial access token') {
+  //   return redirect('/login');
+  // }
   return null;
 };
 
@@ -43,6 +43,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     const response = await createPost(content, images, hashtag);
     if (response && response.status === 200) {
+      console.log(response.data);
       return redirect('/');
     }
   } catch (err) {
