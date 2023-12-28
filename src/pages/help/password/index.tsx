@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { certifyNumber, sendAuthentication } from '../../../apis/user';
+import { sendCertifyNumber, compareCertifyNumber } from '../../../apis/user';
 
 import HelpInput from '../../../components/help/HelpInput';
 import FormError, { ErrorText } from '../../../components/form/FormError';
@@ -26,12 +26,12 @@ function FindPassword() {
   };
 
   // 인증번호 전송 함수
-  const sendCertifyNumber = async () => {
+  const onSendCertifyNumber = async () => {
     // validation
     if (!validateHelpEmail(email, setEmailError)) return;
     // server
     try {
-      const response = await sendAuthentication(email);
+      const response = await sendCertifyNumber(email);
 
       if (response.status === 200) {
         setEmailError('인증번호가 전송되었습니다.');
@@ -42,12 +42,12 @@ function FindPassword() {
   };
 
   // 인증번호 처리 함수
-  const requestCertifyNumber = async () => {
+  const onCompareCertifyNumber = async () => {
     // validation
     if (!validateCertifyNumber(certificationNumber, setCertifyError)) return;
     // server
     try {
-      const response = await certifyNumber(certificationNumber);
+      const response = await compareCertifyNumber(email, certificationNumber);
 
       if (response.status === 200) {
         setIsCertified(true);

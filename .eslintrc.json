@@ -20,6 +20,7 @@
   },
   "plugins": ["@typescript-eslint", "react"],
   "rules": {
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "react/jsx-filename-extension": [
       2,

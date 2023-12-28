@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-
 import { AxiosError } from 'axios';
+import React, { useState } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { signup } from '../../apis/user';
 
 import FormInput from '../../components/form/FormInput';
@@ -9,41 +8,41 @@ import FormLabel from '../../components/form/FormLabel';
 import FormSubmitButton from '../../components/form/FormSubmitButton';
 import FormError, { ErrorText } from '../../components/form/FormError';
 
-import { Gender, ISignupFormError, ISignupFormValue } from '../../types/user';
+const initFormValue: ISignupInputForm = {
+  email: '',
+  password: '',
+  checkPassword: '',
+  name: '',
+  nickname: '',
+  phone: '',
+  gender: 'M',
+};
 
-import validateSignupForm from '../../validation/signup/signupFormValidation';
+const initError: ISignupFormError = {
+  email: '',
+  password: '',
+  checkPassword: '',
+  name: '',
+  nickname: '',
+  phone: '',
+};
+type CurrentPage = 'email' | 'additional-info' | 'success';
 
 function Signup() {
   const navigate = useNavigate();
-  const selectedButtonStyle = 'bg-[#BC9CFF] text-white ';
-  const unSelectedButtonStyle = ' border border-[#BC9CFF] text-[#7F7F7F]';
+  const location = useLocation();
 
-  const initFormValue: ISignupFormValue = {
-    email: '',
-    password: '',
-    checkPassword: '',
-    name: '',
-    nickname: '',
-    phone: '',
-    gender: 'M',
-  };
+  const currentPage = location.pathname.split('/')[2] as CurrentPage;
 
-  const initError: ISignupFormError = {
-    email: '',
-    password: '',
-    checkPassword: '',
-    name: '',
-    nickname: '',
-    phone: '',
-  };
-
-  const [formValue, setFormValue] = useState<ISignupFormValue>(initFormValue);
+  const [formValue, setFormValue] = useState<ISignupInputForm>(initFormValue);
   const [errorMsg, setErrorMsg] = useState<ISignupFormError>(initError);
+  const [isCertified, setIsCertified] = useState<boolean>(false);
 
-  const handleChange = (id: string, value: string) => {
+  // input handler
+  const handleFormInput = (id: string, value: string) => {
     setFormValue((prevInput) => ({ ...prevInput, [id]: value }));
   };
-
+  // gender handler
   const handleGender = (event: React.MouseEvent<HTMLButtonElement>) => {
     setFormValue({
       ...formValue,
@@ -51,15 +50,15 @@ function Signup() {
     });
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const { email, password, checkPassword, name, nickname, phone, gender } =
+  // 회원가입 함수
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const email = localStorage.getItem('certifiedEmail') as string;
+    console.log(email);
+    const { password, checkPassword, name, nickname, phone, gender } =
       formValue;
-
-    // validation
     if (
-      !validateSignupForm(
-        email,
+      !validateAdditionalInfoForm(
         password,
         checkPassword,
         name,
@@ -70,9 +69,8 @@ function Signup() {
     )
       return;
 
-    // send to server
     try {
-      const signupFormData = {
+      const signupForm = {
         email,
         password,
         name,
@@ -80,11 +78,9 @@ function Signup() {
         phone,
         gender,
       };
-      const response = await signup(signupFormData);
+      const response = await signup(signupForm);
       if (response && response.status === 200) {
-        // eslint-disable-next-line no-alert
-        alert('회원가입이 완료되었습니다.\n로그인 페이지로 이동합니다.');
-        navigate('/login');
+        navigate('/signup/success');
       }
     } catch (err) {
       const error = err as unknown as AxiosError;
@@ -97,6 +93,16 @@ function Signup() {
         alert('회원가입 도중 문제가 발생하였습니다.');
       }
     }
+  };
+
+  const isSignupProcess = () => {
+    if (
+      currentPage === 'email' ||
+      currentPage === 'additional-info' ||
+      currentPage === 'success'
+    )
+      return true;
+    return false;
   };
 
   return (

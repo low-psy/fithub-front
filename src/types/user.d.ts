@@ -9,7 +9,7 @@ export interface ISignupProps {
 
 export type Gender = 'M' | 'F';
 
-export interface ISignupFormValue {
+export interface ISignupInputForm {
   email: string;
   password: string;
   checkPassword: string;
