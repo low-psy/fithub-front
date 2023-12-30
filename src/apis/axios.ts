@@ -1,7 +1,7 @@
 import axios, {
   AxiosError,
   AxiosHeaders,
-  AxiosRequestConfig,
+  // AxiosRequestConfig,
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios';
@@ -46,24 +46,24 @@ const onResponseError = async (
   err: AxiosError | Error,
 ): Promise<AxiosError> => {
   const error = err as unknown as AxiosError;
-  const { response } = error;
-  const prevConfig = error?.config as AxiosRequestConfig;
+  // const { response } = error;
+  // const prevConfig = error?.config as AxiosRequestConfig;
 
   // TODO: access token 만료 시 재발급 요청 추가하기
-  if (response && response.status === 403) {
-    // access token 재발급 요청
-    try {
-      await defaultAxios.patch('/auth/reissue');
+  // if (response && response.status === 403) {
+  //   // access token 재발급 요청
+  //   try {
+  //     await defaultAxios.patch('/auth/reissue');
 
-      if (response) {
-        // TODO: 아직 확인중
+  //     if (response) {
+  //       // TODO: 아직 확인중
 
-        return await authAxios.request(prevConfig);
-      }
-    } catch (er) {
-      console.log(er);
-    }
-  }
+  //       return await authAxios.request(prevConfig);
+  //     }
+  //   } catch (er) {
+  //     console.log(er);
+  //   }
+  // }
   return Promise.reject(error);
 };
 
