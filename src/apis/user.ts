@@ -107,7 +107,9 @@ export const socialSignup = async (
     bio: 'dummyBio',
   };
   const response = defaultAxios.post('/auth/oauth/regist', data, {
-    params: email,
+    params: {
+      email,
+    },
   });
 
   return response;
