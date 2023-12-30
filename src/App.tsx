@@ -4,7 +4,6 @@ import FindPassword from './pages/help/password';
 
 import Home from './pages/home';
 import Login from './pages/login';
-import LoginRedirect from './pages/login/LoginRedirect';
 import NotFound from './pages/NotFound';
 import Signup from './pages/signup';
 import AdditionalInfo from './pages/signup/AdditionalInfo';
@@ -28,11 +27,6 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Route>
           <Route path="/oauth2/regist" element={<SocialSignup />} />
-
-          <Route
-            path="/oauth2/authorization/google"
-            element={<LoginRedirect />}
-          />
           <Route path="/help/password" element={<FindPassword />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
