@@ -21,16 +21,16 @@ function CareerTableData({
   const { company, work, startDate, endDate, working } = career;
   return (
     <tr>
-      <td className="border border-main px-4 py-1 break-keep">{company}</td>
-      <td className="border border-main px-4 py-1 break-keep">{work}</td>
-      <td className="border border-main px-4 py-1 whitespace-nowrap">
+      <td className="break-keep border border-main px-4 py-1">{company}</td>
+      <td className="break-keep border border-main px-4 py-1">{work}</td>
+      <td className="whitespace-nowrap border border-main px-4 py-1">
         {startDate}
       </td>
-      <td className="border border-main px-4 py-1 whitespace-nowrap">
+      <td className="whitespace-nowrap border border-main px-4 py-1">
         {working === 'true' ? '근무중' : endDate}
       </td>
       <td
-        className="border border-main cursor-pointer text-red-400 whitespace-nowrap font-semibold"
+        className="cursor-pointer whitespace-nowrap border border-main font-semibold text-red-400"
         onClick={handleDeleteCareer}
       >
         삭제

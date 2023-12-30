@@ -30,24 +30,24 @@ function CareerInput({
   handleAddCareerList,
 }: ICareerInputProps) {
   return (
-    <div className="px-2 flex flex-col gap-2">
-      <label htmlFor="company" className="text-main font-semibold">
+    <div className="flex flex-col gap-2 px-2">
+      <label htmlFor="company" className="font-semibold text-main">
         회사명
         <input
           id="company"
           placeholder="회사명을 입력해주세요."
-          className="w-full bg-white rounded h-10 hover:outline-none focus:outline-none p-2 border border-main text-black"
+          className="h-10 w-full rounded border border-main bg-white p-2 text-black hover:outline-none focus:outline-none"
           onChange={handleCareerInput}
           value={career.company}
         />
       </label>
       {/* 날짜 */}
-      <div className="flex flex-col sm:flex-row gap-2">
-        <div className="flex flex-col gap-2 h-16">
-          <p className="text-main font-semibold">입사</p>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <div className="flex h-16 flex-col gap-2">
+          <p className="font-semibold text-main">입사</p>
           <div className="flex flex-row gap-2">
             <svg
-              className="w-5 h-5 text-gray-500 dark:text-gray-400"
+              className="h-5 w-5 text-gray-500 dark:text-gray-400"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
@@ -58,7 +58,7 @@ function CareerInput({
             <ReactDatePicker
               id="startDate"
               locale={ko}
-              className="border border-main px-2 w-36 text-black rounded cursor-pointer"
+              className="w-36 cursor-pointer rounded border border-main px-2 text-black"
               selected={
                 career.startDate ? new Date(career.startDate) : new Date()
               }
@@ -67,15 +67,15 @@ function CareerInput({
             />
           </div>
         </div>
-        <div className="hidden sm:h-16 sm:leading-4 sm:align-middle sm:pt-8">
+        <div className="hidden sm:h-16 sm:pt-8 sm:align-middle sm:leading-4">
           ~
         </div>
-        <div className="flex flex-col gap-2 h-16">
+        <div className="flex h-16 flex-col gap-2">
           <div className="flex flex-row items-center">
             <p
               className={`font-semibold ${
                 career.working === 'true'
-                  ? 'line-through text-gray-500'
+                  ? 'text-gray-500 line-through'
                   : 'text-main'
               }`}
             >
@@ -84,17 +84,17 @@ function CareerInput({
             <div
               role="presentation"
               onClick={handleCareerWorking}
-              className={`h-4 w-4 m-1 rounded border  ${
+              className={`m-1 h-4 w-4 rounded border  ${
                 career.working === 'false'
-                  ? 'bg-white border-gray-600'
-                  : 'bg-green-500 border-none'
+                  ? 'border-gray-600 bg-white'
+                  : 'border-none bg-green-500'
               } `}
             />
             <span className="text-sm">현재 재직중</span>
           </div>
           <div className="flex flex-row gap-2">
             <svg
-              className="w-5 h-5 text-gray-500 dark:text-gray-400"
+              className="h-5 w-5 text-gray-500 dark:text-gray-400"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
@@ -105,9 +105,9 @@ function CareerInput({
             <ReactDatePicker
               disabled={career.working === 'true'}
               locale={ko}
-              className={`border  px-2 w-36 rounded ${
+              className={`w-36  rounded border px-2 ${
                 career.working === 'false'
-                  ? 'cursor-pointer text-black border-main'
+                  ? 'cursor-pointer border-main text-black'
                   : 'text-gray-500 '
               }`}
               selected={career.endDate ? new Date(career.endDate) : new Date()}
@@ -118,12 +118,12 @@ function CareerInput({
         </div>
       </div>
       {/* 담당업무 */}
-      <label htmlFor="work" className="text-main font-semibold">
+      <label htmlFor="work" className="font-semibold text-main">
         담당 업무
         <input
           id="work"
           placeholder="담당 업무를 입력해주세요."
-          className="w-full bg-white rounded h-10 hover:outline-none focus:outline-none p-2 border border-main text-black"
+          className="h-10 w-full rounded border border-main bg-white p-2 text-black hover:outline-none focus:outline-none"
           onChange={handleCareerInput}
           value={career.work}
         />
@@ -131,14 +131,14 @@ function CareerInput({
       <div className="flex flex-row gap-4">
         <button
           type="button"
-          className="bg-red-400 text-white px-2 rounded w-full h-8 hover:bg-red-300"
+          className="h-8 w-full rounded bg-red-400 px-2 text-white hover:bg-red-300"
           onClick={handleCareerReset}
         >
           모두 지우기
         </button>
         <button
           type="button"
-          className="bg-main text-white px-2 rounded w-full hover:bg-hoverColor"
+          className="hover:bg-hoverColor w-full rounded bg-main px-2 text-white"
           onClick={handleAddCareerList}
         >
           추가하기

@@ -75,7 +75,7 @@ function FindPassword() {
           onChange={handleEmail}
           error={emailError}
         />
-        <DefaultButton text="전송" onClick={sendCertifyNumber} />
+        <DefaultButton text="전송" onClick={onSendCertifyNumber} />
       </div>
       <FormError>{emailError && <ErrorText text={emailError} />}</FormError>
 
@@ -94,7 +94,7 @@ function FindPassword() {
       {isCertified ? (
         <LinkButton to="/login" text="로그인 하러가기" />
       ) : (
-        <DefaultButton text="인증하기" onClick={requestCertifyNumber} />
+        <DefaultButton text="인증하기" onClick={onCompareCertifyNumber} />
       )}
     </div>
   );

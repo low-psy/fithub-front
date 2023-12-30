@@ -1,12 +1,14 @@
 import { AxiosError } from 'axios';
 import React, { useState } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { signup } from '../../apis/user';
 
 import FormInput from '../../components/form/FormInput';
 import FormLabel from '../../components/form/FormLabel';
 import FormSubmitButton from '../../components/form/FormSubmitButton';
 import FormError, { ErrorText } from '../../components/form/FormError';
+import { ISignupInputForm, ISignupFormError, Gender } from '../../types/user';
+import { validateAdditionalInfoForm } from '../../validation/signup/signupFormValidation';
 
 const initFormValue: ISignupInputForm = {
   email: '',
@@ -36,7 +38,7 @@ function Signup() {
 
   const [formValue, setFormValue] = useState<ISignupInputForm>(initFormValue);
   const [errorMsg, setErrorMsg] = useState<ISignupFormError>(initError);
-  const [isCertified, setIsCertified] = useState<boolean>(false);
+  // const [isCertified, setIsCertified] = useState<boolean>(false);
 
   // input handler
   const handleFormInput = (id: string, value: string) => {
@@ -111,6 +113,7 @@ function Signup() {
       onSubmit={handleSubmit}
       noValidate
     >
+      {isSignupProcess()}
       {/* 이메일 */}
       <FormLabel htmlFor="email" text="이메일">
         <FormInput
@@ -118,7 +121,7 @@ function Signup() {
           id="email"
           type="email"
           value={formValue.email}
-          onChange={handleChange}
+          onChange={handleFormInput}
           error={errorMsg}
         />
         <FormError>
@@ -132,7 +135,7 @@ function Signup() {
           id="password"
           type="password"
           value={formValue.password}
-          onChange={handleChange}
+          onChange={handleFormInput}
           error={errorMsg}
         />
         <FormError>
@@ -146,7 +149,7 @@ function Signup() {
           id="checkPassword"
           type="password"
           value={formValue.checkPassword}
-          onChange={handleChange}
+          onChange={handleFormInput}
           error={errorMsg}
         />
         <FormError>
@@ -162,7 +165,7 @@ function Signup() {
           id="name"
           type="text"
           value={formValue.name}
-          onChange={handleChange}
+          onChange={handleFormInput}
           error={errorMsg}
         />
         <FormError>
@@ -176,7 +179,7 @@ function Signup() {
           id="nickname"
           type="text"
           value={formValue.nickname}
-          onChange={handleChange}
+          onChange={handleFormInput}
           error={errorMsg}
         />
         <FormError>
@@ -190,7 +193,7 @@ function Signup() {
           id="phone"
           type="text"
           value={formValue.phone}
-          onChange={handleChange}
+          onChange={handleFormInput}
           error={errorMsg}
         />
         <FormError>
@@ -204,8 +207,6 @@ function Signup() {
             type="button"
             className={`h-[40px] w-[120px] rounded-md text-lg ${
               formValue.gender === 'M'
-                ? selectedButtonStyle
-                : unSelectedButtonStyle
             }`}
             value="M"
             onClick={handleGender}
@@ -216,8 +217,6 @@ function Signup() {
             type="button"
             className={`h-[40px] w-[120px] rounded-md text-lg ${
               formValue.gender === 'F'
-                ? selectedButtonStyle
-                : unSelectedButtonStyle
             }`}
             value="F"
             onClick={handleGender}

@@ -5,6 +5,7 @@ import InputComponent from '../../components/post/FormInput';
 import TextareaComponent from '../../components/post/FormTextarea';
 import SubmitButton from '../../components/post/FormSubmitButton';
 import ErrorMessage from '../../components/post/FormError';
+import FormImage from '../../components/post/FormImage';
 
 const PostForm = () => {
   const errors = useActionData() as { message: string };
@@ -32,19 +33,7 @@ const PostForm = () => {
         </PostInput>
       </div>
       <div>
-        <PostInput
-          spanText="bring image"
-          htmlFor="image"
-          titleText="이미지 선택"
-        >
-          <InputComponent
-            name="image"
-            type="file"
-            accept=".jpeg, .png"
-            id="image"
-            multiple
-          />
-        </PostInput>
+        <FormImage multiple>이미지 선택</FormImage>
       </div>
       <div>
         <PostInput

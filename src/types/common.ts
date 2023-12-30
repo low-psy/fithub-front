@@ -13,8 +13,7 @@ export interface TextAreaProps
   customProp?: string;
 }
 
-export interface SubmitButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement> {}
+export type SubmitButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
 
 export interface DivProps {
   children?: any;

@@ -17,7 +17,7 @@ function FormInput({
   };
 
   const isError = !!error[id];
-  const textColor = disabled ? 'text-gray-500' : 'text-black';
+  // const textColor = disabled ? 'text-gray-500' : 'text-black';
 
   useEffect(() => {
     if (isError) {
