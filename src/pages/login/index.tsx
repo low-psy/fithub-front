@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { useAppDispatch } from '../../hooks/reduxHooks';
 import { SET_TOKEN } from '../../redux/slices/tokenSlice';
@@ -31,6 +31,10 @@ function Login() {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirectPath = location.state?.redirectPath
+    ? location.state.redirectPath
+    : false;
 
   const initFormValue: ILoginFormValue = {
     email: '',
@@ -57,7 +61,7 @@ function Login() {
       const response = await defaultLogin(email, password);
       if (response && response.status === 200) {
         dispatch(SET_TOKEN(response.data.accessToken));
-        navigate('/');
+        navigate(redirectPath || '/');
       }
     } catch (err) {
       const error = err as unknown as AxiosError;

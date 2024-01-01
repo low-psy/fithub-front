@@ -12,7 +12,15 @@ import EmailAuthentication from './pages/signup/EmailAuthentication';
 import SignupSuccess from './pages/signup/SignupSuccess';
 import SocialSignup from './pages/signup/SocialSignup';
 
+import withAuth from './hocs/withAuth';
+
 function App() {
+  const AuthedCertifyTrainer = withAuth(
+    CertifyTrainer,
+    true,
+    '/signup/certify-trainer',
+  );
+
   return (
     <div className="App">
       <BrowserRouter>
@@ -23,7 +31,7 @@ function App() {
             <Route path="email" element={<EmailAuthentication />} />
             <Route path="additional-info" element={<AdditionalInfo />} />
             <Route path="success" element={<SignupSuccess />} />
-            <Route path="certify-trainer" element={<CertifyTrainer />} />
+            <Route path="certify-trainer" element={<AuthedCertifyTrainer />} />
             <Route path="*" element={<NotFound />} />
           </Route>
           <Route path="/oauth2/regist" element={<SocialSignup />} />
