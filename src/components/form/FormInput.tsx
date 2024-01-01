@@ -31,9 +31,9 @@ function FormInput({
       id={id}
       type={type}
       placeholder={placeholder}
-      className={`${textColor} w-full bg-[#eaeaea] rounded h-10 hover:outlined-none focus:outline-none p-2 mt-2 border  ${
-        isError && 'border border-red-400 '
-      } ${disabled ? 'text-gray-500' : 'text-black'}`}
+      className={`hover:outlined-none mt-2 h-10 rounded border bg-[#eaeaea] p-2 text-black focus:outline-none  ${
+        isError && 'border border-red-400'
+      } `}
       value={value}
       onChange={handleChange}
       disabled={disabled}

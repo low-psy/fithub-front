@@ -7,12 +7,12 @@ import fithubLogo from '../../assets/fithub_logo.png';
 
 function FormLogo({ width, fontSize }: ILogoProps) {
   return (
-    <div className="flex flex-row items-end mb-12 w-fit">
+    <div className="mb-12 flex w-fit flex-row items-end">
       <Link to="/" className="flex flex-row items-end">
         <button type="button" className={width}>
           <img src={fithubLogo} alt="fithub_logo" />
         </button>
-        <p className={`${fontSize} font-bold text-main whitespace-nowrap`}>
+        <p className={`${fontSize} whitespace-nowrap font-bold text-main`}>
           핏헙
         </p>
       </Link>

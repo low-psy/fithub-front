@@ -21,7 +21,7 @@ function HelpInput({
   }, [isError]);
 
   return (
-    <input
+<input
       ref={ref}
       id={id}
       type={type}

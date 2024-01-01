@@ -6,7 +6,7 @@ function FormSubmitButton({ text, className }: IFormSubmitButtonProps) {
   return (
     <button
       type="submit"
-      className={`bg-main h-12 rounded text-white text-xl font-semibold hover:bg-[#976fff] mt-2 ${className}`}
+      className={`mt-2 h-12 rounded bg-main text-xl font-semibold text-white hover:bg-[#976fff] ${className}`}
     >
       {text}
     </button>

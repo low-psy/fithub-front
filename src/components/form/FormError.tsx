@@ -3,7 +3,7 @@ import React from 'react';
 import { IErrorTextProps, IFormErrorProps } from '../../types/form';
 
 export function ErrorText({ text }: IErrorTextProps) {
-  return <p className="text-sm md:text-base text-red-400 ">{text}</p>;
+  return <p className="text-sm text-red-400 md:text-base ">{text}</p>;
 }
 
 function FormError({ children }: IFormErrorProps) {

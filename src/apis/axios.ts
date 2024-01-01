@@ -27,7 +27,6 @@ const onRequest = (
     'Authorization',
     `Bearer ${accessToken}`,
   );
-
   return config;
 };
 
