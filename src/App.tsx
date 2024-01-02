@@ -17,7 +17,6 @@ import NewPost, {
   action as newPostAction,
 } from './pages/newpost/index';
 
-import LoginRedirect from './pages/login/LoginRedirect';
 import NotFound from './pages/NotFound';
 import Signup from './pages/signup';
 import Trainer from './pages/Trainer';
@@ -32,7 +31,10 @@ import EmailAuthentication from './pages/signup/EmailAuthentication';
 import SignupSuccess from './pages/signup/SignupSuccess';
 import SocialSignup from './pages/signup/SocialSignup';
 
+import withAuth from './hocs/withAuth';
+
 function App() {
+
   const router = createBrowserRouter([
     {
       path: '/',
@@ -70,7 +72,6 @@ function App() {
         { path: 'help/password', element: <FindPassword /> },
         { path: 'post', element: <Post /> },
         { path: 'oauth2/regist', element: <SocialSignup /> },
-        { path: 'oauth2/authorization/google', element: <LoginRedirect /> },
       ],
     },
     {

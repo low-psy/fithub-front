@@ -1,4 +1,5 @@
 import React from 'react';
+import { Gender } from './user';
 
 export interface ILayoutProps {
   children: React.ReactNode;
@@ -48,7 +49,11 @@ export interface ILoginFormValue {
 export interface ILoginFormError {
   [key: string]: string;
   email: string;
-  password: string;
+  password?: string;
+  name?: string;
+  nickname?: string;
+  phone?: string;
+  gender?: Gender;
 }
 
 export interface ISignupFormError {

@@ -9,6 +9,7 @@ function HelpInput({
   value,
   onChange,
   error,
+  disabled,
 }: IInputProps) {
   const ref = useRef<HTMLInputElement>(null);
   const isError = !!error;
@@ -20,16 +21,17 @@ function HelpInput({
   }, [isError]);
 
   return (
-    <input
+<input
       ref={ref}
       id={id}
       type={type}
       placeholder={placeholder}
-      className={`hover:outlined-none mt-2 h-10 w-full rounded bg-[#eaeaea] p-2 text-black focus:outline-none ${
+      className={`bg-[#eaeaea] rounded h-10 hover:outlined-none focus:outline-none p-2 mt-2 w-full ${
         isError && 'border border-red-400'
-      }`}
+      } ${disabled ? 'text-gray-500' : 'text-black'}`}
       value={value}
       onChange={onChange}
+      disabled={disabled}
     />
   );
 }
