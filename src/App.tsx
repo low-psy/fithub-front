@@ -34,6 +34,11 @@ import SocialSignup from './pages/signup/SocialSignup';
 import withAuth from './hocs/withAuth';
 
 function App() {
+  const AuthedCertifyTrainer = withAuth(
+    CertifyTrainer,
+    false,
+    '/certify-trainer',
+  );
 
   const router = createBrowserRouter([
     {
@@ -56,7 +61,6 @@ function App() {
         {
           path: 'login',
           element: <Login />,
-          children: [{ path: 'redirect/*', element: <LoginRedirect /> }],
         },
         {
           path: 'signup',
@@ -65,10 +69,10 @@ function App() {
             { path: 'email', element: <EmailAuthentication /> },
             { path: 'additional-info', element: <AdditionalInfo /> },
             { path: 'success', element: <SignupSuccess /> },
-            { path: 'certify-trainer', element: <CertifyTrainer /> },
             { path: '*', element: <NotFound /> },
           ],
         },
+        { path: 'certify-trainer', element: <AuthedCertifyTrainer /> },
         { path: 'help/password', element: <FindPassword /> },
         { path: 'post', element: <Post /> },
         { path: 'oauth2/regist', element: <SocialSignup /> },
