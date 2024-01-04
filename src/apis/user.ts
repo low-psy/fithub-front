@@ -85,11 +85,20 @@ export const compareCertifyNumber = async (
   return response;
 };
 
+/**
+ * [POST] 소셜 회원가입 (소셜 로그인을 이용하기 위한 최초 1회 인증)
+ * 쿼리 파라미터로 이메일을, 요청 바디에 데이터를 전달
+ * @param email 사용자 이메일
+ * @param name 사용자 이름
+ * @param phone 사용자 전화번호
+ * @param gender 사용자 성별
+ * @returns 일단 response 반환
+ */
 export const socialSignup = async (
+  email: string,
   name: string,
   phone: string,
   gender: Gender,
-  email: string,
 ) => {
   const data = {
     name,
@@ -98,7 +107,9 @@ export const socialSignup = async (
     bio: 'dummyBio',
   };
   const response = defaultAxios.post('/auth/oauth/regist', data, {
-    params: email,
+    params: {
+      email,
+    },
   });
 
   return response;
