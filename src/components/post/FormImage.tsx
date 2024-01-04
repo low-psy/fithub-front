@@ -31,14 +31,10 @@ const FormImage: React.FC<InputProps> = ({ className, ...rest }) => {
   return (
     <div>
       <h2 className="text-3xl font-bold text-slate-600 ">이미지 가져오기</h2>
-      <div className="mt-4 flex gap-2 lg:w-2/3">
+      <div className="mt-4 flex gap-4 lg:w-2/3">
         {imagePreviews.map((image, index) => (
-          <div className="aspect-square w-1/4 rounded-xl bg-sub p-1">
-            <img
-              className="w-full rounded-xl"
-              src={image}
-              alt={`Preview ${index + 1}`}
-            />
+          <div className="flex aspect-square w-1/4 items-center justify-center rounded-xl bg-white shadow-lg drop-shadow-sm">
+            <img className="w-full" src={image} alt={`Preview ${index + 1}`} />
           </div>
         ))}
         <label
@@ -56,6 +52,7 @@ const FormImage: React.FC<InputProps> = ({ className, ...rest }) => {
         type="file"
         id="image"
         accept="image/*"
+        name="image"
         onChange={handleImageChange}
         multiple={rest.multiple}
         hidden

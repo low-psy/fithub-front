@@ -13,11 +13,23 @@ type FormDataEntryValue = string | File;
 
 export const createPost = async (
   content: string,
-  image: FormDataEntryValue[],
+  images: FormDataEntryValue[],
   hashtag: string,
 ) => {
-  const data = { content, images: image, hashtags: hashtag };
-  const response = await authAxios.post('/posts', data);
+  const formData = new FormData();
+  images.forEach((image) => {
+    formData.append('images', image);
+  });
+  formData.append('content', content);
+  formData.append('hashTags', hashtag);
+
+  console.log(formData.get('content'));
+  console.log(formData.get('hashTags'));
+  console.log(formData.getAll('images'));
+
+  const response = await authAxios.post('/posts', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
   return response;
 };
 
