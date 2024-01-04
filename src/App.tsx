@@ -31,6 +31,11 @@ import CertifyTrainer from './pages/certifyTrainer';
 import EmailAuthentication from './pages/signup/EmailAuthentication';
 import SignupSuccess from './pages/signup/SignupSuccess';
 import SocialSignup from './pages/signup/SocialSignup';
+import Profile from './pages/profile';
+import MyProfile from './pages/profile/MyProfile';
+import MyPost from './pages/profile/MyPost';
+import MyBook from './pages/profile/MyBook';
+import MyCancel from './pages/profile/MyCancel';
 
 function App() {
   const router = createBrowserRouter([
@@ -71,6 +76,16 @@ function App() {
         { path: 'post', element: <Post /> },
         { path: 'oauth2/regist', element: <SocialSignup /> },
         { path: 'oauth2/authorization/google', element: <LoginRedirect /> },
+        {
+          path: 'profile',
+          element: <Profile />,
+          children: [
+            { path: 'myprofile', element: <MyProfile /> },
+            { path: 'mypost', element: <MyPost /> },
+            { path: 'book', element: <MyBook /> },
+            { path: 'cancel', element: <MyCancel /> },
+          ],
+        },
       ],
     },
     {

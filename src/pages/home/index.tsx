@@ -31,7 +31,7 @@ const Home: React.FC = () => {
     <div className="space-y-10">
       <section className="grid h-56 grid-cols-2  gap-3">
         <div className="row-span-2  flex ">
-          <FilterSection bg={lookupFilter} to="/lookup">
+          <FilterSection bg={lookupFilter} to="/post">
             운동 게시글 조회하기
           </FilterSection>
         </div>

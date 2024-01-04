@@ -24,6 +24,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const images = formData.getAll('image');
   const hashtag = formData.get('hashtag') as string;
 
+  console.log(images);
+
   const errors = { message: '' };
 
   if (!(content || images || hashtag)) {
