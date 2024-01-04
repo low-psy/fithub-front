@@ -30,3 +30,10 @@ export interface LinkButtonProps {
   to: string;
   bg?: string;
 }
+
+export interface FilterItemsProps {
+  text: string;
+  isSelected?: boolean;
+  onClick: () => void;
+  className: string;
+}
