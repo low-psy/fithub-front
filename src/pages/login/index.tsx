@@ -118,7 +118,7 @@ function Login() {
 
         {/* 회원가입하기 <-> 아이디, 비밀번호 찾기 */}
         <div className="mt-8 flex flex-row justify-between text-[#575757]">
-          <FormHelperLink to="/signup" content="이메일로 회원가입하기" />
+          <FormHelperLink to="/signup/email" content="이메일로 회원가입하기" />
           <FormHelperLink to="/help/password" content="비밀번호 찾기" />
         </div>
 
