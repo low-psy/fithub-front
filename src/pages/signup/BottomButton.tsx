@@ -13,11 +13,11 @@ function BottomButton({ type, isCertified, text }: IBottomButtonProps) {
   const availabledCSS = 'bg-main text-white hover:bg-hoverColor';
 
   return (
-    <div className="md:px-2 absolute bottom-4 sm:bottom-8 w-full left-1/2 -translate-x-1/2">
-      <div className="flex flex-row justify-center gap-4 mx-2">
+    <div className="absolute bottom-4 left-1/2 w-full -translate-x-1/2 sm:bottom-8 md:px-2">
+      <div className="mx-2 flex flex-row justify-center gap-4">
         <button
           type={type === 'button' ? 'button' : 'submit'}
-          className={`whitespace-nowrap rounded text-lg font-semibold px-2 h-12  min-w-[120px] w-full ${
+          className={`h-12 w-full min-w-[120px] whitespace-nowrap rounded px-2  text-lg font-semibold ${
             isCertified ? availabledCSS : disabledCSS
           }`}
           disabled={!isCertified}

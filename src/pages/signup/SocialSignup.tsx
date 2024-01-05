@@ -162,18 +162,18 @@ function SocialSignup() {
   return (
     <Layout>
       <FormLogo width="w-14" fontSize="text-lg" />
-      <div className="flex flex-col items-center  mb-2">
+      <div className="mb-2 flex flex-col  items-center">
         <p className="font-semibold">
           소셜 로그인을 이용하기 위한 추가정보를 입력
         </p>
-        <p className="text-slate-500 text-sm">
+        <p className="text-sm text-slate-500">
           추가정보 입력은 최초 소셜로그인 에만 요구됩니다.
         </p>
       </div>
       <form onSubmit={handleSubmitSocialSignup} className="flex flex-col gap-2">
         {/* 이메일 입력, 인증번호 요청 */}
         <FormLabel htmlFor="email" text="이메일">
-          <div className="flex flex-row w-full gap-2">
+          <div className="flex w-full flex-row gap-2">
             <FormInput
               id="email"
               type="email"
@@ -186,7 +186,7 @@ function SocialSignup() {
             {isEmailRequire && (
               <button
                 type="button"
-                className="w-30 whitespace-nowrap bg-main h-10 rounded text-white text-lg font-semibold mt-2 px-2 hover:bg-[#976fff]"
+                className="w-30 mt-2 h-10 whitespace-nowrap rounded bg-main px-2 text-lg font-semibold text-white hover:bg-[#976fff]"
                 onClick={onSendCertificationNumber}
               >
                 인증번호 전송
@@ -200,7 +200,7 @@ function SocialSignup() {
         {/* 인증번호 입력 */}
         {isSent && (
           <FormLabel htmlFor="certificationNumber" text="인증번호 입력">
-            <div className="flex flex-row w-full gap-2">
+            <div className="flex w-full flex-row gap-2">
               <HelpInput
                 placeholder="인증번호를 입력해주세요"
                 id="certificationNumber"
@@ -212,7 +212,7 @@ function SocialSignup() {
               />
               <button
                 type="button"
-                className="w-30 whitespace-nowrap bg-main h-10 rounded text-white text-lg font-semibold mt-2 px-2 hover:bg-[#976fff]"
+                className="w-30 mt-2 h-10 whitespace-nowrap rounded bg-main px-2 text-lg font-semibold text-white hover:bg-[#976fff]"
                 onClick={handleCompareCertifyNumber}
               >
                 인증하기
@@ -222,7 +222,7 @@ function SocialSignup() {
         )}
         {/* 이름, 전화번호, 성별 */}
         {emailCertified && (
-          <div className="flex flex-col gap-2 mt-2">
+          <div className="mt-2 flex flex-col gap-2">
             {/* 이름 */}
             <FormLabel htmlFor="name" text="이름">
               <FormInput
@@ -252,10 +252,10 @@ function SocialSignup() {
               </FormError>
             </FormLabel>
             {/* 성별 */}
-            <div className="flex flex-row gap-4 mt-2">
+            <div className="mt-2 flex flex-row gap-4">
               <button
                 type="button"
-                className={`w-[120px] h-[40px] rounded-md text-lg ${
+                className={`h-[40px] w-[120px] rounded-md text-lg ${
                   formValue.gender === 'M'
                     ? selectedButtonStyle
                     : unSelectedButtonStyle
@@ -267,7 +267,7 @@ function SocialSignup() {
               </button>
               <button
                 type="button"
-                className={`w-[120px] h-[40px] rounded-md text-lg ${
+                className={`h-[40px] w-[120px] rounded-md text-lg ${
                   formValue.gender === 'F'
                     ? selectedButtonStyle
                     : unSelectedButtonStyle
@@ -280,11 +280,11 @@ function SocialSignup() {
             </div>
           </div>
         )}
-        <div className="md:px-2 absolute bottom-4 sm:bottom-8 w-full left-1/2 -translate-x-1/2">
-          <div className="flex flex-row justify-center gap-4 mx-2">
+        <div className="absolute bottom-4 left-1/2 w-full -translate-x-1/2 sm:bottom-8 md:px-2">
+          <div className="mx-2 flex flex-row justify-center gap-4">
             <button
               type="submit"
-              className={`whitespace-nowrap rounded text-lg font-semibold px-2 h-12  min-w-[120px] w-full ${
+              className={`h-12 w-full min-w-[120px] whitespace-nowrap rounded px-2  text-lg font-semibold ${
                 emailCertified ? abledButtonCss : disabledButtonCSS
               }`}
               disabled={!emailCertified}

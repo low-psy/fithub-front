@@ -182,11 +182,11 @@ function CertifyTrainer() {
   };
 
   return (
-    <div className="flex flex-col mb-8">
+    <div className="mb-8 flex flex-col">
       <Header />
       {/* 자격증 사진 업로드 */}
       <div>
-        <p className="text-sm md:text-lg font-semibold text-main mb-2">
+        <p className="mb-2 text-sm font-semibold text-main md:text-lg">
           1. 트레이너 자격증을 첨부해 주세요. (최대 5개)
         </p>
         <LicenseImageInput
@@ -195,10 +195,10 @@ function CertifyTrainer() {
           handleDeleteImage={handleDeleteImage}
         />
       </div>
-      <div className="border-[0.5px] border-gray-300 w-full my-4" />
+      <div className="my-4 w-full border-[0.5px] border-gray-300" />
       {/* 자격증 이름 */}
       <div>
-        <p className="text-sm md:text-lg font-semibold text-main mb-2">
+        <p className="mb-2 text-sm font-semibold text-main md:text-lg">
           2. 자격증 이름을 입력해 주세요.
         </p>
         <LicenseNameInput
@@ -207,10 +207,10 @@ function CertifyTrainer() {
           handleLicenseName={handleLicenseName}
         />
       </div>
-      <div className="border-[0.5px] border-gray-300 w-full my-4" />
+      <div className="my-4 w-full border-[0.5px] border-gray-300" />
       {/* 트레이닝 경력 */}
       <div>
-        <p className="text-sm md:text-lg font-semibold text-main mb-2">
+        <p className="mb-2 text-sm font-semibold text-main md:text-lg">
           3. 트레이닝 경력을 입력하여 주세요. (최대 10개)
         </p>
         <CareerInput
@@ -228,11 +228,11 @@ function CertifyTrainer() {
           />
         )}
         {/* 하단 인증하기 버튼 */}
-        <div className="md:px-2 absolute bottom-4 sm:bottom-8 w-full left-1/2 -translate-x-1/2">
+        <div className="absolute bottom-4 left-1/2 w-full -translate-x-1/2 sm:bottom-8 md:px-2">
           <div className="mx-4">
             <button
               type="button"
-              className="mt-8 bg-main text-white rounded h-10 font-semibold tex-sm md:text-lg w-full hover:bg-hoverColor"
+              className="tex-sm hover:bg-hoverColor mt-8 h-10 w-full rounded bg-main font-semibold text-white md:text-lg"
               onClick={certifyTrainer}
             >
               트레이너 인증하기

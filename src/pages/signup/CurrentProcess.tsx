@@ -7,7 +7,7 @@ interface ISignupProcessProps {
 function SuccessSVG() {
   return (
     <svg
-      className="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5"
+      className="me-2.5 h-3.5 w-3.5 sm:h-4 sm:w-4"
       aria-hidden="true"
       xmlns="http://www.w3.org/2000/svg"
       fill="currentColor"
@@ -39,31 +39,31 @@ function CurrentProcess({ currentPage }: ISignupProcessProps) {
   };
 
   return (
-    <ol className="flex justify-between items-center w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base mb-4">
+    <ol className="mb-4 flex w-full items-center justify-between text-center text-sm font-medium text-gray-500 dark:text-gray-400 sm:text-base">
       <li
-        className={`flex md:w-full items-center sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 dark:after:border-gray-700 ${firstSection.css}`}
+        className={`after:border-1 flex items-center after:mx-6 after:hidden after:h-1 after:w-full after:border-b after:border-gray-200 dark:after:border-gray-700 sm:after:inline-block sm:after:content-[''] md:w-full ${firstSection.css}`}
       >
-        <span className="flex items-center after:content-['-'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
+        <span className="flex items-center after:mx-2 after:text-gray-200 after:content-['-'] dark:after:text-gray-500 sm:after:hidden">
           {firstSection.svg}
           <p className="whitespace-nowrap">이메일</p>{' '}
-          <span className="hidden sm:inline-flex sm:ms-2 whitespace-nowrap">
+          <span className="hidden whitespace-nowrap sm:ms-2 sm:inline-flex">
             인증
           </span>
         </span>
       </li>
       <li
-        className={`flex md:w-full items-center sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 dark:after:border-gray-700 ${secondSection.css}`}
+        className={`after:border-1 flex items-center after:mx-6 after:hidden after:h-1 after:w-full after:border-b after:border-gray-200 dark:after:border-gray-700 sm:after:inline-block sm:after:content-[''] md:w-full ${secondSection.css}`}
       >
-        <span className="flex items-center after:content-['-'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
+        <span className="flex items-center after:mx-2 after:text-gray-200 after:content-['-'] dark:after:text-gray-500 sm:after:hidden">
           {secondSection.svg}
           <p className="whitespace-nowrap">추가정보</p>{' '}
-          <span className="hidden sm:inline-flex sm:ms-2 whitespace-nowrap">
+          <span className="hidden whitespace-nowrap sm:ms-2 sm:inline-flex">
             입력
           </span>
         </span>
       </li>
       <li className={`flex  items-center ${lastSection.css}`}>
-        <span className="flex items-center sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
+        <span className="flex items-center after:mx-2 after:text-gray-200 dark:after:text-gray-500 sm:after:hidden">
           {lastSection.svg}
           <p className="whitespace-nowrap">회원가입 완료</p>{' '}
         </span>

@@ -17,14 +17,14 @@ function LicenseNameInput({
         return (
           <div key={(license + idx) as string} className="mb-2">
             <label className="flex flex-row">
-              <p className="h-10 mr-2 leading-10 text-main font-semibold text-lg w-8 pl-4">
+              <p className="mr-2 h-10 w-8 pl-4 text-lg font-semibold leading-10 text-main">
                 {idx + 1}.
               </p>
               <input
                 id={`${idx}`}
                 maxLength={40}
                 placeholder="자격증 이름을 입력해주세요."
-                className="w-full bg-white rounded h-10 hover:outline-none focus:outline-none p-2 border border-main"
+                className="h-10 w-full rounded border border-main bg-white p-2 hover:outline-none focus:outline-none"
                 value={licenseNames[idx] || ''}
                 onChange={handleLicenseName}
               />

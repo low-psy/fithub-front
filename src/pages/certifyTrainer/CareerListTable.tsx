@@ -22,12 +22,12 @@ function CareerListTable({
   const tableHead = ['회사명', '담당 업부', '입사', '퇴사', '-'];
   return (
     <div className="overflow-x-auto">
-      <table className="border-collapse border-2 border-main mt-2 w-full text-center overflow-x-scroll">
+      <table className="mt-2 w-full border-collapse overflow-x-scroll border-2 border-main text-center">
         <thead>
           <tr className="bg-purple-100 py-2">
             {tableHead.map((title) => (
               <th
-                className="border border-main px-4 py-2 min-w-12 whitespace-nowrap"
+                className="min-w-12 whitespace-nowrap border border-main px-4 py-2"
                 key={title}
               >
                 {title}

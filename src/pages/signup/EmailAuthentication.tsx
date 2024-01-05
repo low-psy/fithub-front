@@ -82,10 +82,10 @@ function EmailAuthentication() {
   };
 
   return (
-    <div className="w-full flex flex-col gap-4 ">
+    <div className="flex w-full flex-col gap-4 ">
       {/* 이메일 */}
       <FormLabel htmlFor="email" text="이메일">
-        <div className="flex flex-row w-full gap-2">
+        <div className="flex w-full flex-row gap-2">
           <FormInput
             placeholder="이메일을 입력해주세요."
             id="email"
@@ -97,7 +97,7 @@ function EmailAuthentication() {
           />
           <button
             type="button"
-            className="w-30 whitespace-nowrap bg-main h-10 rounded text-white text-lg font-semibold mt-2 px-2 hover:bg-[#976fff]"
+            className="w-30 mt-2 h-10 whitespace-nowrap rounded bg-main px-2 text-lg font-semibold text-white hover:bg-[#976fff]"
             onClick={onSendCertifyNumber}
           >
             인증번호 전송
@@ -110,7 +110,7 @@ function EmailAuthentication() {
       {/* 인증번호 */}
       {isSent && (
         <FormLabel htmlFor="certifyNumber" text="인증번호 입력">
-          <div className="flex flex-row w-full gap-2">
+          <div className="flex w-full flex-row gap-2">
             <HelpInput
               placeholder="인증번호를 입력해주세요"
               id="certifyNumber"
@@ -121,7 +121,7 @@ function EmailAuthentication() {
             />
             <button
               type="button"
-              className="w-30 whitespace-nowrap bg-main h-10 rounded text-white text-lg font-semibold mt-2 px-2 hover:bg-[#976fff]"
+              className="w-30 mt-2 h-10 whitespace-nowrap rounded bg-main px-2 text-lg font-semibold text-white hover:bg-[#976fff]"
               onClick={onCompareCertifyNumber}
             >
               인증하기
@@ -137,11 +137,11 @@ function EmailAuthentication() {
           </FormError>
         </FormLabel>
       )}
-      <div className="md:px-2 absolute bottom-4 sm:bottom-8 w-full left-1/2 -translate-x-1/2">
-        <div className="flex flex-row justify-center gap-4 mx-2">
+      <div className="absolute bottom-4 left-1/2 w-full -translate-x-1/2 sm:bottom-8 md:px-2">
+        <div className="mx-2 flex flex-row justify-center gap-4">
           <button
             type="button"
-            className={`whitespace-nowrap rounded text-lg font-semibold px-2 h-12  min-w-[120px] w-full ${
+            className={`h-12 w-full min-w-[120px] whitespace-nowrap rounded px-2  text-lg font-semibold ${
               isCertified ? availabledCSS : disabledCSS
             }`}
             disabled={!isCertified}
