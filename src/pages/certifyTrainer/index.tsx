@@ -5,6 +5,8 @@ import LicenseImageInput from './LicenseImageInput';
 import LicenseNameInput from './LicenseNameInput';
 import CareerInput from './CareerInput';
 import CareerListTable from './CareerListTable';
+import Layout from '../../components/form/Layout';
+import FormLogo from '../../components/form/FormLogo';
 
 interface ICareer {
   [key: string]: string | boolean | (() => void);
@@ -182,7 +184,8 @@ function CertifyTrainer() {
   };
 
   return (
-    <div className="mb-8 flex flex-col">
+    <Layout>
+      <FormLogo width="w-14" />
       <Header />
       {/* 자격증 사진 업로드 */}
       <div>
@@ -240,7 +243,7 @@ function CertifyTrainer() {
           </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 }
 

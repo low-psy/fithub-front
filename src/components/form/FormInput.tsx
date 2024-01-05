@@ -33,7 +33,7 @@ function FormInput({
       placeholder={placeholder}
       className={`hover:outlined-none mt-2 h-10 rounded border bg-[#eaeaea] p-2 focus:outline-none  ${
         isError && 'border border-red-400'
-      } ${textColor}`}
+      } ${textColor} w-full`}
       value={value}
       onChange={handleChange}
       disabled={disabled}

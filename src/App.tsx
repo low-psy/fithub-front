@@ -17,7 +17,6 @@ import NewPost, {
   action as newPostAction,
 } from './pages/newpost/index';
 
-import NotFound from './pages/NotFound';
 import Signup from './pages/signup';
 import Trainer from './pages/Trainer';
 import TrainerHome from './pages/TrainerHome';
@@ -25,18 +24,19 @@ import TrainerCreate from './pages/TrainerCreate';
 import RootErrorBoundary from './components/common/ErrorBoundary';
 import Post from './pages/post';
 
-import AdditionalInfo from './pages/signup/AdditionalInfo';
 import CertifyTrainer from './pages/certifyTrainer';
-import EmailAuthentication from './pages/signup/EmailAuthentication';
-import SignupSuccess from './pages/signup/SignupSuccess';
 import SocialSignup from './pages/signup/SocialSignup';
 
 import withAuth from './hocs/withAuth';
+import EmailAuthentication from './pages/signup/EmailAuthentication';
+import AdditionalInfo from './pages/signup/AdditionalInfo';
+import SignupSuccess from './pages/signup/SignupSuccess';
+import NotFound from './pages/NotFound';
 
 function App() {
   const AuthedCertifyTrainer = withAuth(
     CertifyTrainer,
-    false,
+    true,
     '/certify-trainer',
   );
 
@@ -58,24 +58,24 @@ function App() {
           loader: newPostLoader,
           action: newPostAction,
         },
-        {
-          path: 'login',
-          element: <Login />,
-        },
-        {
-          path: 'signup',
-          element: <Signup />,
-          children: [
-            { path: 'email', element: <EmailAuthentication /> },
-            { path: 'additional-info', element: <AdditionalInfo /> },
-            { path: 'success', element: <SignupSuccess /> },
-            { path: '*', element: <NotFound /> },
-          ],
-        },
-        { path: 'certify-trainer', element: <AuthedCertifyTrainer /> },
-        { path: 'help/password', element: <FindPassword /> },
         { path: 'post', element: <Post /> },
         { path: 'oauth2/regist', element: <SocialSignup /> },
+      ],
+    },
+    { path: 'help/password', element: <FindPassword /> },
+    { path: 'certify-trainer', element: <AuthedCertifyTrainer /> },
+    {
+      path: '/login',
+      element: <Login />,
+    },
+    {
+      path: '/signup',
+      element: <Signup />,
+      children: [
+        { path: 'email', element: <EmailAuthentication /> },
+        { path: 'additional-info', element: <AdditionalInfo /> },
+        { path: 'success', element: <SignupSuccess /> },
+        { path: '*', element: <NotFound /> },
       ],
     },
     {
