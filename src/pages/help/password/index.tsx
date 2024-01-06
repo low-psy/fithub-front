@@ -9,6 +9,8 @@ import {
   validateCertifyNumber,
   validateHelpEmail,
 } from '../../../validation/help/findPasswordValidation';
+import Layout from '../../../components/form/Layout';
+import FormLogo from '../../../components/form/FormLogo';
 
 function FindPassword() {
   const [email, setEmail] = useState<string>('');
@@ -59,21 +61,36 @@ function FindPassword() {
   };
 
   return (
-    <div className="flex min-w-max flex-col gap-2">
-      <div className="mb-4 text-sm text-[#585D69] md:text-base">
-        <p>비밀번호를 잊으셨나요?</p>
-        <p>이메일 인증을 통해 비밀번호를 찾을 수 있습니다.</p>
-      </div>
+    <div>
+      <FormLogo width="w-14" />
+      <div className="flex min-w-max flex-col gap-2">
+        <div className="mb-4 text-sm text-[#585D69] md:text-base">
+          <p>비밀번호를 잊으셨나요?</p>
+          <p>이메일 인증을 통해 비밀번호를 찾을 수 있습니다.</p>
+        </div>
 
-      {/* 이메일 input, 전송 button */}
-      <div className="flex w-full flex-row items-center justify-between gap-4">
+        {/* 이메일 input, 전송 button */}
+        <div className="flex w-full flex-row items-center justify-between gap-4">
+          <HelpInput
+            id="email"
+            type="email"
+            placeholder="이메일을 입력해주세요."
+            value={email}
+            onChange={handleEmail}
+            error={emailError}
+          />
+          <DefaultButton text="전송" onClick={onSendCertifyNumber} />
+        </div>
+        <FormError>{emailError && <ErrorText text={emailError} />}</FormError>
+
+        {/* 인증번호 input */}
         <HelpInput
-          id="email"
-          type="email"
-          placeholder="이메일을 입력해주세요."
-          value={email}
-          onChange={handleEmail}
-          error={emailError}
+          id="authNumber"
+          type="string"
+          placeholder="전송받은 인증번호를 입력해주세요."
+          value={certificationNumber}
+          onChange={handleCertifyNumber}
+          error={certifyError}
         />
         <DefaultButton text="전송" onClick={onSendCertifyNumber} />
       </div>

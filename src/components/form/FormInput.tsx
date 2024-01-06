@@ -17,7 +17,7 @@ function FormInput({
   };
 
   const isError = !!error[id];
-  // const textColor = disabled ? 'text-gray-500' : 'text-black';
+  const textColor = disabled ? 'text-gray-500' : 'text-black';
 
   useEffect(() => {
     if (isError) {
@@ -31,9 +31,9 @@ function FormInput({
       id={id}
       type={type}
       placeholder={placeholder}
-      className={`hover:outlined-none mt-2 h-10 rounded border bg-[#eaeaea] p-2 text-black focus:outline-none  ${
+      className={`hover:outlined-none mt-2 h-10 rounded border bg-[#eaeaea] p-2 focus:outline-none  ${
         isError && 'border border-red-400'
-      } `}
+      } ${textColor} w-full`}
       value={value}
       onChange={handleChange}
       disabled={disabled}
