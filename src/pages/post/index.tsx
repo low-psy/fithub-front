@@ -2,10 +2,87 @@ import React from 'react';
 import { redirect, Link } from 'react-router-dom';
 import store from '../../redux/store';
 import FilterLayout from '../../components/filter/FilterLayout';
-import HeartIcon from '../../assets/icons/HeartIcon';
-import CommentIcon from '../../assets/icons/CommentIcon';
+import PostItem from '../../components/post/PostItem';
+// import { LoaderData } from '../../types/training';
+// import { getPost } from '../../apis/post';
+
+// export const loader = (async () => {
+//   const { data, status } = await getPost();
+
+//   if (status === 404) {
+//     throw json({ message: '게시물 조회에 실패하였습니다' }, { status: 404 });
+//   }
+
+//   return data;
+// }) satisfies LoaderFunction;
+
+const exOfPost = {
+  content: '오운완!',
+  postImages: [
+    'https://health.chosun.com/site/data/img_dir/2023/08/31/2023083102409_0.jpg',
+    'https://health.chosun.com/site/data/img_dir/2020/12/18/2020121801715_0.jpg',
+  ],
+  comments: [
+    {
+      name: 'seongyong',
+      image: 'https://cdn.imweb.me/thumbnail/20220211/b25f693cf8fa7.jpg',
+      comment: '운동하는 모습이 멋져요!',
+      reply: [
+        {
+          name: 'seo',
+          image: 'https://cdn.imweb.me/thumbnail/20220211/b25f693cf8fa7.jpg',
+          comment: '감사합니다!',
+        },
+        {
+          name: 'seo',
+          image: 'https://cdn.imweb.me/thumbnail/20220211/b25f693cf8fa7.jpg',
+          comment: '감사합니다!',
+        },
+      ],
+    },
+    {
+      name: 'somi',
+      image:
+        'https://i.pinimg.com/736x/ca/20/d3/ca20d334e0009893f75514e04b77d544.jpg',
+      comment: '멋지십니다!',
+      reply: [
+        {
+          name: 'seo',
+          image: 'https://cdn.imweb.me/thumbnail/20220211/b25f693cf8fa7.jpg',
+          comment: '감사합니다!',
+        },
+      ],
+    },
+    {
+      name: 'yaejun',
+      image: 'https://cdn.imweb.me/thumbnail/20220211/b25f693cf8fa7.jpg',
+      comment: '운동하는 모습이 멋져요!',
+    },
+  ],
+  likes: [
+    {
+      name: 'yaejun',
+      image: 'https://cdn.imweb.me/thumbnail/20220211/b25f693cf8fa7.jpg',
+    },
+    {
+      name: 'somi',
+      image:
+        'https://i.pinimg.com/736x/ca/20/d3/ca20d334e0009893f75514e04b77d544.jpg',
+    },
+    {
+      name: 'seongyong',
+      image: 'https://cdn.imweb.me/thumbnail/20220211/b25f693cf8fa7.jpg',
+    },
+  ],
+  hashtags: ['#운동', '#트레이닝', '#챌린지', '#운동', '#운동'],
+  date: new Date().toISOString(),
+  profileImage: 'https://www.handmk.com/news/photo/202306/16714_40371_5250.jpg',
+  profileName: 'pys_99',
+};
 
 const Post = () => {
+  // const PostDto = useLoaderData() as LoaderData<typeof loader>;
+
   return (
     <div className="flex gap-8">
       <FilterLayout>
@@ -22,43 +99,7 @@ const Post = () => {
         </div>
       </FilterLayout>
       <section className="w-[728px] space-y-12">
-        <article className="space-y-4">
-          <div className="space-y-4  bg-white p-4 shadow-sm drop-shadow-xl">
-            <div className="flex gap-4">
-              <div className="aspect-square w-12 rounded-full bg-red-700">
-                이미지
-              </div>
-              <div>
-                <h2 className="font-bold">name</h2>
-                <div className="font-extralight">time</div>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <h3>오운완</h3>
-              <div className="flex gap-4">
-                <div className="aspect-square w-1/2 bg-red-700">이미지</div>
-                <div className="aspect-square w-1/2 bg-red-700">이미지</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 ">
-              <HeartIcon />
-              <CommentIcon />
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="aspect-square w-8 rounded-full bg-red-700">
-                ..
-              </div>
-              <h3>
-                <span className="font-bold">Liked </span>by 000님 and 여러 명
-              </h3>
-            </div>
-            <div>
-              <h3>댓글 1개 보기</h3>
-              <h4 className="font-thin">댓글 달기...</h4>
-            </div>
-            <div />
-          </div>
-        </article>
+        <PostItem {...exOfPost} />
       </section>
     </div>
   );

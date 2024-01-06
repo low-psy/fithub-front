@@ -1,3 +1,4 @@
+import { PostsDto } from '../types/post';
 import { authAxios } from './axios';
 
 /**
@@ -23,10 +24,6 @@ export const createPost = async (
   formData.append('content', content);
   formData.append('hashTags', hashtag);
 
-  console.log(formData.get('content'));
-  console.log(formData.get('hashTags'));
-  console.log(formData.getAll('images'));
-
   const response = await authAxios.post('/posts', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
@@ -34,6 +31,6 @@ export const createPost = async (
 };
 
 export const getPost = async () => {
-  const response = await authAxios.get('/post');
-  return response;
+  const { data, status } = await authAxios.get<PostsDto>('/posts');
+  return { data, status };
 };

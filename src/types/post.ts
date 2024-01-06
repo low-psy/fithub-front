@@ -26,3 +26,37 @@ export interface PForm {
   image: string;
   keyword: string;
 }
+
+export interface LikeDto {
+  name: string;
+  image: string;
+}
+
+export interface ReplyDto {
+  name: string;
+  image: string;
+  comment: string;
+}
+
+export interface CommentDto {
+  name: string;
+  image: string;
+  comment: string;
+  reply?: ReplyDto[];
+}
+
+export interface PostData {
+  content?: string;
+  postImages: string[];
+  likes?: LikeDto[];
+  comments?: CommentDto[];
+  hashtags?: string[];
+  profileImage: string;
+  profileName: string;
+  date: string;
+}
+
+export interface PostsDto {
+  totalElements: number;
+  content: PostData[];
+}

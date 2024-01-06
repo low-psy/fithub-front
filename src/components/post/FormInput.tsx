@@ -1,7 +1,7 @@
 import React from 'react';
 import { InputProps } from '../../types/post';
 
-const InputComponent: React.FC<InputProps> = ({ className, ...rest }) => {
+const FormInput: React.FC<InputProps> = ({ className, ...rest }) => {
   let classProps;
   let isHidden = false;
   if (rest.type === 'text') {
@@ -26,4 +26,4 @@ const InputComponent: React.FC<InputProps> = ({ className, ...rest }) => {
   );
 };
 
-export default InputComponent;
+export default FormInput;
