@@ -95,10 +95,10 @@ function AdditionalInfo() {
       </FormLabel>
       {/* 성별 */}
       <FormLabel htmlFor="gender" text="성별">
-        <div className="flex flex-row gap-4 mt-1">
+        <div className="mt-1 flex flex-row gap-4">
           <button
             type="button"
-            className={`w-[120px] h-[40px] rounded-md text-lg ${
+            className={`h-[40px] w-[120px] rounded-md text-lg ${
               formValue.gender === 'M'
                 ? selectedButtonStyle
                 : unSelectedButtonStyle
@@ -110,7 +110,7 @@ function AdditionalInfo() {
           </button>
           <button
             type="button"
-            className={`w-[120px] h-[40px] rounded-md text-lg ${
+            className={`h-[40px] w-[120px] rounded-md text-lg ${
               formValue.gender === 'F'
                 ? selectedButtonStyle
                 : unSelectedButtonStyle
@@ -122,11 +122,11 @@ function AdditionalInfo() {
           </button>
         </div>
       </FormLabel>
-      <div className="md:px-2 absolute bottom-4 sm:bottom-8 w-full left-1/2 -translate-x-1/2">
-        <div className="flex flex-row justify-center gap-4 mx-2">
+      <div className="absolute bottom-4 left-1/2 w-full -translate-x-1/2 sm:bottom-8 md:px-2">
+        <div className="mx-2 flex flex-row justify-center gap-4">
           <button
             type="submit"
-            className="whitespace-nowrap rounded text-lg font-semibold px-2 h-12  min-w-[120px] w-full bg-main text-white hover:bg-hoverColor"
+            className="hover:bg-hoverColor h-12 w-full min-w-[120px] whitespace-nowrap rounded  bg-main px-2 text-lg font-semibold text-white"
           >
             회원가입하기
           </button>

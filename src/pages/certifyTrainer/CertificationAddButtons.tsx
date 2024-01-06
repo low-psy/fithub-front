@@ -22,7 +22,7 @@ export function ImageUploadButton({ handleAddImage }: IImageUploadButtonProps) {
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="currentColor"
-        className="h-48 w-48 hover:cursor-pointer border border-main"
+        className="h-48 w-48 border border-main hover:cursor-pointer"
         viewBox="0 0 16 16"
         onClick={onClickImageUpload}
       >
@@ -43,7 +43,7 @@ export function CareerUploadButton({
   return (
     <button
       type="button"
-      className="bg-main text-white text-semibold text-sm md:text-lg h-[20px] md:h-[28px] px-2 rounded mb-2"
+      className="text-semibold mb-2 h-[20px] rounded bg-main px-2 text-sm text-white md:h-[28px] md:text-lg"
       onClick={handleAddCareerInputCount}
     >
       추가

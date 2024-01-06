@@ -8,7 +8,7 @@ export function ErrorText({ text }: IErrorTextProps) {
 
 function FormError({ children }: IFormErrorProps) {
   // return <div className="h-[12px] sm:h-[20px]">{children}</div>;
-  return <div className="">{children}</div>;
+  return <div>{children}</div>;
 }
 
 export default FormError;

@@ -15,15 +15,15 @@ function LicenseImageInput({
 }: ILicenseImageInputProps) {
   return (
     <div className="w-full overflow-x-auto">
-      <div className="flex flex-row gap-4 w-max">
+      <div className="flex w-max flex-row gap-4">
         {images.map((image, idx) => {
           return (
             <div className="flex flex-col " key={image}>
-              <img src={image} alt={image} className="w-48 h-48" key={image} />
+              <img src={image} alt={image} className="h-48 w-48" key={image} />
               <button
                 type="button"
                 onClick={() => handleDeleteImage(idx)}
-                className="border border-main rounded text-main hover:bg-main hover:text-white font-semibold"
+                className="rounded border border-main font-semibold text-main hover:bg-main hover:text-white"
               >
                 삭제하기
               </button>

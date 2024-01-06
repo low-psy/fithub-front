@@ -21,6 +21,8 @@ import googleBtn from '../../assets/google_symbol.png';
 import { ILoginFormError, ILoginFormValue } from '../../types/form';
 
 import validateLoginForm from '../../validation/login/loginFormValidation';
+import FormLogo from '../../components/form/FormLogo';
+import Layout from '../../components/form/Layout';
 
 function Login() {
   const kakaoSocialLoginRequestUrl = `${process.env.REACT_APP_BASE_SERVER_URL}/oauth2/authorization/kakao`;
@@ -82,10 +84,15 @@ function Login() {
   };
 
   return (
-    <>
-      {/* 로고 영역. 클릭 시 home으로 navigate */}
+    // <div className="flex w-full flex-col items-center justify-center p-10">
+    <Layout>
+      <FormLogo width="w-14" />
       {/* 이메일, 비밀번호 입력 form */}
-      <form className="flex flex-col gap-6" onSubmit={handleSubmit} noValidate>
+      <form
+        className="flex  w-full max-w-[600px] flex-col gap-6"
+        onSubmit={handleSubmit}
+        noValidate
+      >
         {/* 이메일 */}
         <FormLabel htmlFor="email" text="이메일">
           <FormInput
@@ -118,7 +125,7 @@ function Login() {
 
         {/* 회원가입하기 <-> 아이디, 비밀번호 찾기 */}
         <div className="mt-8 flex flex-row justify-between text-[#575757]">
-          <FormHelperLink to="/signup" content="이메일로 회원가입하기" />
+          <FormHelperLink to="/signup/email" content="이메일로 회원가입하기" />
           <FormHelperLink to="/help/password" content="비밀번호 찾기" />
         </div>
 
@@ -148,7 +155,8 @@ function Login() {
           src={googleBtn}
         />
       </div>
-    </>
+    </Layout>
+    // </div>
   );
 }
 
