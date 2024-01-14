@@ -5,7 +5,6 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios';
-import store from '../redux/store';
 
 export const defaultAxios = axios.create({
   baseURL: process.env.REACT_APP_BASE_SERVER_URL,
@@ -21,7 +20,7 @@ export const authAxios = axios.create({
 const onRequest = (
   config: InternalAxiosRequestConfig,
 ): InternalAxiosRequestConfig => {
-  const { accessToken } = store.getState().token;
+  const accessToken = localStorage.getItem('accessToken');
 
   (config.headers as AxiosHeaders).set(
     'Authorization',
@@ -36,7 +35,13 @@ const onRequestError = (error: AxiosError | Error): Promise<AxiosError> => {
 };
 
 // response를 받고 호출되는 함수
-const onResponse = (response: AxiosResponse): AxiosResponse => {
+const onResponse = (
+  response: AxiosResponse,
+): AxiosResponse | Promise<AxiosResponse> => {
+  if (response.status === 201) {
+    const newAccessToken = response.data.accessToken;
+    localStorage.setItem('accessToken', newAccessToken);
+  }
   return response;
 };
 
