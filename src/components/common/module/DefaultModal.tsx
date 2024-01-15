@@ -20,7 +20,8 @@ const DefaultModal: React.FC<ModalProps> = ({
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div
-        className={`max-h-[${modalMaxHeight}px] w-[${modalWidth}px] overflow-auto rounded-md bg-white p-4`}
+        className="overflow-auto rounded-md bg-white p-4"
+        style={{ width: modalWidth, maxHeight: modalMaxHeight }}
       >
         <div className="text-end">
           <button type="button" onClick={onClose}>

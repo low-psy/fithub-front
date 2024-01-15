@@ -5,7 +5,10 @@ interface ImageSliderProps {
   imageSize: string;
 }
 
-const ImageSlider: React.FC<ImageSliderProps> = ({ postImages, imageSize }) => {
+const ImageSlider: React.FC<ImageSliderProps> = ({
+  postImages,
+  imageSize = '468',
+}) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const handlePrevClick = () => {
@@ -43,17 +46,20 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ postImages, imageSize }) => {
           navigate_before
         </span>
       </button>
-      <div className={`flex aspect-square w-[${imageSize}px] overflow-hidden`}>
+      <div className="flex aspect-square overflow-hidden">
         <div
-          className="flex bg-red-300 transition-transform duration-1000 ease-in-out"
-          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+          className="flex items-center  bg-black transition-transform duration-1000 ease-in-out"
+          style={{
+            width: `${imageSize}px`,
+            transform: `translateX(-${currentIndex * 100}%)`,
+          }}
         >
           {postImages.map((imageUrl, index) => (
             <img
               key={imageUrl}
               src={imageUrl}
               alt={`게시물 이미지 ${index + 1}`}
-              className="max-h-full max-w-full object-cover"
+              className="max-w-full "
             />
           ))}
         </div>

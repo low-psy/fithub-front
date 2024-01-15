@@ -1,13 +1,19 @@
 import React, { useRef, useState } from 'react';
-import { Form } from 'react-router-dom';
-import { CommentDto } from '../../types/post';
+import { PostComment } from '../../types/post';
 import CommentItem from './CommentItem';
+import CommentForm from './CommentForm';
 
 interface CommentsProps {
-  comments?: CommentDto[];
+  comments?: PostComment[];
+  count: number;
+  postId: number;
 }
 
-const Comment: React.FunctionComponent<CommentsProps> = ({ comments }) => {
+const Comment: React.FunctionComponent<CommentsProps> = ({
+  comments,
+  count,
+  postId,
+}) => {
   const [isComment, setIsComment] = useState<boolean>(false);
   const [visibleReplies, setVisibleReplies] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>('');
@@ -35,6 +41,7 @@ const Comment: React.FunctionComponent<CommentsProps> = ({ comments }) => {
 
   const handleChange = () => {
     const newValue = inputRef.current?.value;
+
     if (!newValue?.startsWith(replyTo)) {
       setInputValue(replyTo);
     } else {
@@ -42,43 +49,51 @@ const Comment: React.FunctionComponent<CommentsProps> = ({ comments }) => {
     }
   };
 
+  const commentPostedHandler = () => {
+    setInputValue(''); // input value 초기화
+  };
+
   return (
-    <Form className="space-y-4">
-      <div>
-        <button type="button" onClick={handleToggleCmt}>
-          {!isComment ? `댓글 ${comments?.length}개 보기...` : '댓글 닫기'}
-        </button>
-      </div>
+    <ul className="space-y-4">
+      {count > 0 ? (
+        <div>
+          <button type="button" onClick={handleToggleCmt}>
+            {!isComment ? `댓글 ${count}개 보기...` : '댓글 닫기'}
+          </button>
+        </div>
+      ) : null}
       {isComment ? (
         <div className="max-h-[300px] space-y-3 overflow-auto">
           {comments?.map((comment) => {
             return (
-              <div key={comment.name} className="space-y-4">
+              <div key={comment.commentId} className="space-y-4">
                 <CommentItem
                   comment={comment}
                   onReplyClick={handleReplyClick}
                 />
-                {comment.reply && (
+                {comment.childComment && (
                   <div className="space-y-4 pl-16 ">
                     <button
                       type="button"
                       className=" text-sm"
-                      onClick={() => handleToggleReply(comment.name)}
+                      onClick={() =>
+                        handleToggleReply(comment.profileInputName)
+                      }
                     >
                       <span className="mr-1 inline-block h-[1px] w-6 bg-slate-500 align-middle" />
-                      {!visibleReplies.includes(comment.name)
-                        ? `답글 보기 (${comment.reply?.length})`
+                      {!visibleReplies.includes(comment.profileInputName)
+                        ? `답글 보기 (${count})`
                         : '답글 숨기기'}
                     </button>
-                    {visibleReplies.includes(comment.name) &&
-                      comment.reply.map((reply) => {
+                    {visibleReplies.includes(comment.profileInputName) &&
+                      comment.childComment.map((reply) => {
                         return (
                           <div>
-                            <CommentItem
+                            {/* <CommentItem
                               key={reply.name}
                               comment={reply}
                               onReplyClick={handleReplyClick}
-                            />
+                            /> */}
                           </div>
                         );
                       })}
@@ -89,14 +104,15 @@ const Comment: React.FunctionComponent<CommentsProps> = ({ comments }) => {
           })}
         </div>
       ) : null}
-      <input
-        ref={inputRef}
-        value={inputValue}
-        placeholder="댓글 달기..."
-        onChange={handleChange}
-        className="w-full rounded-md p-2 outline-none"
+      <CommentForm
+        postId={postId}
+        inputValue={inputValue}
+        onInputChange={handleChange}
+        inputRef={inputRef}
+        onCommentPosted={commentPostedHandler}
+        parentCommentId={0}
       />
-    </Form>
+    </ul>
   );
 };
 
