@@ -6,7 +6,7 @@ export type LoaderData<TLoaderFn extends LoaderFunction> = Awaited<
   ? D
   : never;
 
-type TrainerData = {
+export interface TrainerData {
   id: number;
   trainerInfoDto: {
     trainerId: number;
@@ -20,7 +20,7 @@ type TrainerData = {
   startDate: string;
   endDate: string;
   closed: boolean;
-};
+}
 
 export interface TrainingDto {
   totalPages: number;
