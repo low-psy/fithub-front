@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import { InputProps } from '../../types/common';
 
-const FormImage: React.FC<InputProps> = ({ className, ...rest }) => {
-  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+const FormMultipleImage: React.FC<InputProps> = ({
+  children,
+  className,
+  ...rest
+}) => {
+  const [imagePreviews, setImagePreviews] = useState<string[]>(
+    (rest.value as string[]) || [],
+  );
   const [imageCount, setImageCount] = useState<number>(0);
   let restCount;
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,12 +36,15 @@ const FormImage: React.FC<InputProps> = ({ className, ...rest }) => {
 
   return (
     <div>
-      <h2 className="text-3xl font-bold text-slate-600 ">이미지 가져오기</h2>
-      <div className="mt-4 flex gap-4 lg:w-2/3">
+      <h2 className="text-3xl font-bold text-slate-600 ">{children}</h2>
+      <ul className="mt-4 flex gap-4 lg:w-2/3">
         {imagePreviews.map((image, index) => (
-          <div className="flex aspect-square w-1/4 items-center justify-center rounded-xl bg-white shadow-lg drop-shadow-sm">
+          <li
+            className="flex aspect-square w-1/4 items-center justify-center rounded-xl bg-white shadow-lg drop-shadow-sm"
+            key={image}
+          >
             <img className="w-full" src={image} alt={`Preview ${index + 1}`} />
-          </div>
+          </li>
         ))}
         <label
           htmlFor="image"
@@ -47,7 +56,7 @@ const FormImage: React.FC<InputProps> = ({ className, ...rest }) => {
           "
           />
         </label>
-      </div>
+      </ul>
       <input
         type="file"
         id="image"
@@ -62,4 +71,4 @@ const FormImage: React.FC<InputProps> = ({ className, ...rest }) => {
   );
 };
 
-export default FormImage;
+export default FormMultipleImage;
