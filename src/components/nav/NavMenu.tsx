@@ -7,7 +7,7 @@ import ProfileIcon from '../../assets/icons/ProfileIcon';
 
 const NavMenu = () => {
   const accessToken = useAppSelector((store) => store.token.accessToken);
-  let profileTo = '/profile';
+  let profileTo = '/profile/myprofile';
   let isCreateTrainer = true;
   const location = useLocation();
   if (location.pathname === '/newpost') {
@@ -17,12 +17,12 @@ const NavMenu = () => {
     profileTo = '/login';
   }
   return (
-    <ul className="flex grow items-center justify-end gap-5   lg:basis-1/3">
+    <ul className="hidden items-center justify-end gap-5 md:flex  md:grow md:basis-1/3">
       <li key="trainer" className="grow text-center">
         {isCreateTrainer ? (
           <Link
             to="/trainer/home"
-            className="rounded-full px-4 py-3 hover:bg-slate-200"
+            className="hidden whitespace-nowrap rounded-full px-4 py-3 hover:bg-slate-200 md:inline-block"
           >
             트레이너신가요?
           </Link>
