@@ -3,6 +3,7 @@ import {
   ReactElement,
   TextareaHTMLAttributes,
 } from 'react';
+import { ApiResponse } from './common';
 
 export interface PostInputProps {
   children: ReactElement;
@@ -27,36 +28,37 @@ export interface PForm {
   keyword: string;
 }
 
-export interface LikeDto {
-  name: string;
-  image: string;
+export interface PostLikedUser {
+  likedUser: string;
+  likedUserProfileUrl: string;
+  likedUserBio: string;
 }
 
-export interface ReplyDto {
-  name: string;
-  image: string;
-  comment: string;
+export interface PostComment {
+  commentId: number;
+  writerNickName: string;
+  content: string;
+  parentCommentId: number;
+  profileUrl: string;
+  profileInputName: string;
+  deleted: boolean;
+  createdDate: string;
+  childComment: string[];
 }
 
-export interface CommentDto {
-  name: string;
-  image: string;
-  comment: string;
-  reply?: ReplyDto[];
-}
-
-export interface PostData {
-  content?: string;
-  postImages: string[];
-  likes?: LikeDto[];
-  comments?: CommentDto[];
-  hashtags?: string[];
-  profileImage: string;
-  profileName: string;
-  date: string;
-}
-
-export interface PostsDto {
-  totalElements: number;
-  content: PostData[];
+export interface Post {
+  postId: number;
+  postCreatedDate: string;
+  postContent: string;
+  postWriter: string;
+  postWriterProfileUrl: string;
+  postHashTags: string[];
+  postViews: number;
+  postLikesCount: number;
+  postLikedUser: PostLikedUser[];
+  postDocumentUrls: string[];
+  postCommentsCount: number;
+  postComments: PostComment[];
+  liked: boolean;
+  bookmark: boolean;
 }
