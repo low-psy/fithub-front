@@ -4,9 +4,9 @@ import NavComponent from '../components/nav/NavComponent';
 
 const Root = () => {
   return (
-    <div className="min-w-200 mx-10 mt-6 ">
+    <div className="mx-4 mt-4 md:mx-10 md:mt-6">
       <NavComponent />
-      <main className="mt-10 pb-10">
+      <main className="md:mt-10 md:pb-10">
         <Outlet />
       </main>
     </div>

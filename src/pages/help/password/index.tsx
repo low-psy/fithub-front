@@ -9,7 +9,6 @@ import {
   validateCertifyNumber,
   validateHelpEmail,
 } from '../../../validation/help/findPasswordValidation';
-import Layout from '../../../components/form/Layout';
 import FormLogo from '../../../components/form/FormLogo';
 
 function FindPassword() {

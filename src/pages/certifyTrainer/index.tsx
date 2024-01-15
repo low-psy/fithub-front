@@ -5,8 +5,6 @@ import LicenseImageInput from './LicenseImageInput';
 import LicenseNameInput from './LicenseNameInput';
 import CareerInput from './CareerInput';
 import CareerListTable from './CareerListTable';
-import Layout from '../../components/form/Layout';
-import FormLogo from '../../components/form/FormLogo';
 
 interface ICareer {
   [key: string]: string | boolean | (() => void);

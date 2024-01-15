@@ -15,6 +15,7 @@ const FilterItem: React.FC<FilterItemsProps> = ({
 
   return (
     <div
+      key={text}
       className={`cursor-pointer ${className}`}
       onClick={onClick}
       onKeyDown={handleKeyDown}
