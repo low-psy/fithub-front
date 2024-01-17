@@ -1,6 +1,6 @@
 import { TrainingDto } from '../types/training';
 import { createFakeData } from '../types/trainingClass';
-import { defaultAxios } from './axios';
+import { authAxios, defaultAxios } from './axios';
 
 /**
  * [POST] 트레이닝 조회
@@ -37,4 +37,41 @@ export const getNextPageData = async (currentPage: number) => {
       return { ...trainer, title: `${trainer.title}_${currentPage}page` };
     }),
   };
+};
+
+export const createTraining = async (
+  title: string,
+  content: string,
+  images: string,
+  location: string,
+  quota: string,
+  price: string,
+  startDate: string,
+  endDate: string,
+  startHour: string,
+  endHour: string,
+  unableDates: string[],
+) => {
+  const formData = new FormData();
+  formData.append('images', images);
+  formData.append('title', title);
+  formData.append('content', content);
+  formData.append('location', location);
+  formData.append('quota', quota);
+  formData.append('price', price);
+  formData.append('startDate', startDate);
+  formData.append('endDate', endDate);
+  formData.append('startDate', startDate);
+  formData.append('startHour', startHour);
+  formData.append('endHour', endHour);
+  unableDates.forEach((date) => {
+    formData.append('unableDates', date);
+  });
+
+  const response = await authAxios.post('/trainer/training', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response;
 };

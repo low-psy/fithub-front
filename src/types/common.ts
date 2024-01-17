@@ -66,3 +66,13 @@ export interface ApiResponse<T> {
   last: boolean;
   empty: boolean;
 }
+
+export interface FormErrors {
+  title?: string;
+  content?: string;
+  images?: string;
+  location?: string;
+  quota?: string;
+  price?: string;
+  dateTime?: string;
+}

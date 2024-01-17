@@ -1,15 +1,17 @@
 import {
   InputHTMLAttributes,
   ReactElement,
+  ReactNode,
   TextareaHTMLAttributes,
 } from 'react';
 import { ApiResponse } from './common';
 
 export interface PostInputProps {
-  children: ReactElement;
+  children: ReactElement | ReactNode;
   spanText: string;
   htmlFor: string;
   titleText: string;
+  error?: string | undefined;
 }
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
