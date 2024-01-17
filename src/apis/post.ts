@@ -20,8 +20,8 @@ export const createPost = async (
   hashtag: string,
 ) => {
   const formData = new FormData();
-  images.forEach((image, index) => {
-    formData.append(`image[${index}]`, image);
+  images.forEach((image) => {
+    formData.append(`images`, image);
   });
   formData.append('content', content);
   formData.append('hashTags', hashtag);
@@ -66,7 +66,13 @@ export const deletePost = async (id: string) => {
 };
 
 export const getPost = async (): Promise<AxiosResponse<ApiResponse<Post>>> => {
-  return authAxios.get<ApiResponse<Post>>('/posts');
+  return authAxios.get<ApiResponse<Post>>('/posts?page=0&size=10');
+};
+
+export const getMyPost = async (): Promise<
+  AxiosResponse<ApiResponse<Post>>
+> => {
+  return authAxios.get<ApiResponse<Post>>('/posts?');
 };
 
 export const postLike = async (id: string) => {
@@ -95,5 +101,8 @@ export const postComment = async (
     postId,
     parentCommentId,
   };
-  return authAxios.post('/comments', data);
+  return authAxios.post('/comments', {
+    content: 'test 입니다',
+    postId: 3,
+  });
 };

@@ -27,7 +27,10 @@ import CertifyTrainer from './pages/certifyTrainer';
 import SocialSignup from './pages/signup/SocialSignup';
 import Profile from './pages/profile';
 import MyProfile from './pages/profile/MyProfile';
-import MyPost, { action as myPostAction } from './pages/profile/MyPost';
+import MyPost, {
+  loader as myPostLoader,
+  action as myPostAction,
+} from './pages/profile/MyPost';
 import MyBook from './pages/profile/MyBook';
 import MyCancel from './pages/profile/MyCancel';
 import EmailAuthentication from './pages/signup/EmailAuthentication';
@@ -35,15 +38,17 @@ import AdditionalInfo from './pages/signup/AdditionalInfo';
 import SignupSuccess from './pages/signup/SignupSuccess';
 import NotFound from './pages/NotFound';
 import NewTrainer from './pages/trainer/new';
-import CreateTrainer from './pages/trainer/create';
+import CreateTrainer, {
+  action as createTrainerAction,
+} from './pages/trainer/create';
 import loadGoogleMapsAPI from './types/loadGoogleMaps';
 
 // import withAuth from './hocs/withAuth';
 
 function App() {
-  useEffect(() => {
-    loadGoogleMapsAPI();
-  }, []);
+  // useEffect(() => {
+  //   loadGoogleMapsAPI();
+  // }, []);
   const router = createBrowserRouter([
     {
       path: '/',
@@ -71,7 +76,12 @@ function App() {
           element: <Profile />,
           children: [
             { path: 'myprofile', element: <MyProfile /> },
-            { path: 'mypost', element: <MyPost />, action: myPostAction },
+            {
+              path: 'mypost',
+              element: <MyPost />,
+              action: myPostAction,
+              loader: myPostLoader,
+            },
             { path: 'book', element: <MyBook /> },
             { path: 'cancel', element: <MyCancel /> },
           ],
@@ -103,7 +113,11 @@ function App() {
           path: 'new',
           children: [
             { index: true, element: <NewTrainer /> },
-            { path: 'create', element: <CreateTrainer /> },
+            {
+              path: 'create',
+              element: <CreateTrainer />,
+              action: createTrainerAction,
+            },
           ],
         },
       ],

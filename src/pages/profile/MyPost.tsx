@@ -30,6 +30,7 @@ export const loader = (async () => {
 
 const MyPost = () => {
   const PostDto = useLoaderData() as LoaderData<typeof loader>;
+  console.log(PostDto);
   const {
     selectedFilter: mySelectedFilter,
     handleFilterClick: handleMyFilterClick,
@@ -52,7 +53,7 @@ const MyPost = () => {
           })}
         </div>
       </article>
-      {PostDto.data.content.map((post) => (
+      {PostDto?.data.content.map((post) => (
         <PostItem {...post} postUse="update" />
       ))}
     </div>
