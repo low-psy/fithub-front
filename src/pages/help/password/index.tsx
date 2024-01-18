@@ -9,7 +9,6 @@ import {
   validateCertifyNumber,
   validateHelpEmail,
 } from '../../../validation/help/findPasswordValidation';
-import Layout from '../../../components/form/Layout';
 import FormLogo from '../../../components/form/FormLogo';
 
 function FindPassword() {
@@ -61,7 +60,7 @@ function FindPassword() {
   };
 
   return (
-    <Layout>
+    <div>
       <FormLogo width="w-14" />
       <div className="flex min-w-max flex-col gap-2">
         <div className="mb-4 text-sm text-[#585D69] md:text-base">
@@ -92,18 +91,28 @@ function FindPassword() {
           onChange={handleCertifyNumber}
           error={certifyError}
         />
-        <FormError>
-          {certifyError && <ErrorText text={certifyError} />}
-        </FormError>
-
-        {/* 인증하기 button, 로그인 하러가기  button */}
-        {isCertified ? (
-          <LinkButton to="/login" text="로그인 하러가기" />
-        ) : (
-          <DefaultButton text="인증하기" onClick={onCompareCertifyNumber} />
-        )}
+        <DefaultButton text="전송" onClick={onSendCertifyNumber} />
       </div>
-    </Layout>
+      <FormError>{emailError && <ErrorText text={emailError} />}</FormError>
+
+      {/* 인증번호 input */}
+      <HelpInput
+        id="authNumber"
+        type="string"
+        placeholder="전송받은 인증번호를 입력해주세요."
+        value={certificationNumber}
+        onChange={handleCertifyNumber}
+        error={certifyError}
+      />
+      <FormError>{certifyError && <ErrorText text={certifyError} />}</FormError>
+
+      {/* 인증하기 button, 로그인 하러가기  button */}
+      {isCertified ? (
+        <LinkButton to="/login" text="로그인 하러가기" />
+      ) : (
+        <DefaultButton text="인증하기" onClick={onCompareCertifyNumber} />
+      )}
+    </div>
   );
 }
 

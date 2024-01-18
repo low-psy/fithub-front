@@ -2,13 +2,15 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import TrainerHeader from '../components/trainer/TrainerHeader';
 
-const Trainer = () => {
+const TrainerRoot = () => {
   return (
-    <div className="min-w-200 mx-10 mt-6 space-y-4 ">
+    <div className="mx-4 mt-4 md:mx-10 md:mt-6 ">
       <TrainerHeader />
-      <Outlet />
+      <main className="md:mt-10 md:pb-10">
+        <Outlet />
+      </main>
     </div>
   );
 };
 
-export default Trainer;
+export default TrainerRoot;

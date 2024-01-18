@@ -30,3 +30,49 @@ export interface LinkButtonProps {
   to: string;
   bg?: string;
 }
+
+export interface FilterItemsProps {
+  text: string;
+  isSelected?: boolean;
+  onClick: () => void;
+  className: string;
+}
+
+interface Sort {
+  empty: boolean;
+  sorted: boolean;
+  unsorted: boolean;
+}
+
+interface Pageable {
+  offset: number;
+  sort: Sort;
+  pageNumber: number;
+  pageSize: number;
+  paged: boolean;
+  unpaged: boolean;
+}
+
+export interface ApiResponse<T> {
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  content: T[];
+  number: number;
+  sort: Sort;
+  numberOfElements: number;
+  pageable: Pageable;
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+}
+
+export interface FormErrors {
+  title?: string;
+  content?: string;
+  images?: string;
+  location?: string;
+  quota?: string;
+  price?: string;
+  dateTime?: string;
+}

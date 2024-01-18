@@ -60,6 +60,7 @@ function Login() {
     try {
       const response = await defaultLogin(email, password);
       if (response && response.status === 200) {
+        console.log(response);
         dispatch(SET_TOKEN(response.data.accessToken));
         navigate(redirectPath || '/');
       }

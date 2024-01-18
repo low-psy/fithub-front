@@ -82,7 +82,7 @@ function EmailAuthentication() {
   };
 
   return (
-    <div className=" flex w-full flex-col gap-4">
+    <div className="flex w-full flex-col gap-4 ">
       {/* 이메일 */}
       <FormLabel htmlFor="email" text="이메일">
         <div className="flex w-full flex-row gap-2">

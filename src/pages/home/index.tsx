@@ -5,17 +5,23 @@ import {
   json,
   useLoaderData,
 } from 'react-router-dom';
-import getTraining from '../../apis/trainig';
+import { getTraining, getNextPageData } from '../../apis/trainig';
 import FilterSection from '../../components/item/LinkItemWithBg';
 import lookupFilter from '../../assets/lookupFilter.png';
 import mapFilter from '../../assets/mapFilter.png';
 import newpostFilter from '../../assets/newpostFilter.png';
 import FilterIcon from '../../assets/icons/filterIcon';
 import MainSection from '../../components/item/TrainerItem';
-import { LoaderData } from '../../types/training';
+import { LoaderData, TrainerData } from '../../types/training';
+import useInfiniteScroll from '../../hooks/infiniteScroll';
+import { createFakeData } from '../../types/trainingClass';
 
 export const loader = (async () => {
   const { data, status } = await getTraining();
+
+  if (status === 201) {
+    return null;
+  }
 
   if (status === 404) {
     throw json({ message: '홈페이지 로딩에 실패했습니다' }, { status: 404 });
@@ -25,13 +31,25 @@ export const loader = (async () => {
 }) satisfies LoaderFunction;
 
 const Home: React.FC = () => {
-  const trianerInfoDto = useLoaderData() as LoaderData<typeof loader>;
+  let trainerInfoDto = useLoaderData() as LoaderData<typeof loader>;
+  trainerInfoDto = createFakeData();
+
+  const { data, loaderIndicator } = useInfiniteScroll<TrainerData>({
+    initialData: trainerInfoDto?.content || [],
+    fetchData: async (page) => {
+      const nextPageData = await getNextPageData(page);
+      if (!nextPageData) {
+        return [];
+      }
+      return nextPageData.content;
+    },
+  });
 
   return (
-    <div className="space-y-10">
-      <section className="grid h-56 grid-cols-2  gap-3">
+    <div className="space-y-4 md:space-y-10">
+      <section className="hidden h-56 grid-cols-2 gap-3  md:grid">
         <div className="row-span-2  flex ">
-          <FilterSection bg={lookupFilter} to="/lookup">
+          <FilterSection bg={lookupFilter} to="/post">
             운동 게시글 조회하기
           </FilterSection>
         </div>
@@ -46,25 +64,26 @@ const Home: React.FC = () => {
           </FilterSection>
         </div>
       </section>
-      <section>
-        <article className="flex items-center justify-between ">
+      <section className="space-y-4">
+        <article className="flex items-center justify-between">
           <h2 className="text-2xl font-bold">
             이런 <span className="text-main">트레이닝</span>은 어떠세요?
           </h2>
           <button
             type="button"
-            className="flex gap-4 rounded-xl bg-slate-200 px-6 py-4 drop-shadow-sm"
+            className="hidden gap-4 rounded-xl bg-slate-200 px-6 py-4 drop-shadow-sm md:flex"
           >
             <FilterIcon />
             필터
           </button>
         </article>
         <article>
-          <ul className="grid grid-cols-2 gap-4 md:grid-cols-3  xl:grid-cols-4">
-            {trianerInfoDto.content.map((value) => {
-              return <MainSection trainerInfoDto={value} />;
-            })}
+          <ul className="grid grid-cols-1 justify-items-center gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+            {data.map((value) => (
+              <MainSection key={value.id} trainerInfoDto={value} />
+            ))}
           </ul>
+          <div ref={loaderIndicator} />
         </article>
       </section>
     </div>

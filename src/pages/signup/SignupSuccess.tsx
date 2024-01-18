@@ -29,7 +29,7 @@ function SignupSuccess() {
         <button
           type="button"
           className="hover:bg-hoverColor mt-10 h-10 w-full rounded bg-main px-4 text-lg font-semibold text-white"
-          onClick={() => navigate('/certify-trainer')}
+          onClick={() => navigate('/signup/certify-trainer')}
         >
           트레이너 인증하기
         </button>

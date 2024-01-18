@@ -3,7 +3,9 @@ import { DivProps } from '../../types/common';
 
 const ErrorMessage: React.FC<DivProps> = ({ children, className }) => {
   return (
-    <div className={`${className}  bg-accent_sub py-2 text-center text-accent`}>
+    <div
+      className={`${className} rounded-md bg-accent_sub py-2 text-center text-lg font-bold text-accent`}
+    >
       {children}
     </div>
   );
