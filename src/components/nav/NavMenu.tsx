@@ -7,7 +7,7 @@ import ProfileIcon from '../../assets/icons/ProfileIcon';
 
 const NavMenu = () => {
   const accessToken = useAppSelector((store) => store.token.accessToken);
-  let profileTo = '/profile';
+  let profileTo = '/user';
 
   if (accessToken === 'initial access token') {
     profileTo = '/login';
@@ -32,7 +32,7 @@ const NavMenu = () => {
           <ChatIcon />
         </Link>
       </li>
-      <li key="profile">
+      <li key="user">
         <Link to={profileTo}>
           <ProfileIcon />
         </Link>
