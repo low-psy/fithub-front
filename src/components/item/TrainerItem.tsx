@@ -1,13 +1,27 @@
 import React from 'react';
 import { TrainingSectionProps } from '../../types/training';
 
+function formatDate(dateString: string) {
+  const date = new Date(dateString);
+  const month = date.getMonth() + 1; // getMonth()는 0부터 시작하므로 1을 더해줍니다.
+  const day = date.getDate();
+
+  return `${month}월 ${day}일`;
+}
+
 const MainItem: React.FunctionComponent<TrainingSectionProps> = ({
   trainerInfoDto,
 }) => {
+  const startDate = formatDate(trainerInfoDto.startDate);
+  const endDate = formatDate(trainerInfoDto.endDate);
   return (
-    <div className="rounded-xl bg-white ">
+    <div className=" space-y-4 sm:w-auto">
       <div className="aspect-square">
-        {trainerInfoDto.trainerInfoDto.trainerProfileImg}
+        <img
+          src={trainerInfoDto.trainerInfoDto.trainerProfileImg}
+          alt="프로필 이미지"
+          className="h-full w-full rounded-xl object-cover "
+        />
       </div>
       <div className="space-y-2">
         <div className="flex items-center justify-between">
@@ -18,11 +32,11 @@ const MainItem: React.FunctionComponent<TrainingSectionProps> = ({
             {trainerInfoDto.closed ? '종료' : '모집중'}
           </h3>
         </div>
-        <div>
+        <div className="text-sm text-stone-800">
           <h3>{trainerInfoDto.location}</h3>
-          <h3>{`${trainerInfoDto.startDate} ${trainerInfoDto.endDate}`}</h3>
+          <h3>{`${startDate} ~ ${endDate}`}</h3>
         </div>
-        <div>{`${trainerInfoDto.price}원`}</div>
+        <div>{`₩ ${trainerInfoDto.price}원`}</div>
       </div>
     </div>
   );

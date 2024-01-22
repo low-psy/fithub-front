@@ -31,10 +31,13 @@ const NavSearch = () => {
   });
 
   return (
-    <Form className="hidden basis-1/3 justify-center lg:flex" method="post">
+    <Form
+      className="flex  h-full  w-full justify-center lg:basis-1/3"
+      method="post"
+    >
       <div
         className="text-md relative flex
-        w-96  items-center rounded-full bg-sub font-medium hover:shadow"
+        h-full  w-full items-center rounded-full bg-sub font-medium hover:shadow"
         onClick={clickHandler}
         aria-hidden="true"
         ref={divRef}
@@ -43,14 +46,14 @@ const NavSearch = () => {
         <input
           id="search_input"
           type="text"
-          className="ml-2 grow bg-sub pl-6 font-medium placeholder-slate-900 focus:placeholder-sub focus:outline-none"
+          className="ml-2 grow bg-sub pl-2 font-medium placeholder-slate-900 focus:placeholder-sub focus:outline-none md:pl-6"
           placeholder="관심있는 트레이닝을 검색해 보세요!"
           onChange={inputChangeHandler}
           ref={inputRef}
           value={enteredText as string}
         />
         <label htmlFor="btn" />
-        <button id="btn" type="submit" className="pr-4">
+        <button id="btn" type="submit" className="pr-3">
           <SearchIcon />
           <span className="sr-only">검색 버튼</span>
         </button>

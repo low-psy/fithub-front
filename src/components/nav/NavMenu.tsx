@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../hooks/reduxHooks';
 import BookmarkIcon from '../../assets/icons/BookmarkIcon';
 import ChatIcon from '../../assets/icons/ChatIcon';
@@ -9,18 +9,25 @@ const NavMenu = () => {
   const accessToken = useAppSelector((store) => store.token.accessToken);
   let profileTo = '/user';
 
+  let isCreateTrainer = true;
+  const location = useLocation();
+  if (location.pathname === '/newpost') {
+    isCreateTrainer = false;
+  }
   if (accessToken === 'initial access token') {
     profileTo = '/login';
   }
   return (
-    <ul className="flex grow items-center justify-end gap-5   lg:basis-1/3">
+    <ul className="hidden items-center justify-end gap-5 md:flex  md:grow md:basis-1/3">
       <li key="trainer" className="grow text-center">
-        <Link
-          to="/trainer/home"
-          className="rounded-full px-4 py-3 hover:bg-slate-200"
-        >
-          트레이너신가요?
-        </Link>
+        {isCreateTrainer ? (
+          <Link
+            to="/trainer/home"
+            className="hidden whitespace-nowrap rounded-full px-4 py-3 hover:bg-slate-200 md:inline-block"
+          >
+            트레이너신가요?
+          </Link>
+        ) : null}
       </li>
       <li key="book">
         <Link to="/book">
