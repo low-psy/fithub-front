@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { useAppDispatch } from '../../hooks/reduxHooks';
 import { SET_TOKEN } from '../../redux/slices/tokenSlice';
@@ -25,13 +25,23 @@ import FormLogo from '../../components/form/FormLogo';
 import Layout from '../../components/form/Layout';
 
 function Login() {
+  const [searchParams] = useSearchParams();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (searchParams.get('status') === '400 BAD_REQUEST') {
+      // eslint-disable-next-line no-alert
+      alert(searchParams.get('message'));
+      navigate('/login');
+    }
+  }, [navigate, searchParams]);
+
   const kakaoSocialLoginRequestUrl = `${process.env.REACT_APP_BASE_SERVER_URL}/oauth2/authorization/kakao`;
   const naverSocialLoginRequestUrl = `${process.env.REACT_APP_BASE_SERVER_URL}/oauth2/authorization/naver`;
   const googleSocialLoginRequestUrl = `${process.env.REACT_APP_BASE_SERVER_URL}/oauth2/authorization/google`;
 
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const location = useLocation();
   const redirectPath = location.state?.redirectPath
     ? location.state.redirectPath
     : false;
