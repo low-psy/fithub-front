@@ -50,8 +50,12 @@ const onResponseError = async (
   err: AxiosError | Error,
 ): Promise<AxiosError> => {
   const error = err as unknown as AxiosError;
-  // const { response } = error;
+  const { response } = error;
   // const prevConfig = error?.config as AxiosRequestConfig;
+
+  if (response && response.status === 405) {
+    window.location.replace('/login');
+  }
 
   // TODO: access token 만료 시 재발급 요청 추가하기
   // if (response && response.status === 403) {
