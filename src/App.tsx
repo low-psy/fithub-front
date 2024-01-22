@@ -32,8 +32,15 @@ import EmailAuthentication from './pages/signup/EmailAuthentication';
 import AdditionalInfo from './pages/signup/AdditionalInfo';
 import SignupSuccess from './pages/signup/SignupSuccess';
 import NotFound from './pages/NotFound';
-import Profile from './pages/profile';
-import profileLoader from './pages/profile/loader';
+
+import User from './pages/user';
+import Profile from './pages/user/profile';
+import Posts from './pages/user/posts';
+import Reservations from './pages/user/Reservation';
+import Cancellation from './pages/user/cancellation';
+import EditProfile from './pages/user/profile/EditProfile';
+
+import profileLoader from './pages/user/loader';
 
 function App() {
   const AuthedCertifyTrainer = withAuth(
@@ -62,7 +69,34 @@ function App() {
         },
         { path: 'post', element: <Post /> },
         { path: 'oauth2/regist', element: <SocialSignup /> },
-        { path: 'profile', element: <Profile />, loader: profileLoader },
+        {
+          path: 'user',
+          element: <User />,
+          loader: profileLoader,
+          children: [
+            {
+              index: true,
+              element: <Profile />,
+            },
+            {
+              path: 'edit',
+              element: <EditProfile />,
+              loader: profileLoader,
+            },
+            {
+              path: 'posts',
+              element: <Posts />,
+            },
+            {
+              path: 'reservation',
+              element: <Reservations />,
+            },
+            {
+              path: 'cancellation',
+              element: <Cancellation />,
+            },
+          ],
+        },
       ],
     },
     { path: 'help/password', element: <FindPassword /> },
