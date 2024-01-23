@@ -25,14 +25,7 @@ import Post, { loader as postLoader } from './pages/post';
 
 import CertifyTrainer from './pages/certifyTrainer';
 import SocialSignup from './pages/signup/SocialSignup';
-import Profile from './pages/profile';
-import MyProfile from './pages/profile/MyProfile';
-import MyPost, {
-  loader as myPostLoader,
-  action as myPostAction,
-} from './pages/profile/MyPost';
-import MyBook from './pages/profile/MyBook';
-import MyCancel from './pages/profile/MyCancel';
+
 import EmailAuthentication from './pages/signup/EmailAuthentication';
 import AdditionalInfo from './pages/signup/AdditionalInfo';
 import SignupSuccess from './pages/signup/SignupSuccess';
@@ -61,15 +54,16 @@ function App() {
     '/certify-trainer',
   );
 
-function App() {
   // useEffect(() => {
   //   loadGoogleMapsAPI();
   // }, []);
+
   const router = createBrowserRouter([
     {
       path: '/',
       element: <Root />,
       children: [
+        // 홈
         {
           index: true,
           element: <Home />,
@@ -77,15 +71,18 @@ function App() {
           action: homeAction,
           errorElement: <RootErrorBoundary />,
         },
+        // 게시글 작성
         {
           path: 'newpost',
           element: <NewPost />,
           loader: newPostLoader,
           action: newPostAction,
         },
-
+        // 게시글
         { path: 'post', element: <Post />, loader: postLoader },
+        // 소셜 회원가입
         { path: 'oauth2/regist', element: <SocialSignup /> },
+        // 유저 프로필
         {
           path: 'user',
           element: <User />,
@@ -112,29 +109,24 @@ function App() {
               path: 'cancellation',
               element: <Cancellation />,
             },
-        {
-          path: 'profile',
-          element: <Profile />,
-          children: [
-            { path: 'myprofile', element: <MyProfile /> },
-            {
-              path: 'mypost',
-              element: <MyPost />,
-              action: myPostAction,
-              loader: myPostLoader,
-            },
-            { path: 'book', element: <MyBook /> },
-            { path: 'cancel', element: <MyCancel /> },
           ],
         },
       ],
     },
+
+    // 비밀번호 찾기
     { path: 'help/password', element: <FindPassword /> },
-     { path: 'certify-trainer', element: <AuthedCertifyTrainer /> },
+
+    // 트레이너 인증
+    { path: 'certify-trainer', element: <AuthedCertifyTrainer /> },
+
+    // 로그인
     {
       path: '/login',
       element: <Login />,
     },
+
+    // 회원가입
     {
       path: '/signup',
       element: <Signup />,
@@ -145,6 +137,8 @@ function App() {
         { path: '*', element: <NotFound /> },
       ],
     },
+
+    // 트레이너 생성?
     {
       path: '/trainer',
       element: <TrainerRoot />,
