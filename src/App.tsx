@@ -43,7 +43,23 @@ import CreateTrainer, {
 } from './pages/trainer/create';
 import loadGoogleMapsAPI from './types/loadGoogleMaps';
 
-// import withAuth from './hocs/withAuth';
+import User from './pages/user';
+import Profile from './pages/user/profile';
+import Posts from './pages/user/posts';
+import Reservations from './pages/user/Reservation';
+import Cancellation from './pages/user/cancellation';
+import EditProfile from './pages/user/profile/EditProfile';
+
+import profileLoader from './pages/user/loader';
+
+import withAuth from './hocs/withAuth';
+
+function App() {
+  const AuthedCertifyTrainer = withAuth(
+    CertifyTrainer,
+    true,
+    '/certify-trainer',
+  );
 
 function App() {
   // useEffect(() => {
@@ -70,7 +86,32 @@ function App() {
 
         { path: 'post', element: <Post />, loader: postLoader },
         { path: 'oauth2/regist', element: <SocialSignup /> },
-        // { path: 'oauth2/authorization/google', element: <LoginRedirect /> },
+        {
+          path: 'user',
+          element: <User />,
+          loader: profileLoader,
+          children: [
+            {
+              index: true,
+              element: <Profile />,
+            },
+            {
+              path: 'edit',
+              element: <EditProfile />,
+              loader: profileLoader,
+            },
+            {
+              path: 'posts',
+              element: <Posts />,
+            },
+            {
+              path: 'reservation',
+              element: <Reservations />,
+            },
+            {
+              path: 'cancellation',
+              element: <Cancellation />,
+            },
         {
           path: 'profile',
           element: <Profile />,
@@ -89,7 +130,7 @@ function App() {
       ],
     },
     { path: 'help/password', element: <FindPassword /> },
-    // { path: 'certify-trainer', element: <AuthedCertifyTrainer /> },
+     { path: 'certify-trainer', element: <AuthedCertifyTrainer /> },
     {
       path: '/login',
       element: <Login />,
