@@ -20,7 +20,6 @@ export const loader = (async () => {
   try {
     const response = await getPost();
     if (response && response.status === 200) {
-      console.log(response);
       return response;
     }
     return response;

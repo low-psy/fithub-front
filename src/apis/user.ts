@@ -43,8 +43,6 @@ export const signup = async (props: ISignupProps, profileImg = '') => {
   const blob = new Blob([JSON.stringify(signupDto)], {
     type: 'application/json',
   });
-  console.log(signupDto);
-  console.log(blob);
 
   const formData = new FormData();
   formData.append('signUpDto', blob);

@@ -31,7 +31,6 @@ const MapDisplay: React.FC<MapDisplayProps> = ({
 
   const handleMarkerLoad = () => {
     setMarkerLoaded(true);
-    console.log('loaded!!!!');
   };
 
   const handleMarkerDragEnd = (event: google.maps.MapMouseEvent) => {

@@ -55,8 +55,6 @@ function Signup() {
   // 회원가입 함수
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // const email = localStorage.getItem('certifiedEmail') as string;
-    // console.log(email);
     const { email, password, checkPassword, name, nickname, phone, gender } =
       formValue;
     if (
@@ -81,7 +79,6 @@ function Signup() {
         gender,
       };
       const response = await signup(signupForm);
-      console.log(response);
       if (response && response.status === 200) {
         navigate('/signup/success');
       }

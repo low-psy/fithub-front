@@ -50,7 +50,6 @@ const Comment: React.FunctionComponent<CommentsProps> = ({
   };
 
   const commentPostedHandler = () => {
-    console.log('suceess');
     setInputValue(''); // input value 초기화
   };
 
