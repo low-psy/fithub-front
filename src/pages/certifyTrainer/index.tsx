@@ -140,7 +140,6 @@ function CertifyTrainer() {
           },
         },
       );
-      console.log(response);
     } catch (error) {
       console.log(error);
     }

@@ -11,7 +11,6 @@ const validatePostData = (
     return { message: '내용, 이미지, 해시태그 중 하나는 입력해주셔야 합니다.' };
   }
   if (images.length <= 1 && images.filter((v) => v.name !== '').length === 0) {
-    console.log('error');
     return { message: '이미지는 최소 1개 이상 업로드 해주셔야 합니다.' };
   }
 

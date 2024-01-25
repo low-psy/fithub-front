@@ -59,7 +59,6 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
     liked,
     postLikesCount,
   );
-  console.log(postId);
   const { isBooked, toggleBook } = useBook(postId.toString(), bookmark);
   const date = formatDate(postCreatedDate);
   return (

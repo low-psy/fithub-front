@@ -33,7 +33,6 @@ const TrainerForm: React.FC<TrainerFormProps> = ({
   id,
 }) => {
   const errors = useActionData() as FormErrors;
-  console.log(errors);
   const [showDetailInput, setShowDetailInput] = useState(false);
   const [formattedAddress, setformattedAddress] = useState('');
   const [finalAddress, setFinalAddress] = useState('');

@@ -92,6 +92,5 @@ const Home: React.FC = () => {
 export default Home;
 
 export const action = ({ request }: ActionFunctionArgs) => {
-  console.log(request);
   return null;
 };

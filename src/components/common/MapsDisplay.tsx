@@ -21,7 +21,15 @@ const MapDisplay: React.FC<MapDisplayProps> = ({
     if (location && !markerLoaded) {
       setMarkerLoaded(true);
     }
+<<<<<<< HEAD
   }, [location, markerLoaded]);
+=======
+  }, [markerLoaded]);
+
+  const handleMarkerLoad = () => {
+    setMarkerLoaded(true);
+  };
+>>>>>>> fc9a12ae4b13091e9e11230937acae64239e76c9
 
   const handleMarkerDragEnd = (event: google.maps.MapMouseEvent) => {
     if (event.latLng) {

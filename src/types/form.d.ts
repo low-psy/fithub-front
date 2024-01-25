@@ -21,7 +21,7 @@ export interface IHelperLinkProps {
 export interface ILabelProps {
   htmlFor: string;
   text: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export interface ILogoProps {

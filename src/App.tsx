@@ -25,14 +25,7 @@ import Post, { loader as postLoader } from './pages/post';
 
 import CertifyTrainer from './pages/certifyTrainer';
 import SocialSignup from './pages/signup/SocialSignup';
-import Profile from './pages/profile';
-import MyProfile from './pages/profile/MyProfile';
-import MyPost, {
-  loader as myPostLoader,
-  action as myPostAction,
-} from './pages/profile/MyPost';
-import MyBook from './pages/profile/MyBook';
-import MyCancel from './pages/profile/MyCancel';
+
 import EmailAuthentication from './pages/signup/EmailAuthentication';
 import AdditionalInfo from './pages/signup/AdditionalInfo';
 import SignupSuccess from './pages/signup/SignupSuccess';
@@ -45,15 +38,34 @@ import Detail from './pages/detail';
 import TrainingDetailPage from './pages/detail/detail';
 import useGoogleMapsApiLoader from './hooks/useGoogleMap';
 
-// import withAuth from './hocs/withAuth';
+import User from './pages/user';
+import Profile from './pages/user/profile';
+import Posts from './pages/user/posts';
+import Reservations from './pages/user/Reservation';
+import Cancellation from './pages/user/cancellation';
+import EditProfile from './pages/user/profile/EditProfile';
+
+import profileLoader from './pages/user/loader';
+
+import withAuth from './hocs/withAuth';
 
 function App() {
-  useGoogleMapsApiLoader();
+  const AuthedCertifyTrainer = withAuth(
+    CertifyTrainer,
+    true,
+    '/certify-trainer',
+  );
+
+  // useEffect(() => {
+  //   loadGoogleMapsAPI();
+  // }, []);
+
   const router = createBrowserRouter([
     {
       path: '/',
       element: <Root />,
       children: [
+        // 홈
         {
           index: true,
           element: <Home />,
@@ -61,29 +73,44 @@ function App() {
           action: homeAction,
           errorElement: <RootErrorBoundary />,
         },
+        // 게시글 작성
         {
           path: 'newpost',
           element: <NewPost />,
           loader: newPostLoader,
           action: newPostAction,
         },
-
+        // 게시글
         { path: 'post', element: <Post />, loader: postLoader },
+        // 소셜 회원가입
         { path: 'oauth2/regist', element: <SocialSignup /> },
-        // { path: 'oauth2/authorization/google', element: <LoginRedirect /> },
+        // 유저 프로필
         {
-          path: 'profile',
-          element: <Profile />,
+          path: 'user',
+          element: <User />,
+          loader: profileLoader,
           children: [
-            { path: 'myprofile', element: <MyProfile /> },
             {
-              path: 'mypost',
-              element: <MyPost />,
-              action: myPostAction,
-              loader: myPostLoader,
+              index: true,
+              element: <Profile />,
             },
-            { path: 'book', element: <MyBook /> },
-            { path: 'cancel', element: <MyCancel /> },
+            {
+              path: 'edit',
+              element: <EditProfile />,
+              loader: profileLoader,
+            },
+            {
+              path: 'posts',
+              element: <Posts />,
+            },
+            {
+              path: 'reservation',
+              element: <Reservations />,
+            },
+            {
+              path: 'cancellation',
+              element: <Cancellation />,
+            },
           ],
         },
         {
@@ -92,12 +119,20 @@ function App() {
         },
       ],
     },
+
+    // 비밀번호 찾기
     { path: 'help/password', element: <FindPassword /> },
-    // { path: 'certify-trainer', element: <AuthedCertifyTrainer /> },
+
+    // 트레이너 인증
+    { path: 'certify-trainer', element: <AuthedCertifyTrainer /> },
+
+    // 로그인
     {
       path: '/login',
       element: <Login />,
     },
+
+    // 회원가입
     {
       path: '/signup',
       element: <Signup />,
@@ -108,6 +143,8 @@ function App() {
         { path: '*', element: <NotFound /> },
       ],
     },
+
+    // 트레이너 생성?
     {
       path: '/trainer',
       element: <TrainerRoot />,

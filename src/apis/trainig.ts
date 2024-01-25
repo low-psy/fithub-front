@@ -14,7 +14,6 @@ export const getTraining = async () => {
     '/users/training/all?page=0&size=10',
   );
 
-  console.log(data);
   return { data, status };
 };
 
