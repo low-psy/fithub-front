@@ -1,13 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useAppSelector } from './reduxHooks';
 
-const useMapDisplay = () => {
+interface UseMapDisplayProps {
+  initialAddress: string;
+}
+
+const useMapDisplay = ({ initialAddress }: UseMapDisplayProps) => {
+  const isLoaded = useAppSelector((state) => state.map.isLoaded);
+
   const [finalLocation, setFinalLocation] =
     useState<google.maps.LatLngLiteral | null>(null);
-  const [finalAddress, setFinalAddress] = useState('');
+  const [finalAddress, setFinalAddress] = useState(initialAddress);
 
   const geocodeAddress = (address: string) => {
     const geocoder = new google.maps.Geocoder();
     geocoder.geocode({ address }, (results, status) => {
+      console.log(results);
       if (status === 'OK' && results[0]) {
         const { location } = results[0].geometry;
         setFinalLocation({
@@ -19,6 +27,13 @@ const useMapDisplay = () => {
       }
     });
   };
+
+  useEffect(() => {
+    if (initialAddress && isLoaded) {
+      geocodeAddress(initialAddress);
+      setFinalAddress(initialAddress);
+    }
+  }, [initialAddress, isLoaded]);
 
   const handleDetailLocationInput = (detail: string) => {
     const fullAddress = `${finalAddress}, ${detail}`;
