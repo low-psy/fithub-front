@@ -54,7 +54,6 @@ export default class Training implements TrainingDto {
 }
 
 export function createFakeData(): Training {
-  console.log('execute');
   const trainers: TrainerData[] = Array.from({ length: 10 }, (_, index) => ({
     id: index,
     trainerInfoDto: {
@@ -70,8 +69,6 @@ export function createFakeData(): Training {
     endDate: '2022-12-31',
     closed: false,
   }));
-
-  console.log(trainers);
 
   return new Training({
     totalPages: 10,

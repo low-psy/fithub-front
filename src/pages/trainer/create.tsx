@@ -18,7 +18,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const title = formData.get('title') as string;
   const content = formData.get('content') as string;
   const images = formData.get('image') as string;
-  console.log(images);
   const location = formData.get('finalLocation') as string;
   const quota = formData.get('quota') as string;
   const price = formData.get('price') as string;

@@ -30,7 +30,6 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
   const handlePlaceSelect = (autocomplete: google.maps.places.Autocomplete) => {
     const place = autocomplete.getPlace();
     const formattedAddress = place.formatted_address as string;
-    console.log(place);
     if (place.geometry && place.address_components) {
       const detailedAddress = place.address_components
         .map((ac) => ac.long_name)
