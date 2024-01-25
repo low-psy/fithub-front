@@ -39,11 +39,11 @@ function CurrentProcess({ currentPage }: ISignupProcessProps) {
   };
 
   return (
-    <ol className="mb-4 flex w-full items-center justify-between text-center text-sm font-medium text-gray-500 dark:text-gray-400 sm:text-base">
+    <ol className="mb-4 flex w-full items-center justify-between text-center text-sm font-medium text-gray-500 sm:text-base dark:text-gray-400">
       <li
-        className={`after:border-1 flex items-center after:mx-6 after:hidden after:h-1 after:w-full after:border-b after:border-gray-200 dark:after:border-gray-700 sm:after:inline-block sm:after:content-[''] md:w-full ${firstSection.css}`}
+        className={`after:border-1 flex items-center after:mx-6 after:hidden after:h-1 after:w-full after:border-b after:border-gray-200 sm:after:inline-block sm:after:content-[''] md:w-full dark:after:border-gray-700 ${firstSection.css}`}
       >
-        <span className="flex items-center after:mx-2 after:text-gray-200 after:content-['-'] dark:after:text-gray-500 sm:after:hidden">
+        <span className="flex items-center after:mx-2 after:text-gray-200 after:content-['-'] sm:after:hidden dark:after:text-gray-500">
           {firstSection.svg}
           <p className="whitespace-nowrap">이메일</p>{' '}
           <span className="hidden whitespace-nowrap sm:ms-2 sm:inline-flex">
@@ -52,9 +52,9 @@ function CurrentProcess({ currentPage }: ISignupProcessProps) {
         </span>
       </li>
       <li
-        className={`after:border-1 flex items-center after:mx-6 after:hidden after:h-1 after:w-full after:border-b after:border-gray-200 dark:after:border-gray-700 sm:after:inline-block sm:after:content-[''] md:w-full ${secondSection.css}`}
+        className={`after:border-1 flex items-center after:mx-6 after:hidden after:h-1 after:w-full after:border-b after:border-gray-200 sm:after:inline-block sm:after:content-[''] md:w-full dark:after:border-gray-700 ${secondSection.css}`}
       >
-        <span className="flex items-center after:mx-2 after:text-gray-200 after:content-['-'] dark:after:text-gray-500 sm:after:hidden">
+        <span className="flex items-center after:mx-2 after:text-gray-200 after:content-['-'] sm:after:hidden dark:after:text-gray-500">
           {secondSection.svg}
           <p className="whitespace-nowrap">추가정보</p>{' '}
           <span className="hidden whitespace-nowrap sm:ms-2 sm:inline-flex">
@@ -63,7 +63,7 @@ function CurrentProcess({ currentPage }: ISignupProcessProps) {
         </span>
       </li>
       <li className={`flex  items-center ${lastSection.css}`}>
-        <span className="flex items-center after:mx-2 after:text-gray-200 dark:after:text-gray-500 sm:after:hidden">
+        <span className="flex items-center after:mx-2 after:text-gray-200 sm:after:hidden dark:after:text-gray-500">
           {lastSection.svg}
           <p className="whitespace-nowrap">회원가입 완료</p>{' '}
         </span>
