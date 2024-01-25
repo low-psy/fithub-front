@@ -46,6 +46,7 @@ import EditProfile from './pages/user/profile/EditProfile';
 import profileLoader from './pages/user/loader';
 
 import withAuth from './hocs/withAuth';
+import Help from './pages/help';
 
 function App() {
   const AuthedCertifyTrainer = withAuth(
@@ -113,19 +114,20 @@ function App() {
         },
       ],
     },
-
     // 비밀번호 찾기
-    { path: 'help/password', element: <FindPassword /> },
-
+    // { path: 'help/password', element: <FindPassword /> },
+    {
+      path: '/help',
+      element: <Help />,
+      children: [{ path: 'password', element: <FindPassword /> }],
+    },
     // 트레이너 인증
     { path: 'certify-trainer', element: <AuthedCertifyTrainer /> },
-
     // 로그인
     {
       path: '/login',
       element: <Login />,
     },
-
     // 회원가입
     {
       path: '/signup',
@@ -137,7 +139,6 @@ function App() {
         { path: '*', element: <NotFound /> },
       ],
     },
-
     // 트레이너 생성?
     {
       path: '/trainer',
