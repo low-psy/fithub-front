@@ -20,7 +20,9 @@
   },
   "plugins": ["@typescript-eslint", "react"],
   "rules": {
+    "no-nested-ternary": "off",
     "no-undef": ["error", { "typeof": true }],
+    "no-shadow": "off",
     "react/prop-types": "off",
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
