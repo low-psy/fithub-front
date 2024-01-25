@@ -90,6 +90,7 @@ export const compareCertifyNumber = async (
  * @param name 사용자 이름
  * @param phone 사용자 전화번호
  * @param gender 사용자 성별
+ *  @param providerId 소셜 provider id
  * @returns 일단 response 반환
  */
 export const socialSignup = async (
@@ -97,18 +98,17 @@ export const socialSignup = async (
   name: string,
   phone: string,
   gender: Gender,
+  providerId: string,
 ) => {
   const data = {
+    email,
     name,
     phone,
-    gender,
     bio: 'dummyBio',
+    gender,
+    providerId,
   };
-  const response = defaultAxios.post('/auth/oauth/regist', data, {
-    params: {
-      email,
-    },
-  });
+  const response = defaultAxios.post('/auth/oauth/regist', data);
 
   return response;
 };

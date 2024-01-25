@@ -130,13 +130,20 @@ function SocialSignup() {
   ) => {
     e.preventDefault();
     const { email, name, phone, gender } = formValue;
+    const providerId = searchParams.get('providerId') as string;
 
     // validation
     if (!validateSocialSignupForm(email, name, phone, setErrorMsg)) return;
 
     // send to server
     try {
-      const response = await socialSignup(email, name, phone, gender);
+      const response = await socialSignup(
+        email,
+        name,
+        phone,
+        gender,
+        providerId,
+      );
 
       if (response && response.status === 200) {
         // eslint-disable-next-line no-alert
