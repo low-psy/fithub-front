@@ -17,13 +17,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const errors: FormErrors = {};
   const title = formData.get('title') as string;
   const content = formData.get('content') as string;
-  const images = formData.get('image') as string;
-  console.log(images);
+  const images = formData.getAll('image') as File[];
   const location = formData.get('finalLocation') as string;
   const quota = formData.get('quota') as string;
   const price = formData.get('price') as string;
-  const startDate = formData.get('start_date') as string;
-  const endDate = formData.get('last_date') as string;
+  const startDate = formData.get('startDate') as string;
+  const endDate = formData.get('endDate') as string;
   const startHour = formData.get('start_hour') as string;
   const endHour = formData.get('last_hour') as string;
   const unableDates = formData.getAll('unable_date') as string[];
@@ -69,6 +68,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
   } catch (err) {
     console.log(err);
+    return '/trainer/new/create';
   }
 
   return redirect('/trainer/home');
