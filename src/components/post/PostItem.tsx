@@ -14,6 +14,7 @@ import PostBookmarkIcon from '../../assets/icons/PostBookmarkIcon';
 import Button from '../common/\bButton';
 import useLike from '../../hooks/likeHook';
 import useBook from '../../hooks/bookHook';
+import { formatDate } from '../item/TrainerItem';
 
 interface PostItemProps extends Post {
   postUse?: string;
@@ -60,6 +61,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
   );
   console.log(postId);
   const { isBooked, toggleBook } = useBook(postId.toString(), bookmark);
+  const date = formatDate(postCreatedDate);
   return (
     <article key={postId}>
       <div className="space-y-6  bg-white p-4 shadow-sm drop-shadow-xl ">
@@ -67,7 +69,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
           <ProfileSection
             profileName={postWriter}
             profileImage={postWriterProfileUrl}
-            date={postCreatedDate}
+            date={date}
           />
           {postUse === 'update' && (
             <DropdownMenu onMenuItemClick={handleMenuItemClick} />

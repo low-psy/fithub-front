@@ -41,14 +41,14 @@ import NewTrainer from './pages/trainer/new';
 import CreateTrainer, {
   action as createTrainerAction,
 } from './pages/trainer/create';
-import loadGoogleMapsAPI from './types/loadGoogleMaps';
+import Detail from './pages/detail';
+import TrainingDetailPage from './pages/detail/detail';
+import useGoogleMapsApiLoader from './hooks/useGoogleMap';
 
 // import withAuth from './hocs/withAuth';
 
 function App() {
-  // useEffect(() => {
-  //   loadGoogleMapsAPI();
-  // }, []);
+  useGoogleMapsApiLoader();
   const router = createBrowserRouter([
     {
       path: '/',
@@ -85,6 +85,10 @@ function App() {
             { path: 'book', element: <MyBook /> },
             { path: 'cancel', element: <MyCancel /> },
           ],
+        },
+        {
+          path: 'detail',
+          children: [{ path: ':trainingId', element: <Detail /> }],
         },
       ],
     },

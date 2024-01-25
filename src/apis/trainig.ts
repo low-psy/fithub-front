@@ -1,6 +1,9 @@
+import { AxiosResponse } from 'axios';
 import { TrainingDto } from '../types/training';
 import { createFakeData } from '../types/trainingClass';
 import { authAxios, defaultAxios } from './axios';
+import { TrainingInfoDto } from '../types/swagger/model/trainingInfoDto';
+import { ApiResponse } from '../types/common';
 
 /**
  * [POST] 트레이닝 조회
@@ -39,10 +42,12 @@ export const getNextPageData = async (currentPage: number) => {
   };
 };
 
+type FormDataEntryValue = string | File;
+
 export const createTraining = async (
   title: string,
   content: string,
-  images: string,
+  images: FormDataEntryValue[],
   location: string,
   quota: string,
   price: string,
@@ -53,7 +58,9 @@ export const createTraining = async (
   unableDates: string[],
 ) => {
   const formData = new FormData();
-  formData.append('images', images);
+  images.forEach((image) => {
+    formData.append(`images`, image);
+  });
   formData.append('title', title);
   formData.append('content', content);
   formData.append('location', location);
@@ -74,4 +81,12 @@ export const createTraining = async (
     },
   });
   return response;
+};
+
+export const getDetailTraining = async (
+  trainingId: number,
+): Promise<AxiosResponse<ApiResponse<TrainingInfoDto>>> => {
+  return authAxios.get<ApiResponse<TrainingInfoDto>>(
+    `/users/training?trainingId=${trainingId}`,
+  );
 };

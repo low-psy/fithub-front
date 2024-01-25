@@ -1,7 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { TrainingSectionProps } from '../../types/training';
 
-function formatDate(dateString: string) {
+export function formatDate(dateString: string) {
   const date = new Date(dateString);
   const month = date.getMonth() + 1; // getMonth()는 0부터 시작하므로 1을 더해줍니다.
   const day = date.getDate();
@@ -15,7 +16,7 @@ const MainItem: React.FunctionComponent<TrainingSectionProps> = ({
   const startDate = formatDate(trainerInfoDto.startDate);
   const endDate = formatDate(trainerInfoDto.endDate);
   return (
-    <div className=" space-y-4 sm:w-auto">
+    <Link to={`/detail/${trainerInfoDto.id}`} className=" space-y-4 sm:w-auto">
       <div className="aspect-square">
         <img
           src={trainerInfoDto.trainerInfoDto.trainerProfileImg}
@@ -38,7 +39,7 @@ const MainItem: React.FunctionComponent<TrainingSectionProps> = ({
         </div>
         <div>{`₩ ${trainerInfoDto.price}원`}</div>
       </div>
-    </div>
+    </Link>
   );
 };
 

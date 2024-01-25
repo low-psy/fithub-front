@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, FormMethod, useActionData } from 'react-router-dom';
+import { start } from 'repl';
 import PostInput from '../post/FormText';
 import InputComponent from '../post/FormInput';
 import TextareaComponent from '../post/FormTextarea';
@@ -9,6 +10,10 @@ import LocationSearchInput from '../common/LocationSearchInput';
 import DetailLocationInput from '../common/DetailLocation';
 import MultipleDateInput from '../common/MultipleDate';
 import { FormErrors } from '../../types/common';
+import FormMultipleImage from '../post/FormMultipleImage';
+import Calendar from '../common/Calendar';
+import { useAppSelector } from '../../hooks/reduxHooks';
+import { SelectedDates } from '../../redux/initialStates/initialStateTypes';
 
 interface TrainerFormProps {
   content?: string;
@@ -32,7 +37,6 @@ const TrainerForm: React.FC<TrainerFormProps> = ({
   const [showDetailInput, setShowDetailInput] = useState(false);
   const [formattedAddress, setformattedAddress] = useState('');
   const [finalAddress, setFinalAddress] = useState('');
-  console.log(finalAddress);
 
   const handleLocationSelect = (address: string) => {
     setformattedAddress(address);
@@ -57,6 +61,18 @@ const TrainerForm: React.FC<TrainerFormProps> = ({
     const fullAddress = `${formattedAddress}, ${detail}`;
     setFinalAddress(fullAddress);
   };
+  const [selectedDates, setSelectedDates] = useState<SelectedDates>({
+    startDate: null,
+    endDate: null,
+  });
+  console.log(selectedDates);
+  const { startDate } = selectedDates;
+  let { endDate } = selectedDates;
+  if (selectedDates.startDate) {
+    if (!selectedDates.endDate) {
+      endDate = startDate;
+    }
+  }
 
   return (
     <Form
@@ -99,9 +115,9 @@ const TrainerForm: React.FC<TrainerFormProps> = ({
         </PostInput>
       </div>
       <div>
-        <FormSingleImage value={images}>
-          트레이너 프로필 이미지(1개만 선택)
-        </FormSingleImage>
+        <FormMultipleImage multiple value={images}>
+          이미지 선택
+        </FormMultipleImage>
       </div>
       <div className="space-y-4">
         <PostInput
@@ -155,29 +171,28 @@ const TrainerForm: React.FC<TrainerFormProps> = ({
       </div>
       <div>
         <PostInput
-          spanText="시작일을 입력하세요"
-          htmlFor="start_date"
+          spanText="트레이닝 기간을 입력하세요"
+          htmlFor="date"
           titleText="트레이닝 기간"
           error={errors?.dateTime}
         >
-          <InputComponent
-            placeholder="시작일을 입력하세요"
-            name="start_date"
-            type="date"
-            id="start_date"
-          />
-        </PostInput>
-        <PostInput
-          spanText="마감일을 입력하세요"
-          htmlFor="last_date"
-          titleText=""
-        >
-          <InputComponent
-            placeholder="마감일을 입력하세요"
-            name="last_date"
-            type="date"
-            id="last_date"
-          />
+          <div className="w-full md:w-[500px]">
+            <Calendar
+              onSelectedDates={(selectedDates) =>
+                setSelectedDates(selectedDates)
+              }
+            />
+            <input
+              name="startDate"
+              value={startDate as string}
+              className="hidden"
+            />
+            <input
+              name="endDate"
+              value={endDate as string}
+              className="hidden"
+            />
+          </div>
         </PostInput>
       </div>
       <div>
