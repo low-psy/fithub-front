@@ -68,8 +68,9 @@ export const sendCertifyNumber = async (email: string) => {
 /**
  * [POST] 이메일로 받은 인증번호를 서버에 생성된 인증번호와 비교 요청
  * number를 인자로 받아 서버로 전송
- * @param number 이메일로 받은 인증번호
- * @returns 일단 response 반환
+ * @param certificationNumber 이메일로 받은 인증번호
+ * @param email 사용자 이메일
+ * @returns
  */
 export const compareCertifyNumber = async (
   certificationNumber: string,
@@ -91,7 +92,7 @@ export const compareCertifyNumber = async (
  * @param phone 사용자 전화번호
  * @param gender 사용자 성별
  *  @param providerId 소셜 provider id
- * @returns 일단 response 반환
+ * @returns
  */
 export const socialSignup = async (
   email: string,
@@ -109,6 +110,17 @@ export const socialSignup = async (
     providerId,
   };
   const response = defaultAxios.post('/auth/oauth/regist', data);
+
+  return response;
+};
+
+/**
+ * [POST] 임시 비밀번호 발급
+ * @param email 사용자 이메일
+ * @returns
+ */
+export const getTempPassword = (email: string) => {
+  const response = defaultAxios.post('/auth/email/send/temporary-password');
 
   return response;
 };

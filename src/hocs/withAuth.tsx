@@ -19,7 +19,6 @@ const withAuth = (
 
     useEffect(() => {
       if (option === true && !isAccessToken) {
-        // eslint-disable-next-line no-alert
         alert('로그인이 필요합니다.\n로그인 페이지로 이동합니다.');
         navigate('/login', {
           state: {
@@ -28,7 +27,6 @@ const withAuth = (
         });
       }
       if (option === false && isAccessToken) {
-        // eslint-disable-next-line no-alert
         alert('비정상적인 접근입니다,\n이전 페이지로 이동합니다.');
         navigate(-1);
       }
