@@ -30,7 +30,7 @@ const Reservation = ({ closed }: IReservationProps) => {
         <div className="flex flex-col gap-1">
           {testContent.map((item) => {
             return (
-              <p className="text-sm">
+              <p className="text-sm" key={item.id}>
                 <span className="text-gray-600">{item.title}: </span>
                 {item.content}
               </p>

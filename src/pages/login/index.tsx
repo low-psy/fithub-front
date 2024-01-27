@@ -65,7 +65,7 @@ function Login() {
     const { email, password } = formValue;
 
     // validation
-    if (!validateLoginForm(email, password, setErrorMsg)) return;
+    // if (!validateLoginForm(email, password, setErrorMsg)) return;
 
     // send to server
     try {

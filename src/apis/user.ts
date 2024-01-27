@@ -115,12 +115,14 @@ export const socialSignup = async (
 };
 
 /**
- * [POST] 임시 비밀번호 발급
+ * [PATCH] 임시 비밀번호 발급
  * @param email 사용자 이메일
  * @returns
  */
 export const getTempPassword = (email: string) => {
-  const response = defaultAxios.post('/auth/email/send/temporary-password');
+  const response = defaultAxios.patch('/auth/email/send/temporary-password', {
+    to: email,
+  });
 
   return response;
 };
