@@ -20,6 +20,7 @@
   },
   "plugins": ["@typescript-eslint", "react"],
   "rules": {
+    "dot-notation": "off",
     "no-undef": ["error", { "typeof": true }],
     "react/prop-types": "off",
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
