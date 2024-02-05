@@ -11,6 +11,7 @@
  */
 
 export interface ProfileDto { 
+    name?: string;
     nickname?: string;
     email?: string;
     phone?: string;

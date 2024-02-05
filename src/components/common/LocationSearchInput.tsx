@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 // Google Places API 로더 및 타입 임포트
 import { Autocomplete } from '@react-google-maps/api';
+import { useAppSelector } from '../../hooks/reduxHooks';
 
 interface LocationSearchInputProps {
   onLocationSelect: (address: string) => void;
@@ -31,6 +32,10 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
       event.preventDefault();
     }
   };
+
+  const isLoaded = useAppSelector((state) => state.map.isLoaded);
+
+  if (!isLoaded) return <div>Loading...</div>;
 
   return (
     <Autocomplete

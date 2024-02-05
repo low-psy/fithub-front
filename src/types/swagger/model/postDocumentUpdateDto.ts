@@ -15,5 +15,8 @@
  */
 export interface PostDocumentUpdateDto { 
     image?: Blob;
+    /**
+     * 수정되지 않는 이미지 url
+     */
     awsS3Url?: string;
 }

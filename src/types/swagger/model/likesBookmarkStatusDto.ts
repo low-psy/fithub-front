@@ -11,7 +11,16 @@
  */
 
 export interface LikesBookmarkStatusDto { 
+    /**
+     * 게시글 id
+     */
     postId?: number;
+    /**
+     * 로그인한 사용자의 게시글 좋아요 여부 확인
+     */
     likesStatus?: boolean;
+    /**
+     * 로그인한 사용자의 게시글 북마크 여부 확인
+     */
     bookmarkStatus?: boolean;
 }

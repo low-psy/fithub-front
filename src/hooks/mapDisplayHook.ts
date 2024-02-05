@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAppSelector } from './reduxHooks';
 
 interface UseMapDisplayProps {
-  initialAddress: string;
+  initialAddress?: string;
 }
 
 const useMapDisplay = ({ initialAddress }: UseMapDisplayProps) => {

@@ -9,9 +9,8 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { ProfileDto } from './profileDto';
+import { ProfileUpdateDto } from './profileUpdateDto';
 
 export interface ProfileUpdateBody { 
-    image?: Blob;
-    profileDto?: ProfileDto;
+    profileUpdateDto: ProfileUpdateDto;
 }

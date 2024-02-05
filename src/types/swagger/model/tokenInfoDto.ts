@@ -13,6 +13,4 @@
 export interface TokenInfoDto { 
     grantType?: string;
     accessToken?: string;
-    refreshToken?: string;
-    refreshTokenExpirationTime?: number;
 }

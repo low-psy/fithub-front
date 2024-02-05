@@ -1,53 +1,40 @@
 import { LoaderFunction } from 'react-router-dom';
+import { TrainingOutlineDto } from './swagger/model/trainingOutlineDto';
 
 export type LoaderData<TLoaderFn extends LoaderFunction> =
   Awaited<ReturnType<TLoaderFn>> extends Response | infer D ? D : never;
 
-export interface TrainerData {
-  id: number;
-  trainerInfoDto: {
-    trainerId: number;
-    name: string;
-    trainerProfileImg: string;
-    location: string;
-  };
-  title: string;
-  price: number;
-  location: string;
-  startDate: string;
-  endDate: string;
-  closed: boolean;
-}
+export class PaymentRequest {
+  clientId: string;
 
-export interface TrainingDto {
-  totalPages: number;
-  totalElements: number;
-  size: number;
-  content: TrainerData[];
-  number: number;
-  sort: {
-    empty: boolean;
-    sorted: boolean;
-    unsorted: boolean;
-  };
-  numberOfElements: number;
-  pageable: {
-    offset: number;
-    sort: {
-      empty: boolean;
-      sorted: boolean;
-      unsorted: boolean;
+  method: string;
+
+  orderId: string;
+
+  amount: number;
+
+  goodsName: string;
+
+  returnUrl: string;
+
+  fnError: (result: { errorMsg: string }) => void;
+
+  constructor(trainingInfo: {
+    id: string;
+    price: number;
+    title: string;
+    method: string;
+  }) {
+    this.clientId = 'S2_cebfac3f527448e988e6e872c9c59ad6';
+    this.method = trainingInfo.method;
+    this.orderId = trainingInfo.id;
+    this.amount = trainingInfo.price;
+    this.goodsName = trainingInfo.title;
+    this.returnUrl = `http://localhost:3000/detail/${trainingInfo.id}/payment`;
+    this.fnError = function (result: { errorMsg: string }) {
+      alert(`개발자확인용: ${result.errorMsg}`);
     };
-    pageNumber: number;
-    pageSize: number;
-    paged: boolean;
-    unpaged: boolean;
-  };
-  first: boolean;
-  last: boolean;
-  empty: boolean;
-}
+  }
 
-export interface TrainingSectionProps {
-  trainerInfoDto: TrainerData;
+  // 필요한 경우 추가 메서드를 여기에 정의할 수 있습니다.
 }

@@ -25,6 +25,10 @@ export interface PostInfoDto {
      */
     createdDate?: Date;
     /**
+     * 게시글 수정일
+     */
+    modifiedDate?: Date;
+    /**
      * 게시글 내용
      */
     content?: string;
@@ -40,4 +44,8 @@ export interface PostInfoDto {
      * 게시글 첨부 이미지 url 리스트
      */
     documentUrls?: Array<string>;
+    /**
+     * 게시글 댓글 수
+     */
+    postCommentsCount?: number;
 }

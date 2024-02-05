@@ -11,7 +11,7 @@
  */
 
 /**
- * 회원의 트레이닝 예약 정보 확인
+ * 회원의 트레이닝 예약, 진행,종료 정보 확인
  */
 export interface UsersReserveInfoDto { 
     /**
@@ -27,19 +27,11 @@ export interface UsersReserveInfoDto {
      */
     title?: string;
     /**
-     * 트레이닝을 담당하는 트레이너 이름
-     */
-    trainerName?: string;
-    /**
      * 예약한 트레이닝 날짜, 시간
-     */
-    trainingDateTime?: Date;
-    /**
-     * 트레이닝을 예약한 날짜, 시간
      */
     reserveDateTime?: Date;
     /**
-     * 트레이닝 진행 상황(진행 전, 진행중, 진행완료, 취소)
+     * 트레이닝 진행 상황(진행 전, 진행중, 진행완료)
      */
     status?: UsersReserveInfoDto.StatusEnum;
     /**
@@ -50,6 +42,10 @@ export interface UsersReserveInfoDto {
      * 트레이닝 구매 번호
      */
     merchantUid?: string;
+    /**
+     * 트레이닝 결제(예약)한 날짜, 시간
+     */
+    paymentDateTime?: Date;
 }
 export namespace UsersReserveInfoDto {
     export type StatusEnum = 'BEFORE' | 'START' | 'COMPLETE' | 'CANCEL' | 'NOSHOW';

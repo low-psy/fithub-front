@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
 import { Form, FormMethod, useActionData } from 'react-router-dom';
-import { start } from 'repl';
 import PostInput from '../post/FormText';
 import InputComponent from '../post/FormInput';
 import TextareaComponent from '../post/FormTextarea';
 import SubmitButton from '../post/FormSubmitButton';
-import FormSingleImage from '../post/FormSingleImage';
 import LocationSearchInput from '../common/LocationSearchInput';
 import DetailLocationInput from '../common/DetailLocation';
 import MultipleDateInput from '../common/MultipleDate';
 import { FormErrors } from '../../types/common';
 import FormMultipleImage from '../post/FormMultipleImage';
 import Calendar from '../common/Calendar';
-import { useAppSelector } from '../../hooks/reduxHooks';
 import { SelectedDates } from '../../redux/initialStates/initialStateTypes';
 
 interface TrainerFormProps {
@@ -52,10 +49,6 @@ const TrainerForm: React.FC<TrainerFormProps> = ({
     action = '/trainer/update';
   }
 
-  const refreshPage = () => {
-    window.location.reload();
-  };
-
   const handleDetailLocationInput = (detail: string) => {
     const fullAddress = `${formattedAddress}, ${detail}`;
     setFinalAddress(fullAddress);
@@ -64,7 +57,6 @@ const TrainerForm: React.FC<TrainerFormProps> = ({
     startDate: null,
     endDate: null,
   });
-  console.log(selectedDates);
   const { startDate } = selectedDates;
   let { endDate } = selectedDates;
   if (selectedDates.startDate) {

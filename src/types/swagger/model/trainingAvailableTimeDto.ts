@@ -12,7 +12,7 @@
 import { LocalTime } from './localTime';
 
 export interface TrainingAvailableTimeDto {
-  id: number;
-  time: LocalTime;
-  enabled: boolean;
+  id?: number;
+  time?: LocalTime;
+  enabled?: boolean;
 }

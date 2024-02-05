@@ -5,10 +5,14 @@ const ProfileSection: React.FC<{
   profileImage?: string | undefined;
   date?: string | undefined;
   location?: string;
-}> = ({ profileName, profileImage, date, location }) => {
+  profileWidth?: string;
+}> = ({ profileName, profileImage, date, location, profileWidth }) => {
   return (
-    <div className="flex gap-4 ">
-      <div className="aspect-square w-12 overflow-hidden rounded-full border-2 border-gray-100">
+    <div className="flex items-center gap-4">
+      <div
+        className="aspect-square w-12  overflow-hidden rounded-full border-[1px] border-gray-300"
+        style={{ width: profileWidth }}
+      >
         <img src={profileImage} alt="프로필 이미지" />
       </div>
       <div className="space-y-1">

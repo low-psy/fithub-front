@@ -12,8 +12,8 @@
 import { TrainingAvailableTimeDto } from './trainingAvailableTimeDto';
 
 export interface TrainingAvailableDateDto {
-  id: number;
-  date: string;
-  enabled: boolean;
-  availableTimes: Array<TrainingAvailableTimeDto>;
+  id?: number;
+  date?: string;
+  enabled?: boolean;
+  availableTimes?: Array<TrainingAvailableTimeDto>;
 }

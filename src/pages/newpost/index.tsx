@@ -5,16 +5,17 @@ import PostForm from '../../components/post/PostForm';
 // import store from '../../redux/store';
 import { createPost } from '../../apis/post';
 import validatePostData from '../../validation/postValidation';
+import store from '../../redux/store';
 
 function NewPost() {
   return <PostForm useCase="create" />;
 }
 
 export const loader = async () => {
-  // const { accessToken } = store.getState().token;
-  // if (accessToken === 'initial access token') {
-  //   return redirect('/login');
-  // }
+  const { accessToken } = store.getState().token;
+  if (accessToken === 'initial access token') {
+    return redirect('/login');
+  }
   return null;
 };
 

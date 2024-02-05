@@ -9,6 +9,7 @@ const useGoogleMapsApiLoader = () => {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_KEY as string,
     libraries: ['maps', 'places'],
+    language: 'ko',
   });
   useEffect(() => {
     dispatch(SET_MAP_LOADED(isLoaded));

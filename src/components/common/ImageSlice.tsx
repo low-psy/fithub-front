@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 interface ImageSliderProps {
-  postImages: string[];
+  postImages: (string | undefined)[];
   imageSize?: string;
 }
 
@@ -10,6 +10,9 @@ const ImageSlider: React.FC<ImageSliderProps> = ({
   imageSize = '468',
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+  if (!postImages) {
+    return <div>no-images</div>;
+  }
 
   const handlePrevClick = () => {
     setCurrentIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : 0));
@@ -38,7 +41,7 @@ const ImageSlider: React.FC<ImageSliderProps> = ({
   }
 
   return (
-    <div className="flex items-center  justify-center bg-yellow-500">
+    <div className="flex h-full items-center  justify-center ">
       <button type="button" onClick={handlePrevClick}>
         <span
           className={`material-symbols-outlined relative  z-10 -mr-14 rounded-full bg-white  ${bBtnOpacity}`}
@@ -46,9 +49,9 @@ const ImageSlider: React.FC<ImageSliderProps> = ({
           navigate_before
         </span>
       </button>
-      <div className="flex max-h-[500px] w-full overflow-hidden bg-black lg:aspect-auto lg:h-[400px]">
+      <div className="flex h-full w-full overflow-hidden bg-black ">
         <div
-          className="flex w-full items-center bg-slate-400   transition-transform duration-1000 ease-in-out"
+          className="flex w-full items-center   transition-transform duration-1000 ease-in-out"
           style={{
             transform: `translateX(-${currentIndex * 100}%)`,
           }}
@@ -58,16 +61,12 @@ const ImageSlider: React.FC<ImageSliderProps> = ({
               key={imageUrl as string}
               src={imageUrl as string}
               alt={`게시물 이미지 ${index + 1}`}
-              className="h-full w-full shrink-0 object-cover"
+              className="max-h-full w-full shrink-0 object-cover"
             />
           ))}
         </div>
       </div>
-      <button
-        type="button"
-        onClick={handleNextClick}
-        className="z-20 bg-slate-500"
-      >
+      <button type="button" onClick={handleNextClick} className="z-20 ">
         <span
           className={`material-symbols-outlined relative z-20 -ml-14 rounded-full bg-white p-0.5 ${nBtnOpacity}`}
         >

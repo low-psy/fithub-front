@@ -11,11 +11,15 @@
  */
 
 /**
- * 트레이닝 예약 결제 검증을 위한 dto
+ * 트레이닝 예약 결제 금액 검증을 위한 dto
  */
 export interface PaymentReqDto {
   /**
-   * 결제하는 트레이닝 id
+   * 예약 id
+   */
+  reservationId: number;
+  /**
+   * 예약한 트레이닝 id
    */
   trainingId: number;
   /**
@@ -34,6 +38,4 @@ export interface PaymentReqDto {
    * 주문 번호
    */
   merchantUid: string;
-  amount: number;
-  reserveDateTime: Date;
 }
