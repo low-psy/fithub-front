@@ -1,10 +1,16 @@
+import axios from 'axios';
 import React, { useState } from 'react';
+import { changePassword } from '../../../apis/user';
 
 interface IChangePasswordProps {
   resetActivatedTarget: () => void;
+  email: string;
 }
 
-const ChangePassword = ({ resetActivatedTarget }: IChangePasswordProps) => {
+const ChangePassword = ({
+  resetActivatedTarget,
+  email,
+}: IChangePasswordProps) => {
   const [pw, setPw] = useState<string>('');
   const [pwCheck, setPwCheck] = useState<string>('');
 
@@ -16,6 +22,22 @@ const ChangePassword = ({ resetActivatedTarget }: IChangePasswordProps) => {
     setPwCheck(e.target.value);
   };
 
+  const handleChangePassword = async () => {
+    // pw, pwCheck 검사하는 로직 들어가야함
+
+    try {
+      const response = await changePassword(email, pw);
+      if (response && response.status === 200) {
+        alert('비밀번호 변경이 완료되었습니다.');
+        window.location.href = '/user';
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        alert(error.message);
+      }
+    }
+  };
+
   return (
     <div className="mt-4">
       <p className="mb-2 font-semibold">비밀번호 변경</p>
@@ -24,6 +46,7 @@ const ChangePassword = ({ resetActivatedTarget }: IChangePasswordProps) => {
           <p className="text-sm">새 비밀번호</p>
           <input
             className="h-10 w-full max-w-md rounded border border-gray-500 px-4 py-1"
+            type="password"
             value={pw}
             placeholder="새 비밀번호를 입력해주세요."
             onChange={handlePw}
@@ -33,6 +56,7 @@ const ChangePassword = ({ resetActivatedTarget }: IChangePasswordProps) => {
           <p className="text-sm">새 비밀번호 확인</p>
           <input
             className="h-10 w-full max-w-md rounded border border-gray-500 px-4 py-1"
+            type="password"
             value={pwCheck}
             placeholder="새 비밀번호를 한번 더 입력해주세요."
             onChange={handlePwCheck}
@@ -44,6 +68,7 @@ const ChangePassword = ({ resetActivatedTarget }: IChangePasswordProps) => {
         <button
           type="button"
           className="h-12 w-32 rounded bg-main px-4 py-1 font-bold text-white hover:bg-[#8766ff]"
+          onClick={handleChangePassword}
         >
           변경하기
         </button>
