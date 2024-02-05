@@ -7,7 +7,7 @@ import ProfileIcon from '../../assets/icons/ProfileIcon';
 
 const NavMenu = () => {
   const accessToken = useAppSelector((store) => store.token.accessToken);
-  let profileTo = '/user';
+  let profileTo = '/user/profile';
 
   let isCreateTrainer = true;
   const location = useLocation();
