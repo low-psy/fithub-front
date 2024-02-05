@@ -71,9 +71,6 @@ function Login() {
     try {
       const response = await defaultLogin(email, password);
       if (response && response.status === 200) {
-        // local storage에 access token 저장
-        localStorage.setItem('accessToken', response.data.accessToken);
-
         dispatch(SET_TOKEN(response.data.accessToken));
         navigate(redirectPath || '/');
       }
