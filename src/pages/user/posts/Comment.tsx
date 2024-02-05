@@ -9,7 +9,7 @@ const Comment = () => {
   };
 
   return (
-    <div className="p-2">
+    <div className="p-2 pr-0">
       <div className="flex w-full justify-between">
         {/* 댓글 정보 */}
         <div className="flex flex-row items-center ">
