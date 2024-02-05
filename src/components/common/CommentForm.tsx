@@ -1,53 +1,78 @@
-import React, { FormEvent, RefObject } from 'react';
-import { postComment } from '../../apis/post';
+import React, { useEffect, useRef, useState } from 'react';
+import { useFetcher } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useAppSelector } from '../../hooks/reduxHooks';
+import { SET_REPLY_TO } from '../../redux/slices/commentSlice';
 
 interface CommentFormProps {
-  parentCommentId: number;
-  postId: number;
-  inputValue: string;
-  inputRef: RefObject<HTMLInputElement>;
-  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onCommentPosted: () => void;
+  parentCommentId: number | undefined;
+  postId: number | undefined;
 }
 
 const CommentForm: React.FC<CommentFormProps> = ({
   postId,
-  inputValue,
-  onInputChange,
-  onCommentPosted,
-  inputRef,
   parentCommentId,
 }) => {
-  const submitHandler = async (event: FormEvent) => {
-    event.preventDefault();
-    if (!inputValue.trim()) return; // 빈 입력은 무시
+  const cmt = useAppSelector((state) => state.comment);
+  const dispatch = useDispatch();
+  const [replyTo, setReplyTo] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string | undefined>('');
+  const fetcher = useFetcher();
+  const inputRef = useRef<HTMLInputElement>(null);
 
-    try {
-      const response = await postComment(inputValue, postId, parentCommentId); // postComment API 호출
-      if (response.status === 200) {
-        onCommentPosted(); // 콜백 함수 실행
-      } else {
-        // 오류 처리
-        console.error('Failed to post comment');
-      }
-    } catch (error) {
-      console.error('Error posting comment', error);
+  useEffect(() => {
+    setReplyTo(cmt.replyTo);
+    if (fetcher.data?.comment) {
+      setInputValue(''); // input value 초기화
     }
+  }, [fetcher.data, cmt.replyTo]);
+
+  const handleChange = () => {
+    setInputValue(inputRef.current?.value);
+  };
+
+  const replytToClick = () => {
+    dispatch(SET_REPLY_TO({ replyId: null, replyTo: '' }));
   };
 
   return (
-    <form onSubmit={submitHandler} className="flex ">
+    <fetcher.Form className="flex items-center" action="/post" method="post">
+      <div className="flex grow rounded-md  p-2 pl-0">
+        <div
+          className="shrink-0 cursor-pointer rounded-md bg-slate-400"
+          style={{
+            padding: replyTo ? '8px' : '0px',
+            marginRight: replyTo ? '8px' : '0px',
+          }}
+          onClick={replytToClick}
+          role="presentation"
+        >
+          {replyTo}
+        </div>
+        <input
+          name="content"
+          onChange={handleChange}
+          value={inputValue}
+          ref={inputRef}
+          className=" inline-block  w-full py-2 outline-none"
+          placeholder="댓글을 입력하세요..."
+        />
+      </div>
+      <input name="postId" className="hidden" value={postId} />
       <input
-        ref={inputRef}
-        value={inputValue}
-        placeholder="댓글 달기..."
-        onChange={onInputChange}
-        className="basis-10/12 rounded-md  outline-none"
+        name="parentCommentId"
+        className="hidden"
+        value={parentCommentId}
       />
-      <button type="submit" className=" grow rounded-full bg-sub px-4 py-2">
-        제출
-      </button>
-    </form>
+      <div>
+        <button
+          type="submit"
+          className="block w-[80px] rounded-full bg-sub py-2 "
+        >
+          제출
+        </button>
+      </div>
+    </fetcher.Form>
   );
 };
 

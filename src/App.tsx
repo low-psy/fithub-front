@@ -21,7 +21,7 @@ import Signup from './pages/signup';
 import TrainerHome from './pages/trainer';
 import TrainerRoot from './pages/TrainerRoot';
 import RootErrorBoundary from './components/common/ErrorBoundary';
-import Post, { loader as postLoader } from './pages/post';
+import Post, { action as postAction, loader as postLoader } from './pages/post';
 
 import CertifyTrainer from './pages/certifyTrainer';
 import SocialSignup from './pages/signup/SocialSignup';
@@ -34,7 +34,8 @@ import NewTrainer from './pages/trainer/new';
 import CreateTrainer, {
   action as createTrainerAction,
 } from './pages/trainer/create';
-import loadGoogleMapsAPI from './types/loadGoogleMaps';
+import Detail, { loader as detailedTrainingLoader } from './pages/detail';
+import useGoogleMapsApiLoader from './hooks/useGoogleMap';
 
 import User from './pages/user';
 import Profile from './pages/user/profile';
@@ -46,6 +47,10 @@ import EditProfile from './pages/user/profile/EditProfile';
 import profileLoader from './pages/user/loader';
 
 import withAuth from './hocs/withAuth';
+import DetailPost, {
+  loader as detailPostLoader,
+} from './pages/post/detailPost';
+import TrainingCancel from './pages/home/Cancel';
 import Help from './pages/help';
 
 function App() {
@@ -55,9 +60,7 @@ function App() {
     '/certify-trainer',
   );
 
-  // useEffect(() => {
-  //   loadGoogleMapsAPI();
-  // }, []);
+  useGoogleMapsApiLoader();
 
   const router = createBrowserRouter([
     {
@@ -80,7 +83,19 @@ function App() {
           action: newPostAction,
         },
         // 게시글
-        { path: 'post', element: <Post />, loader: postLoader },
+        {
+          path: 'post',
+          element: <Post />,
+          loader: postLoader,
+          action: postAction,
+          children: [
+            {
+              path: ':postId',
+              element: <DetailPost />,
+              loader: detailPostLoader,
+            },
+          ],
+        },
         // 소셜 회원가입
         { path: 'oauth2/regist', element: <SocialSignup /> },
         // 유저 프로필
@@ -111,6 +126,20 @@ function App() {
               element: <Cancellation />,
             },
           ],
+        },
+        {
+          path: 'detail',
+          children: [
+            {
+              path: ':trainingId',
+              element: <Detail />,
+              loader: detailedTrainingLoader,
+            },
+          ],
+        },
+        {
+          path: '/training/cancel',
+          element: <TrainingCancel />,
         },
       ],
     },

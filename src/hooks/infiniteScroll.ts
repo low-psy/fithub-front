@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 
 interface UseInfiniteScrollProps<T> {
   initialData: T[];
-  fetchData: (page: number) => Promise<T[]>;
+  fetchData: (page: number) => Promise<T[] | []>;
 }
 
 const useInfiniteScroll = <T>({

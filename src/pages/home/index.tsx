@@ -2,9 +2,9 @@ import React from 'react';
 import {
   ActionFunctionArgs,
   LoaderFunction,
-  json,
   useLoaderData,
 } from 'react-router-dom';
+import { AxiosError, AxiosResponse } from 'axios';
 import { getTraining, getNextPageData } from '../../apis/trainig';
 import FilterSection from '../../components/item/LinkItemWithBg';
 import lookupFilter from '../../assets/lookupFilter.png';
@@ -12,38 +12,39 @@ import mapFilter from '../../assets/mapFilter.png';
 import newpostFilter from '../../assets/newpostFilter.png';
 import FilterIcon from '../../assets/icons/filterIcon';
 import MainSection from '../../components/item/TrainerItem';
-import { LoaderData, TrainerData } from '../../types/training';
-import useInfiniteScroll from '../../hooks/infiniteScroll';
-import { createFakeData } from '../../types/trainingClass';
+// import useInfiniteScroll from '../../hooks/infiniteScroll';
+// import { createFakeData } from '../../types/trainingClass';
+// import { TrainingOutlineDto } from '../../types/swagger/model/trainingOutlineDto';
+import { PageTrainingOutlineDto } from '../../types/swagger/model/pageTrainingOutlineDto';
 
-export const loader = (async () => {
-  const { data, status } = await getTraining();
-
-  if (status === 201) {
-    return null;
+export const loader: LoaderFunction = async () => {
+  try {
+    const response = await getTraining();
+    return response; // AxiosResponse 객체 전체를 반환
+  } catch (err) {
+    const error = err as unknown as AxiosError;
+    throw error;
   }
-
-  if (status === 404) {
-    throw json({ message: '홈페이지 로딩에 실패했습니다' }, { status: 404 });
-  }
-
-  return data;
-}) satisfies LoaderFunction;
+};
 
 const Home: React.FC = () => {
-  let trainerInfoDto = useLoaderData() as LoaderData<typeof loader>;
-  trainerInfoDto = createFakeData();
+  const response = useLoaderData() as AxiosResponse<PageTrainingOutlineDto>;
+  // let trainerInfoDto = response.data;
 
-  const { data, loaderIndicator } = useInfiniteScroll<TrainerData>({
-    initialData: trainerInfoDto?.content || [],
-    fetchData: async (page) => {
-      const nextPageData = await getNextPageData(page);
-      if (!nextPageData) {
-        return [];
-      }
-      return nextPageData.content;
-    },
-  });
+  // const { data, loaderIndicator } = useInfiniteScroll<TrainingOutlineDto>({
+  //   initialData: trainerInfoDto?.content || [],
+  //   fetchData: async (page): Promise<TrainingOutlineDto[] | []> => {
+  //     if (response.data.content && response.data.content.length < 10) {
+  //       return [];
+  //     }
+  //     const nextPageData = await getNextPageData(page);
+  //     console.log(nextPageData);
+  //     if (!nextPageData) {
+  //       return [];
+  //     }
+  //     return nextPageData.data.content || [];
+  //   },
+  // });
 
   return (
     <div className="space-y-4 md:space-y-10">
@@ -78,12 +79,13 @@ const Home: React.FC = () => {
           </button>
         </article>
         <article>
-          <ul className="grid grid-cols-1 justify-items-center gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-            {data.map((value) => (
-              <MainSection key={value.id} trainerInfoDto={value} />
-            ))}
+          <ul className="grid grid-cols-1 gap-6  sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+            {response.data.content &&
+              response.data.content.map((value) => (
+                <MainSection key={value.id} trainerInfoDto={value} />
+              ))}
           </ul>
-          <div ref={loaderIndicator} />
+          {/* <div ref={loaderIndicator} /> */}
         </article>
       </section>
     </div>
