@@ -36,7 +36,7 @@ const Profile = () => {
       <div className="mb-4 mt-8 w-full border shadow-slate-500" />
 
       {/* 비밀번호 변경, 회원 탈퇴 */}
-      <MyAccount />
+      <MyAccount email={email} />
     </div>
   );
 };
