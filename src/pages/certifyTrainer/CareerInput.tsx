@@ -119,10 +119,10 @@ function CareerInput({
       </div>
       {/* 담당업무 */}
       <label htmlFor="work" className="font-semibold text-main">
-        담당 업무
+        주요 업무
         <input
           id="work"
-          placeholder="담당 업무를 입력해주세요."
+          placeholder="주요 업무를 입력해주세요."
           className="h-10 w-full rounded border border-main bg-white p-2 text-black hover:outline-none focus:outline-none"
           onChange={handleCareerInput}
           value={career.work}
@@ -131,7 +131,7 @@ function CareerInput({
       <div className="flex flex-row gap-4">
         <button
           type="button"
-          className="h-8 w-full rounded bg-red-400 px-2 text-white hover:bg-red-300"
+          className="h-10 w-full rounded bg-red-400 px-2 text-white hover:bg-red-300"
           onClick={handleCareerReset}
         >
           모두 지우기

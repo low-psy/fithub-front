@@ -23,7 +23,7 @@ function LicenseImageInput({
               <button
                 type="button"
                 onClick={() => handleDeleteImage(idx)}
-                className="rounded border border-main font-semibold text-main hover:bg-main hover:text-white"
+                className="h-8 rounded border border-main font-semibold text-main hover:bg-main hover:text-white"
               >
                 삭제하기
               </button>

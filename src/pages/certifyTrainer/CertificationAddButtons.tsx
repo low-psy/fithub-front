@@ -22,7 +22,7 @@ export function ImageUploadButton({ handleAddImage }: IImageUploadButtonProps) {
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="currentColor"
-        className="h-48 w-48 border border-main hover:cursor-pointer"
+        className="h-48 w-48 rounded border border-main hover:cursor-pointer"
         viewBox="0 0 16 16"
         onClick={onClickImageUpload}
       >
