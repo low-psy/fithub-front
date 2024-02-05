@@ -51,6 +51,7 @@ import DetailPost, {
   loader as detailPostLoader,
 } from './pages/post/detailPost';
 import TrainingCancel from './pages/home/Cancel';
+import Help from './pages/help';
 
 function App() {
   const AuthedCertifyTrainer = withAuth(
@@ -142,19 +143,20 @@ function App() {
         },
       ],
     },
-
     // 비밀번호 찾기
-    { path: 'help/password', element: <FindPassword /> },
-
+    // { path: 'help/password', element: <FindPassword /> },
+    {
+      path: '/help',
+      element: <Help />,
+      children: [{ path: 'password', element: <FindPassword /> }],
+    },
     // 트레이너 인증
     { path: 'certify-trainer', element: <AuthedCertifyTrainer /> },
-
     // 로그인
     {
       path: '/login',
       element: <Login />,
     },
-
     // 회원가입
     {
       path: '/signup',
@@ -166,7 +168,6 @@ function App() {
         { path: '*', element: <NotFound /> },
       ],
     },
-
     // 트레이너 생성?
     {
       path: '/trainer',

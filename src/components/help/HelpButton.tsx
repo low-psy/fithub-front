@@ -7,7 +7,7 @@ export function DefaultButton({ text, onClick }: IDefaultButtonProps) {
   return (
     <button
       type="button"
-      className="mt-2 h-10 whitespace-nowrap rounded bg-main px-6 py-2 text-center text-xl font-semibold leading-6 text-white hover:bg-[#976fff]"
+      className="h-12 w-full whitespace-nowrap rounded bg-main py-2 text-lg font-semibold text-white hover:bg-[#976fff] md:text-xl"
       onClick={onClick}
     >
       {text}
@@ -17,7 +17,7 @@ export function DefaultButton({ text, onClick }: IDefaultButtonProps) {
 
 export function LinkButton({ to, text }: ILinkButtonProps) {
   return (
-    <Link to={to} className="flex flex-col">
+    <Link to={to} className="flex w-full flex-col">
       <DefaultButton text={text} />
     </Link>
   );

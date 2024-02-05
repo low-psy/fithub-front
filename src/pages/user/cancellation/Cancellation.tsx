@@ -20,9 +20,13 @@ const Cancellation = () => {
         <div className="flex flex-col gap-1">
           {testContent.map((item) => {
             if (item.title.length === 0)
-              return <p className="text-sm">{item.content}</p>;
+              return (
+                <p className="text-sm" key={item.id}>
+                  {item.content}
+                </p>
+              );
             return (
-              <p className="text-sm">
+              <p className="text-sm" key={item.id}>
                 <span className="text-gray-600">{item.title}: </span>
                 {item.content}
               </p>

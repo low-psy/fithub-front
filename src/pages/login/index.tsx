@@ -23,6 +23,7 @@ import { ILoginFormError, ILoginFormValue } from '../../types/form';
 import validateLoginForm from '../../validation/login/loginFormValidation';
 import FormLogo from '../../components/form/FormLogo';
 import Layout from '../../components/form/Layout';
+import BottomButtonLayout from '../../components/form/BottomButtonLayout';
 
 function Login() {
   const [searchParams] = useSearchParams();
@@ -64,7 +65,7 @@ function Login() {
     const { email, password } = formValue;
 
     // validation
-    if (!validateLoginForm(email, password, setErrorMsg)) return;
+    // if (!validateLoginForm(email, password, setErrorMsg)) return;
 
     // send to server
     try {
@@ -97,7 +98,6 @@ function Login() {
   };
 
   return (
-    // <div className="flex w-full flex-col items-center justify-center p-10">
     <Layout>
       <FormLogo width="w-14" />
       {/* 이메일, 비밀번호 입력 form */}
@@ -137,39 +137,40 @@ function Login() {
         </FormLabel>
 
         {/* 회원가입하기 <-> 아이디, 비밀번호 찾기 */}
-        <div className="mt-8 flex flex-row justify-between text-[#575757]">
+        <div className="flex flex-row justify-between text-[#575757]">
           <FormHelperLink to="/signup/email" content="이메일로 회원가입하기" />
           <FormHelperLink to="/help/password" content="비밀번호 찾기" />
         </div>
 
-        <FormSubmitButton text="로그인" />
-      </form>
+        {/* 소셜로그인 */}
+        <SocialLoginHeader />
+        <div className="mt-4 flex flex-row justify-center gap-8">
+          {/* 카카오 */}
+          <SocialLoginButton
+            to={kakaoSocialLoginRequestUrl}
+            alt="kakao_login_btn"
+            src={kakaoBtn}
+            className="flex items-center justify-center rounded-full bg-[#FEE500]"
+          />
+          {/* 네이버 */}
+          <SocialLoginButton
+            to={naverSocialLoginRequestUrl}
+            alt="naver_login_btn"
+            src={naverBtn}
+          />
+          {/* 구글 */}
+          <SocialLoginButton
+            to={googleSocialLoginRequestUrl}
+            alt="google_login_button"
+            src={googleBtn}
+          />
+        </div>
 
-      {/* 소셜로그인 */}
-      <SocialLoginHeader />
-      <div className="mt-4 flex flex-row justify-center gap-8">
-        {/* 카카오 */}
-        <SocialLoginButton
-          to={kakaoSocialLoginRequestUrl}
-          alt="kakao_login_btn"
-          src={kakaoBtn}
-          className="flex items-center justify-center rounded-full bg-[#FEE500]"
-        />
-        {/* 네이버 */}
-        <SocialLoginButton
-          to={naverSocialLoginRequestUrl}
-          alt="naver_login_btn"
-          src={naverBtn}
-        />
-        {/* 구글 */}
-        <SocialLoginButton
-          to={googleSocialLoginRequestUrl}
-          alt="google_login_button"
-          src={googleBtn}
-        />
-      </div>
+        <BottomButtonLayout>
+          <FormSubmitButton text="로그인" />
+        </BottomButtonLayout>
+      </form>
     </Layout>
-    // </div>
   );
 }
 

@@ -13,7 +13,7 @@ const Replys = () => {
         <input
           value={input}
           onChange={handleInput}
-          className="h-8 w-full rounded border border-gray-500 p-2"
+          className="h-10 w-full rounded border border-gray-400 p-2"
         />
         <button
           type="button"
