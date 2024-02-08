@@ -1,36 +1,41 @@
 import React from 'react';
-import { PostComment } from '../../types/post';
+import { CommentInfoDto } from '../../types/swagger/model/commentInfoDto';
 
 interface CommentItemProps {
-  comment: PostComment;
-  onReplyClick: (name: string) => void;
+  comment: CommentInfoDto;
+  onReplyClick: (replyTo: string, replyId: number) => void;
 }
 
 const CommentItem: React.FC<CommentItemProps> = ({ comment, onReplyClick }) => {
   return (
-    <div className=" flex items-start gap-4">
-      <div className="aspect-square w-[48px] overflow-hidden rounded-full">
-        <img
-          src={comment.profileUrl}
-          alt="답글을 단 사람의 이미지"
-          className="object-cover"
-        />
+    <div className=" flex gap-3 ">
+      <div className="flex shrink-0 grow-0 items-start">
+        <div className="aspect-square w-[36px]  overflow-hidden  rounded-full border-[1px]">
+          <img
+            src={comment.writerProfileUrl}
+            alt="답글을 단 사람의 이미지"
+            className="max-h-full max-w-full"
+          />
+        </div>
       </div>
-      <div className="space-y-4">
+      <div className="space-y-1">
+        <div className="flex flex-wrap items-start gap-x-3 gap-y-1">
+          <h3 className="text-sm font-bold">{comment.writerNickName}</h3>
+          <p className="text-sm">{comment.content}</p>
+        </div>
         <div>
-          <div className="flex gap-2">
-            <h3 className="font-bold">{comment.profileInputName}</h3>
-            <p>{comment.content}</p>
-          </div>
-          <div>
-            <button
-              type="button"
-              className="text-sm"
-              onClick={() => onReplyClick(comment.profileInputName)}
-            >
-              답글달기
-            </button>
-          </div>
+          <button
+            type="button"
+            className="block text-xs"
+            onClick={() => {
+              onReplyClick(
+                comment.writerNickName as string,
+                comment.commentId as number,
+              );
+            }}
+          >
+            답글달기
+          </button>
         </div>
       </div>
     </div>

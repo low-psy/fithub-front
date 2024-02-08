@@ -2,7 +2,7 @@ import React from 'react';
 import { Form } from 'react-router-dom';
 
 interface DeleteItemProps {
-  id: number; // 삭제할 게시물의 ID
+  id: number | undefined; // 삭제할 게시물의 ID
   action: string;
   itemName: string;
 }

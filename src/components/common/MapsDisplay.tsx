@@ -1,33 +1,27 @@
+import { GoogleMap, Marker } from '@react-google-maps/api';
 import React, { useEffect, useState } from 'react';
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
-
-interface Location {
-  lat: number;
-  lng: number;
-}
+import { useAppSelector } from '../../hooks/reduxHooks';
 
 interface MapDisplayProps {
-  location: Location;
-  onMarkerDragEnd?: (location: Location) => void;
+  location: google.maps.LatLngLiteral | null;
+  onMarkerDragEnd?: (location: google.maps.LatLngLiteral) => void;
   mapContainerStyle?: React.CSSProperties;
+  draggable: boolean;
 }
 
 const MapDisplay: React.FC<MapDisplayProps> = ({
   location,
   onMarkerDragEnd,
   mapContainerStyle,
+  draggable,
 }) => {
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API as string,
-  });
-
   const [markerLoaded, setMarkerLoaded] = useState(false);
 
   useEffect(() => {
-    if (!markerLoaded) {
-      setMarkerLoaded(false);
+    if (location && !markerLoaded) {
+      setMarkerLoaded(true);
     }
-  }, [markerLoaded]);
+  }, [markerLoaded, location]);
 
   const handleMarkerLoad = () => {
     setMarkerLoaded(true);
@@ -35,7 +29,7 @@ const MapDisplay: React.FC<MapDisplayProps> = ({
 
   const handleMarkerDragEnd = (event: google.maps.MapMouseEvent) => {
     if (event.latLng) {
-      const newLocation = {
+      const newLocation: google.maps.LatLngLiteral = {
         lat: event.latLng.lat(),
         lng: event.latLng.lng(),
       };
@@ -43,23 +37,26 @@ const MapDisplay: React.FC<MapDisplayProps> = ({
     }
   };
 
+  const isLoaded = useAppSelector((state) => state.map.isLoaded);
+
   if (!isLoaded) return <div>Loading...</div>;
+
   return (
     <GoogleMap
-      center={location}
+      center={location || { lat: -34.397, lng: 150.644 }} // 기본 위치를 설정할 수 있습니다.
       zoom={15}
       mapContainerStyle={
         mapContainerStyle || { width: '400px', height: '400px' }
       }
-      key={1}
     >
-      <Marker
-        position={location}
-        draggable
-        onDragEnd={handleMarkerDragEnd}
-        onLoad={handleMarkerLoad}
-        key={1}
-      />
+      {location && (
+        <Marker
+          position={location}
+          draggable={draggable}
+          onDragEnd={handleMarkerDragEnd}
+          onLoad={() => setMarkerLoaded(true)}
+        />
+      )}
     </GoogleMap>
   );
 };

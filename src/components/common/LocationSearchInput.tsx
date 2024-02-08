@@ -2,12 +2,8 @@
 
 import React, { useState } from 'react';
 // Google Places API 로더 및 타입 임포트
-import { useLoadScript, Autocomplete } from '@react-google-maps/api';
-
-interface Location {
-  lat: number;
-  lng: number;
-}
+import { Autocomplete } from '@react-google-maps/api';
+import { useAppSelector } from '../../hooks/reduxHooks';
 
 interface LocationSearchInputProps {
   onLocationSelect: (address: string) => void;
@@ -18,11 +14,6 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
 }) => {
   const [selected, setSelected] = useState(false);
 
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_KEY as string,
-    libraries: ['places'],
-  });
-
   const autocompleteOptions = {
     componentRestrictions: { country: 'KR' },
   };
@@ -31,21 +22,20 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
     const place = autocomplete.getPlace();
     const formattedAddress = place.formatted_address as string;
     if (place.geometry && place.address_components) {
-      const detailedAddress = place.address_components
-        .map((ac) => ac.long_name)
-        .join(', ');
       onLocationSelect(formattedAddress);
       setSelected(true);
     }
   };
-
-  if (!isLoaded) return <div>Loading...</div>;
 
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
       event.preventDefault();
     }
   };
+
+  const isLoaded = useAppSelector((state) => state.map.isLoaded);
+
+  if (!isLoaded) return <div>Loading...</div>;
 
   return (
     <Autocomplete

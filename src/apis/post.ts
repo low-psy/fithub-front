@@ -1,7 +1,11 @@
 import { AxiosResponse } from 'axios';
 import { ApiResponse } from '../types/common';
 import { Post } from '../types/post';
-import { authAxios } from './axios';
+import { authAxios, defaultAxios } from './axios';
+import { PagePostOutlineDto } from '../types/swagger/model/pagePostOutlineDto';
+import { LikesBookmarkStatusDto } from '../types/swagger/model/likesBookmarkStatusDto';
+import { PostDetailInfoDto } from '../types/swagger/model/postDetailInfoDto';
+import { PostOutlineDto } from '../types/swagger/model/postOutlineDto';
 
 /**
  * [POST] 게시물 생성
@@ -65,8 +69,31 @@ export const deletePost = async (id: string) => {
   return response;
 };
 
-export const getPost = async (): Promise<AxiosResponse<ApiResponse<Post>>> => {
-  return authAxios.get<ApiResponse<Post>>('/posts?page=0&size=10');
+export const getPost = async (): Promise<AxiosResponse<PagePostOutlineDto>> => {
+  return defaultAxios.get<PagePostOutlineDto>('/posts/public?page=0&size=10');
+};
+
+export const getDetailPost = async (
+  postId: number,
+): Promise<AxiosResponse<PostDetailInfoDto>> => {
+  return authAxios.get<PostDetailInfoDto>(`/posts/public/${postId}`);
+};
+
+export const getLikeBook = async (
+  postOutlineDtos: PostOutlineDto[],
+): Promise<AxiosResponse<LikesBookmarkStatusDto[]>> => {
+  return authAxios.post<LikesBookmarkStatusDto[]>(
+    '/posts/like-and-bookmark-status',
+    postOutlineDtos,
+  );
+};
+
+export const getDetailLikeBook = async (): Promise<
+  AxiosResponse<LikesBookmarkStatusDto>
+> => {
+  return authAxios.post<LikesBookmarkStatusDto>(
+    '/posts/like-and-bookmark-status',
+  );
 };
 
 export const getMyPost = async (): Promise<
@@ -75,34 +102,31 @@ export const getMyPost = async (): Promise<
   return authAxios.get<ApiResponse<Post>>('/posts?');
 };
 
-export const postLike = async (id: string) => {
+export const postLike = async (id: number) => {
   return authAxios.post(`/posts/likes?postId=${id}`);
 };
 
-export const deleteLike = async (id: string) => {
+export const deleteLike = async (id: number) => {
   return authAxios.delete(`/posts/likes?postId=${id}`);
 };
 
-export const postBook = async (id: string) => {
+export const postBook = async (id: number) => {
   return authAxios.post(`/posts/bookmark?postId=${id}`);
 };
 
-export const deleteBook = async (id: string) => {
+export const deleteBook = async (id: number) => {
   return authAxios.delete(`/posts/bookmark?postId=${id}`);
 };
 
 export const postComment = async (
   content: string,
   postId: number,
-  parentCommentId: number,
+  parentCommentId: number | null,
 ) => {
   const data = {
     content,
     postId,
     parentCommentId,
   };
-  return authAxios.post('/comments', {
-    content: 'test 입니다',
-    postId: 3,
-  });
+  return authAxios.post('/comments', data);
 };

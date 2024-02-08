@@ -3,7 +3,7 @@ import { DivProps } from '../../types/common';
 
 const FilterLayout: React.FunctionComponent<DivProps> = ({ children }) => {
   return (
-    <aside className="hidden w-[300px]  md:block">
+    <aside className="hidden w-[400px]  shrink-0 lg:block">
       <div className="">{children}</div>
     </aside>
   );

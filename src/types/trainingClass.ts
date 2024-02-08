@@ -1,44 +1,33 @@
-import { TrainerData, TrainingDto } from './training';
+import { PageTrainingOutlineDto } from './swagger/model/pageTrainingOutlineDto';
+import { PageableObject } from './swagger/model/pageableObject';
+import { SortObject } from './swagger/model/sortObject';
+import { TrainingInfoDto } from './swagger/model/trainingInfoDto';
+import { TrainingOutlineDto } from './swagger/model/trainingOutlineDto';
 
-export default class Training implements TrainingDto {
-  totalPages: number;
+export default class Training implements PageTrainingOutlineDto {
+  totalPages?: number;
 
-  totalElements: number;
+  totalElements?: number;
 
-  size: number;
+  size?: number;
 
-  content: TrainerData[];
+  content?: TrainingOutlineDto[];
 
-  number: number;
+  number?: number;
 
-  sort: {
-    empty: boolean;
-    sorted: boolean;
-    unsorted: boolean;
-  };
+  sort?: SortObject;
 
-  numberOfElements: number;
+  numberOfElements?: number;
 
-  pageable: {
-    offset: number;
-    sort: {
-      empty: boolean;
-      sorted: boolean;
-      unsorted: boolean;
-    };
-    pageNumber: number;
-    pageSize: number;
-    paged: boolean;
-    unpaged: boolean;
-  };
+  pageable?: PageableObject;
 
-  first: boolean;
+  first?: boolean;
 
-  last: boolean;
+  last?: boolean;
 
-  empty: boolean;
+  empty?: boolean;
 
-  constructor(dto: TrainingDto) {
+  constructor(dto: PageTrainingOutlineDto) {
     this.totalPages = dto.totalPages;
     this.totalElements = dto.totalElements;
     this.size = dto.size;
@@ -53,22 +42,25 @@ export default class Training implements TrainingDto {
   }
 }
 
-export function createFakeData(): Training {
-  const trainers: TrainerData[] = Array.from({ length: 10 }, (_, index) => ({
-    id: index,
-    trainerInfoDto: {
-      trainerId: index,
-      name: `Trainer ${index}`,
-      trainerProfileImg: `http://hitgym.tcubemnet.com/static/datas/board/attach/images/2019/05/20/722eae27d1c80499d453e72c68f052a1.jpg`,
+export function createFakeData(): PageTrainingOutlineDto {
+  const trainers: TrainingOutlineDto[] = Array.from(
+    { length: 10 },
+    (_, index) => ({
+      id: index,
+      trainerInfoDto: {
+        trainerId: index,
+        name: `Trainer ${index}`,
+        trainerProfileImg: `http://hitgym.tcubemnet.com/static/datas/board/attach/images/2019/05/20/722eae27d1c80499d453e72c68f052a1.jpg`,
+        location: `Location ${index}`,
+      },
+      title: `Title ${index}`,
+      price: 100 * index,
       location: `Location ${index}`,
-    },
-    title: `Title ${index}`,
-    price: 100 * index,
-    location: `Location ${index}`,
-    startDate: '2022-01-01',
-    endDate: '2022-12-31',
-    closed: false,
-  }));
+      startDate: '2022-01-01',
+      endDate: '2022-12-31',
+      closed: false,
+    }),
+  );
 
   return new Training({
     totalPages: 10,
@@ -98,4 +90,60 @@ export function createFakeData(): Training {
     last: false,
     empty: false,
   });
+}
+
+export function createDetailFakeData(): TrainingInfoDto {
+  const training: TrainingInfoDto = {
+    id: 0,
+    trainerInfoDto: {
+      trainerId: 0,
+      name: `Trainer ${0}`,
+      trainerProfileImg: `http://hitgym.tcubemnet.com/static/datas/board/attach/images/2019/05/20/722eae27d1c80499d453e72c68f052a1.jpg`,
+      location: '대한민국 서울특별시 중구 을지로3가, 305',
+    },
+    title: `Title ${0}`,
+    content: `content ${0}`,
+    images: [
+      {
+        id: 0,
+        url: 'https://www.100yearshop.co.kr/shop/data/editor/47bab845854505cc.png',
+        inputName: 'inputname',
+      },
+      {
+        id: 0,
+        url: 'https://www.100yearshop.co.kr/shop/data/editor/47bab845854505cc.png',
+        inputName: 'inputname',
+      },
+      {
+        id: 0,
+        url: 'https://www.100yearshop.co.kr/shop/data/editor/47bab845854505cc.png',
+        inputName: 'inputname',
+      },
+    ],
+    quota: 10,
+    price: 100000,
+    location: '대한민국 서울특별시 중구 을지로3가',
+    startDate: '2024-01-19',
+    endDate: '2024-01-19',
+    availableDates: [
+      {
+        id: 0,
+        date: '2024-01-19',
+        enabled: true,
+        availableTimes: [
+          {
+            id: 0,
+            time: {
+              hour: 12,
+              minute: 0,
+              second: 0,
+              nano: 0,
+            },
+            enabled: true,
+          },
+        ],
+      },
+    ],
+  };
+  return training;
 }

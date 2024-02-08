@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 interface ImageSliderProps {
-  postImages: string[];
-  imageSize: string;
+  postImages: (string | undefined)[];
+  imageSize?: string;
 }
 
 const ImageSlider: React.FC<ImageSliderProps> = ({
@@ -10,6 +10,9 @@ const ImageSlider: React.FC<ImageSliderProps> = ({
   imageSize = '468',
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+  if (!postImages) {
+    return <div>no-images</div>;
+  }
 
   const handlePrevClick = () => {
     setCurrentIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : 0));
@@ -26,9 +29,9 @@ const ImageSlider: React.FC<ImageSliderProps> = ({
   const isShowNBtn =
     postImages.length > 1 && currentIndex < postImages.length - 1;
 
-  let bBtnOpacity = 'opacity-70';
+  let bBtnOpacity = 'opacity-80';
 
-  let nBtnOpacity = 'opacity-70';
+  let nBtnOpacity = 'opacity-80';
 
   if (!isShowBBtn) {
     bBtnOpacity = 'opacity-0 cursor-auto';
@@ -38,35 +41,34 @@ const ImageSlider: React.FC<ImageSliderProps> = ({
   }
 
   return (
-    <div className=" flex items-center justify-center">
+    <div className="flex h-full items-center  justify-center ">
       <button type="button" onClick={handlePrevClick}>
         <span
-          className={`material-symbols-outlined relative  z-10 -mr-14 rounded-full bg-white p-0.5 ${bBtnOpacity}`}
+          className={`material-symbols-outlined relative  z-10 -mr-14 rounded-full bg-white  ${bBtnOpacity}`}
         >
           navigate_before
         </span>
       </button>
-      <div className="flex aspect-square overflow-hidden">
+      <div className="flex h-full w-full overflow-hidden bg-black ">
         <div
-          className="flex items-center  bg-black transition-transform duration-1000 ease-in-out"
+          className="flex w-full items-center   transition-transform duration-1000 ease-in-out"
           style={{
-            width: `${imageSize}px`,
             transform: `translateX(-${currentIndex * 100}%)`,
           }}
         >
           {postImages.map((imageUrl, index) => (
             <img
-              key={imageUrl}
-              src={imageUrl}
+              key={imageUrl as string}
+              src={imageUrl as string}
               alt={`게시물 이미지 ${index + 1}`}
-              className="max-w-full "
+              className="max-h-full w-full shrink-0 object-cover"
             />
           ))}
         </div>
       </div>
-      <button type="button" onClick={handleNextClick}>
+      <button type="button" onClick={handleNextClick} className="z-20 ">
         <span
-          className={`material-symbols-outlined relative z-10 -ml-14 rounded-full bg-white p-0.5 ${nBtnOpacity}`}
+          className={`material-symbols-outlined relative z-20 -ml-14 rounded-full bg-white p-0.5 ${nBtnOpacity}`}
         >
           navigate_next
         </span>

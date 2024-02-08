@@ -1,10 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { deleteBook, postBook } from '../apis/post';
 
-const useBook = (postId: string, booked: boolean) => {
+const useBook = (postId: number | undefined, booked: boolean | undefined) => {
+  const navigate = useNavigate();
   const [isBooked, setIsBooked] = useState(booked);
 
+  useEffect(() => {
+    setIsBooked(booked);
+  }, [booked]);
+
   const toggleBook = async () => {
+    if (!postId) {
+      return navigate('/login');
+    }
     const previousBookedState = isBooked;
     setIsBooked(!isBooked); // 먼저 UI 업데이트
 

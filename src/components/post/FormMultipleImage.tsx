@@ -43,7 +43,11 @@ const FormMultipleImage: React.FC<InputProps> = ({
             className="flex aspect-square w-1/4 items-center justify-center rounded-xl bg-white shadow-lg drop-shadow-sm"
             key={image}
           >
-            <img className="w-full" src={image} alt={`Preview ${index + 1}`} />
+            <img
+              className="max-h-full max-w-full object-cover"
+              src={image}
+              alt={`Preview ${index + 1}`}
+            />
           </li>
         ))}
         <label
