@@ -2,13 +2,13 @@ import axios from 'axios';
 import React, { useRef, useState } from 'react';
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import { authAxios } from '../../../../apis/axios';
+import { updateProfile, updateProfileImg } from '../../../../apis/user';
 import { IProfile } from '../../../../types/profile';
 import { Gender } from '../../../../types/user';
 
 const EditProfile = () => {
   const navigate = useNavigate();
   const prevProfile = useLoaderData() as IProfile;
-  const name = '서울로그';
 
   // 프로필(nickname, email, phone, gender, bio, profileImg)
   const [profile, setProfile] = useState<IProfile>(prevProfile);
@@ -26,12 +26,29 @@ const EditProfile = () => {
   };
 
   // 이미지 변경
-  const handleChangeProfileImg = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePutImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
+    console.log(e.target.files[0]);
 
     const imageURL = URL.createObjectURL(e.target.files[0]);
     // setInfo({ ...info, profileImg: imageURL });
     setProfileImage(imageURL);
+
+    const formData = new FormData();
+
+    formData.append('image', e.target.files[0]);
+
+    try {
+      const response = await updateProfileImg(formData);
+
+      if (response && response.status === 200) {
+        alert('프로필 이미지 변경 성공');
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(error);
+      }
+    }
   };
 
   // 이름(지금은안됨), 닉네임, 전화번호 변경
@@ -51,14 +68,11 @@ const EditProfile = () => {
   const unSelectedButtonCSS =
     'py-1 px-4  border border-main rounded h-10 w-full sm:w-32';
 
-  // TODO: API 완성되면 연결해야함
-  const handlePatchInfo = async () => {
+  const handlePutProfile = async () => {
+    const { name, nickname, phone, gender, bio } = profile;
+
     try {
-      const response = await authAxios.patch('/users/profile/update', {
-        profileDto: {
-          nickname: '수정테스트',
-        },
-      });
+      const response = await updateProfile(name, nickname, phone, gender, bio);
       if (response && response.status === 200) {
         // eslint-disable-next-line
         alert('수정 완료');
@@ -84,7 +98,7 @@ const EditProfile = () => {
           type="file"
           accept="image/*"
           className="hidden"
-          onChange={handleChangeProfileImg}
+          onChange={handlePutImage}
           ref={inputRef}
         />
         <button
@@ -98,14 +112,13 @@ const EditProfile = () => {
 
       <div className="flex flex-col gap-8">
         {/* 이름 */}
-        {/* 일단 disabled 처리해놈 */}
         <div>
           <p className="font-semibold">이름</p>
           <input
             id="name"
             className="h-10 w-full rounded border border-gray-300 px-4 py-1 sm:w-9/12"
-            value={name}
-            disabled
+            value={profile.name}
+            onChange={handleInfo}
           />
         </div>
         {/* 닉네임 */}
@@ -167,7 +180,7 @@ const EditProfile = () => {
         <div className="flex flex-row gap-4">
           <button
             type="button"
-            onClick={handlePatchInfo}
+            onClick={handlePutProfile}
             className="h-10 w-52 rounded bg-main px-2 py-1 font-semibold text-white"
           >
             저장하기
