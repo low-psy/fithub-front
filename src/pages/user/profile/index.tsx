@@ -7,13 +7,12 @@ import { IProfile } from '../../../types/profile';
 import MyAccount from './MyAccount';
 
 interface IProfileOutletContext {
-  name: string;
   profile: IProfile;
 }
 
 const Profile = () => {
-  const { name, profile } = useOutletContext<IProfileOutletContext>();
-  const { nickname, gender, phone, email, grade, bio } = profile;
+  const { profile } = useOutletContext<IProfileOutletContext>();
+  const { name, nickname, gender, phone, email, grade, bio } = profile;
 
   return (
     <div className="flex flex-col">
