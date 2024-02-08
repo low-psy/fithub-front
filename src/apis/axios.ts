@@ -53,7 +53,7 @@ const onResponseError = async (
   const { response } = error;
   // const prevConfig = error?.config as AxiosRequestConfig;
 
-  if (response?.status === 405 || response?.status === 401) {
+  if (response?.status === 405) {
     window.location.replace('/login');
   }
 
