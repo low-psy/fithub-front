@@ -3,6 +3,9 @@ import ChangePassword from './ChangePassword';
 import Withdraw from './Withdraw';
 
 type ActivatedTarget = 'change-password' | 'withdraw';
+interface IMyAccountProps {
+  email: string;
+}
 
 const LockSVG = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none">
@@ -22,7 +25,7 @@ const InfoSVG = () => (
   </svg>
 );
 
-const MyAccount = () => {
+const MyAccount = ({ email }: IMyAccountProps) => {
   const [activatiedTarget, setActivatedTarget] = useState<
     ActivatedTarget | boolean
   >(false);
@@ -79,7 +82,10 @@ const MyAccount = () => {
       {/* 해당 target 영역 */}
       <div className="ml-10">
         {activatiedTarget === 'change-password' && (
-          <ChangePassword resetActivatedTarget={resetActivatedTarget} />
+          <ChangePassword
+            resetActivatedTarget={resetActivatedTarget}
+            email={email}
+          />
         )}
         {activatiedTarget === 'withdraw' && (
           <Withdraw resetActivatedTarget={resetActivatedTarget} />

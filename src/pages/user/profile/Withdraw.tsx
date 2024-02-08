@@ -23,7 +23,7 @@ const Withdraw = ({ resetActivatedTarget }: IWithdrawProps) => {
       id: 1,
       content: '- 보유중인 쿠폰과 포인트는 소멸되어 재발행이 불가능합니다.',
     },
-    { id: 2, content: '- 작성하신 휴기는 탈퇴 후 삭제되지 않습니다.' },
+    { id: 2, content: '- 작성하신 후기는 탈퇴 후 삭제되지 않습니다.' },
   ];
 
   const reasons = [
@@ -52,8 +52,8 @@ const Withdraw = ({ resetActivatedTarget }: IWithdrawProps) => {
         <ul>
           {reasons.map((reason) => {
             return (
-              <li>
-                <input type="radio" key={reason.id} className="mr-1" />
+              <li key={reason.id}>
+                <input type="radio" className="mr-1" />
                 {reason.content}
               </li>
             );

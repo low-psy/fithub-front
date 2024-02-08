@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { defaultAxios } from '../../apis/axios';
+import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import LicenseImageInput from './LicenseImageInput';
 import LicenseNameInput from './LicenseNameInput';
 import CareerInput from './CareerInput';
 import CareerListTable from './CareerListTable';
+import Layout from './Layout';
+import certifyTrainer from '../../apis/trainer';
 
 interface ICareer {
   [key: string]: string | boolean | (() => void);
@@ -15,21 +17,24 @@ interface ICareer {
   working: 'true' | 'false';
 }
 
+const handleDateToString = (date: Date) => {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  return `${year}-${month}-${day}`;
+};
+
 function CertifyTrainer() {
+  const navigate = useNavigate();
   // 자격증 이미지 미리보기용
   const [images, setImages] = useState<string[]>([]);
   // form data용
   const [files, setFiles] = useState<File[]>([]);
   // 자격증 이름
   const [licenseNames, setLicenseNames] = useState<string[]>([]);
-
-  const handleDateToString = (date: Date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-
-    return `${year}-${month}-${day}`;
-  };
+  // 경력 리스트
+  const [careerList, setCareerList] = useState<ICareer[]>([]);
   // 경력 하나 입력용
   const [career, setCareer] = useState<ICareer>({
     company: '',
@@ -38,8 +43,7 @@ function CertifyTrainer() {
     endDate: handleDateToString(new Date()),
     working: 'false',
   });
-  // 경력 리스트
-  const [careerList, setCareerList] = useState<ICareer[]>([]);
+
   const handleAddCareerList = () => {
     if (career.company.replace(/ /g, '').length === 0) {
       // eslint-disable-next-line no-alert
@@ -98,7 +102,7 @@ function CertifyTrainer() {
     setLicenseNames([...prevLicenseNamse]);
   };
 
-  const certifyTrainer = async () => {
+  const handleCertifyTrainer = async () => {
     // 자격증 사진 첨부 여부
     if (images.length === 0) {
       // eslint-disable-next-line no-alert
@@ -108,11 +112,10 @@ function CertifyTrainer() {
     // 자격증 사진들의 이름 작성 여부
     if (images.length !== licenseNames.length) {
       // eslint-disable-next-line no-alert
-      alert('자격증 이름을 입력해주세요.');
+      alert('자격증 이름을 모두 입력해주세요.');
       return;
     }
 
-    const url = process.env.REACT_APP_BASE_SERVER_URL as string;
     const formData = new FormData();
 
     // 자격증 이미지 첨부
@@ -131,15 +134,13 @@ function CertifyTrainer() {
     });
 
     try {
-      const response = defaultAxios.post(
-        `${url}/auth/trainer/certificate`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        },
-      );
+      const response = await certifyTrainer(formData);
+      if (response.status === 200) {
+        alert(
+          '트레이너 인증 요청이 완료되었습니다.\n인증 완료까지 몇일이 소요될 수 있습니다.',
+        );
+        navigate('/');
+      }
     } catch (error) {
       console.log(error);
     }
@@ -181,65 +182,66 @@ function CertifyTrainer() {
   };
 
   return (
-    <div className="mb-8 flex flex-col">
-      <Header />
-      {/* 자격증 사진 업로드 */}
-      <div>
-        <p className="mb-2 text-sm font-semibold text-main md:text-lg">
-          1. 트레이너 자격증을 첨부해 주세요. (최대 5개)
-        </p>
-        <LicenseImageInput
-          images={images}
-          handleAddImage={handleAddImage}
-          handleDeleteImage={handleDeleteImage}
-        />
-      </div>
-      <div className="my-4 w-full border-[0.5px] border-gray-300" />
-      {/* 자격증 이름 */}
-      <div>
-        <p className="mb-2 text-sm font-semibold text-main md:text-lg">
-          2. 자격증 이름을 입력해 주세요.
-        </p>
-        <LicenseNameInput
-          images={images}
-          licenseNames={licenseNames}
-          handleLicenseName={handleLicenseName}
-        />
-      </div>
-      <div className="my-4 w-full border-[0.5px] border-gray-300" />
-      {/* 트레이닝 경력 */}
-      <div>
-        <p className="mb-2 text-sm font-semibold text-main md:text-lg">
-          3. 트레이닝 경력을 입력하여 주세요. (최대 10개)
-        </p>
-        <CareerInput
-          career={career}
-          handleCareerInput={handleCareerInput}
-          handleCareerDate={handleCareerDate}
-          handleCareerWorking={handleCareerWorking}
-          handleCareerReset={handleCareerReset}
-          handleAddCareerList={handleAddCareerList}
-        />
-        {careerList.length > 0 && (
-          <CareerListTable
-            careerList={careerList}
-            handleDeleteCareer={handleDeleteCareer}
+    <Layout>
+      <div className="flex w-full max-w-lg flex-col">
+        <Header />
+        {/* 자격증 사진 업로드 */}
+        <div className="max-w-[300px] sm:max-w-lg">
+          <p className="mb-2 text-sm font-semibold text-main md:text-lg">
+            1. 트레이너 자격증을 첨부해 주세요. (최대 5개)
+          </p>
+          <LicenseImageInput
+            images={images}
+            handleAddImage={handleAddImage}
+            handleDeleteImage={handleDeleteImage}
           />
-        )}
-        {/* 하단 인증하기 버튼 */}
-        <div className="absolute bottom-4 left-1/2 w-full -translate-x-1/2 sm:bottom-8 md:px-2">
-          <div className="mx-4">
-            <button
-              type="button"
-              className="tex-sm hover:bg-hoverColor mt-8 h-10 w-full rounded bg-main font-semibold text-white md:text-lg"
-              onClick={certifyTrainer}
-            >
-              트레이너 인증하기
-            </button>
-          </div>
+        </div>
+        <div className="my-4 w-full border-[0.5px] border-gray-300" />
+        {/* 자격증 이름 */}
+        <div>
+          <p className="text-sm font-semibold text-main md:text-lg">
+            2. 자격증 이름을 입력해 주세요.
+          </p>
+          <p className="mb-2 text-xs text-gray-500 md:text-sm ">
+            트레이너 자격증 첨부 시 자동으로 입력란이 생성됩니다.
+          </p>
+          <LicenseNameInput
+            images={images}
+            licenseNames={licenseNames}
+            handleLicenseName={handleLicenseName}
+          />
+        </div>
+        <div className="my-4 w-full border-[0.5px] border-gray-300" />
+        {/* 트레이닝 경력 */}
+        <div>
+          <p className="mb-2 text-sm font-semibold text-main md:text-lg">
+            3. 트레이닝 경력을 입력하여 주세요. (최대 10개)
+          </p>
+          <CareerInput
+            career={career}
+            handleCareerInput={handleCareerInput}
+            handleCareerDate={handleCareerDate}
+            handleCareerWorking={handleCareerWorking}
+            handleCareerReset={handleCareerReset}
+            handleAddCareerList={handleAddCareerList}
+          />
+          {careerList.length > 0 && (
+            <CareerListTable
+              careerList={careerList}
+              handleDeleteCareer={handleDeleteCareer}
+            />
+          )}
+          {/* 하단 인증하기 버튼 */}
+          <button
+            type="button"
+            className="tex-sm hover:bg-hoverColor mt-8 h-10 w-full rounded bg-main font-semibold text-white md:text-lg"
+            onClick={handleCertifyTrainer}
+          >
+            트레이너 인증하기
+          </button>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 }
 

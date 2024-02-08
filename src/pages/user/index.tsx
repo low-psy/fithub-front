@@ -6,7 +6,6 @@ import SideMenu from './SideMenu';
 
 const User = () => {
   const profile = useLoaderData() as IProfile;
-  const name = '서울로그';
 
   return (
     <div className="flex flex-row justify-center gap-x-10 px-10 py-4">
@@ -15,7 +14,6 @@ const User = () => {
         <Outlet
           context={{
             profile,
-            name,
           }}
         />
       </div>

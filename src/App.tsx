@@ -42,8 +42,7 @@ import Profile from './pages/user/profile';
 import Posts from './pages/user/posts';
 import Reservations from './pages/user/Reservation';
 import Cancellation from './pages/user/cancellation';
-import EditProfile from './pages/user/profile/EditProfile';
-
+import EditProfile from './pages/user/profile/editProfile/EditProfile';
 import profileLoader from './pages/user/loader';
 
 import withAuth from './hocs/withAuth';
@@ -98,6 +97,8 @@ function App() {
         },
         // 소셜 회원가입
         { path: 'oauth2/regist', element: <SocialSignup /> },
+        // 트레이너 인증
+        { path: 'certify-trainer', element: <CertifyTrainer /> },
         // 유저 프로필
         {
           path: 'user',
@@ -105,7 +106,7 @@ function App() {
           loader: profileLoader,
           children: [
             {
-              index: true,
+              path: 'profile',
               element: <Profile />,
             },
             {
@@ -143,15 +144,13 @@ function App() {
         },
       ],
     },
-    // 비밀번호 찾기
-    // { path: 'help/password', element: <FindPassword /> },
+    // 비밀번호 찾기 (임시 비밀번호 발급)
     {
       path: '/help',
       element: <Help />,
       children: [{ path: 'password', element: <FindPassword /> }],
     },
-    // 트레이너 인증
-    { path: 'certify-trainer', element: <AuthedCertifyTrainer /> },
+
     // 로그인
     {
       path: '/login',

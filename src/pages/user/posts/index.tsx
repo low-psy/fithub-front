@@ -19,9 +19,7 @@ const Posts = () => {
 
   return (
     <div className="flex flex-col">
-      <p className="border-b border-gray-300 text-lg font-semibold ">
-        내가 쓴 글
-      </p>
+      <p className="mb-4 text-lg font-semibold">내가 쓴 글</p>
       <div className="mb-4 flex w-full flex-row">
         <div
           aria-hidden

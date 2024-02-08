@@ -4,7 +4,7 @@ import Reservation from './Reservation';
 const Reservations = () => {
   return (
     <div>
-      <p className="text-lg font-semibold">예약 내역</p>
+      <p className="mb-4 text-lg font-semibold">예약 내역</p>
       <div className="flex flex-row flex-wrap gap-4">
         <Reservation />
         <Reservation />

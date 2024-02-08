@@ -12,6 +12,12 @@ const Comments = ({ display }: ICommentsProps) => {
   };
   return (
     <div className={`${!display && 'hidden'} py-2`}>
+      {/* 작성된 댓글 영역 */}
+      <div className="flex flex-col gap-2">
+        {/* 메인 댓글 */}
+        <Comment />
+        <Comment />
+      </div>
       {/* 댓글 입력 */}
       <div className="flex flex-row gap-2">
         <input
@@ -25,12 +31,6 @@ const Comments = ({ display }: ICommentsProps) => {
         >
           댓글 작성
         </button>
-      </div>
-      {/* 작성된 댓글 영역 */}
-      <div className="flex flex-col gap-2">
-        {/* 메인 댓글 */}
-        <Comment />
-        <Comment />
       </div>
     </div>
   );

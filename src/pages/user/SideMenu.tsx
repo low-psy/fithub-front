@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation, useParams, useSearchParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import ProfileImage from './ProfileImage';
 import SideMenuButton from './SideMenuButton';
 
@@ -11,7 +11,7 @@ const SideMenu = ({ profileImg }: ISideMenuProps) => {
   const location = useLocation();
   const clicked = location.pathname.split('/')[2];
 
-  const profileUrl = '/user';
+  const profileUrl = '/user/profile';
   const postsUrl = '/user/posts';
   const reservationUrl = '/user/reservation';
   const cancellationUrl = '/user/cancellation';
@@ -27,7 +27,7 @@ const SideMenu = ({ profileImg }: ISideMenuProps) => {
         <SideMenuButton
           text="내 정보"
           to={profileUrl}
-          clicked={clicked === undefined}
+          clicked={clicked === 'profile' || clicked === 'edit'}
         />
         <SideMenuButton
           text="내가 쓴 글"

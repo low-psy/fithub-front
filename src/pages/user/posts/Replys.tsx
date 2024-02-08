@@ -9,7 +9,7 @@ const Replys = () => {
   return (
     <div className="ml-12 py-2">
       <Reply />
-      <div className="flex flex-row gap-2">
+      <div className="flex flex-row gap-2 ">
         <input
           value={input}
           onChange={handleInput}

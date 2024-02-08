@@ -1,4 +1,4 @@
-import { defaultAxios } from './axios';
+import { authAxios, defaultAxios } from './axios';
 
 import { Gender, ISignupProps } from '../types/user';
 
@@ -15,6 +15,10 @@ export const defaultLogin = async (email: string, password: string) => {
     password,
   };
   const response = await defaultAxios.post('/auth/sign-in', data);
+
+  const accessToken = response.headers.authorization.split(' ')[1];
+
+  localStorage.setItem('accessToken', accessToken);
 
   return response;
 };
@@ -122,6 +126,65 @@ export const socialSignup = async (
 export const getTempPassword = (email: string) => {
   const response = defaultAxios.patch('/auth/email/send/temporary-password', {
     to: email,
+  });
+
+  return response;
+};
+
+/**
+ * [POST] 비밀번호 변경
+ * @param email 사용자 이메일
+ * @param password 변경 후 비밀번호
+ * @returns
+ */
+export const changePassword = (email: string, password: string) => {
+  const response = authAxios.post('/auth/change/password', {
+    email,
+    password,
+  });
+
+  return response;
+};
+
+/**
+ * [PUT] 프로필 정보 변경
+ * @param name
+ * @param nickname
+ * @param phone
+ * @param gender
+ * @param bio
+ * @returns
+ */
+export const updateProfile = async (
+  name: string,
+  nickname: string,
+  phone: string,
+  gender: Gender,
+  bio: string,
+) => {
+  const response = await authAxios.put('/users/profile/update', null, {
+    params: {
+      name,
+      nickname,
+      phone,
+      gender,
+      bio,
+    },
+  });
+
+  return response;
+};
+
+/**
+ * [PUT] 프로필 이미지 변경
+ * @param formData
+ * @returns
+ */
+export const updateProfileImg = async (formData: FormData) => {
+  const response = await authAxios.put('/users/image/update', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
   });
 
   return response;
