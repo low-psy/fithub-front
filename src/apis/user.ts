@@ -145,3 +145,47 @@ export const changePassword = (email: string, password: string) => {
 
   return response;
 };
+
+/**
+ * [PUT] 프로필 정보 변경
+ * @param name
+ * @param nickname
+ * @param phone
+ * @param gender
+ * @param bio
+ * @returns
+ */
+export const updateProfile = async (
+  name: string,
+  nickname: string,
+  phone: string,
+  gender: Gender,
+  bio: string,
+) => {
+  const response = await authAxios.put('/users/profile/update', null, {
+    params: {
+      name,
+      nickname,
+      phone,
+      gender,
+      bio,
+    },
+  });
+
+  return response;
+};
+
+/**
+ * [PUT] 프로필 이미지 변경
+ * @param formData
+ * @returns
+ */
+export const updateProfileImg = async (formData: FormData) => {
+  const response = await authAxios.put('/users/image/update', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
+  return response;
+};
