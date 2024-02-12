@@ -20,6 +20,7 @@
   },
   "plugins": ["@typescript-eslint", "react"],
   "rules": {
+    "no-alert": "off",
     "dot-notation": "off",
     "consistent-return": "warn",
     "no-nested-ternary": "off",
@@ -57,7 +58,7 @@
       2,
       {
         "namedComponents": ["arrow-function", "function-declaration"],
-        "unnamedComponents": "function-expression"
+        "unnamedComponents": "arrow-function"
       }
     ],
     "jsx-a11y/label-has-associated-control": [
