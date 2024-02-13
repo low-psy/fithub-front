@@ -28,3 +28,5 @@ export interface ISignupFormError {
   nickname: string;
   phone: string;
 }
+
+export type ROLE = 'guest' | 'user' | 'trainer' | 'admin';

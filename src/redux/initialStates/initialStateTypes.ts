@@ -1,4 +1,5 @@
 import { PaymentReqDto } from '../../types/swagger/model/paymentReqDto';
+import { ROLE } from '../../types/user';
 
 export interface ITokenState {
   accessToken: string;
@@ -20,4 +21,13 @@ export interface PaymentState extends PaymentReqDto {
 export interface CommentState {
   replyTo: string;
   selectReplyId: number | null;
+}
+
+export interface IDropdownState {
+  isOpen: boolean;
+}
+
+export interface IUserState {
+  isLogin: boolean;
+  role: ROLE;
 }
