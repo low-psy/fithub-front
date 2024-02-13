@@ -1,42 +1,28 @@
 import React, { useEffect } from 'react';
-import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Root from './pages/Root';
+import { useDispatch } from 'react-redux';
 
+// pages
+import Root from './pages/Root';
 import Home, {
   loader as homeLoader,
   action as homeAction,
 } from './pages/home/index';
-
 import FindPassword from './pages/help/password';
-
 import Login from './pages/login';
-
 import NewPost, {
   loader as newPostLoader,
   action as newPostAction,
 } from './pages/newpost/index';
-
 import Signup from './pages/signup';
 import TrainerHome from './pages/trainer';
 import TrainerRoot from './pages/TrainerRoot';
-import RootErrorBoundary from './components/common/ErrorBoundary';
 import Post, { action as postAction, loader as postLoader } from './pages/post';
-
 import CertifyTrainer from './pages/certifyTrainer';
 import SocialSignup from './pages/signup/SocialSignup';
-
 import EmailAuthentication from './pages/signup/EmailAuthentication';
 import AdditionalInfo from './pages/signup/AdditionalInfo';
 import SignupSuccess from './pages/signup/SignupSuccess';
-import NotFound from './pages/NotFound';
-import NewTrainer from './pages/trainer/new';
-import CreateTrainer, {
-  action as createTrainerAction,
-} from './pages/trainer/create';
-import Detail, { loader as detailedTrainingLoader } from './pages/detail';
-import useGoogleMapsApiLoader from './hooks/useGoogleMap';
-
 import User from './pages/user';
 import Profile from './pages/user/profile';
 import Posts from './pages/user/posts';
@@ -44,26 +30,40 @@ import Reservations from './pages/user/Reservation';
 import Cancellation from './pages/user/cancellation';
 import EditProfile from './pages/user/profile/editProfile/EditProfile';
 import profileLoader from './pages/user/loader';
-
-import withAuth from './hocs/withAuth';
 import DetailPost, {
   loader as detailPostLoader,
 } from './pages/post/detailPost';
 import TrainingCancel from './pages/home/Cancel';
 import Help from './pages/help';
 
+// components
+import RootErrorBoundary from './components/common/ErrorBoundary';
+import NewTrainer from './pages/trainer/new';
+import CreateTrainer, {
+  action as createTrainerAction,
+} from './pages/trainer/create';
+import Detail, { loader as detailedTrainingLoader } from './pages/detail';
+import pageRoutes from './pageRoutes';
+
+// hooks
+import useGoogleMapsApiLoader from './hooks/useGoogleMap';
+import { LOGIN } from './redux/slices/userSlice';
+
 function App() {
-  const AuthedCertifyTrainer = withAuth(
-    CertifyTrainer,
-    true,
-    '/certify-trainer',
-  );
+  // 전역 로그인 상태 관리
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      dispatch(LOGIN());
+    }
+  }, [dispatch]);
 
   useGoogleMapsApiLoader();
 
   const router = createBrowserRouter([
     {
-      path: '/',
+      path: pageRoutes.main.base,
       element: <Root />,
       children: [
         // 홈
@@ -76,54 +76,54 @@ function App() {
         },
         // 게시글 작성
         {
-          path: 'newpost',
+          path: pageRoutes.main.newPost,
           element: <NewPost />,
           loader: newPostLoader,
           action: newPostAction,
         },
         // 게시글
         {
-          path: 'post',
+          path: pageRoutes.main.post,
           element: <Post />,
           loader: postLoader,
           action: postAction,
           children: [
             {
-              path: ':postId',
+              path: pageRoutes.main.postDetail,
               element: <DetailPost />,
               loader: detailPostLoader,
             },
           ],
         },
         // 소셜 회원가입
-        { path: 'oauth2/regist', element: <SocialSignup /> },
+        { path: pageRoutes.socialSignup, element: <SocialSignup /> },
         // 트레이너 인증
-        { path: 'certify-trainer', element: <CertifyTrainer /> },
+        { path: pageRoutes.certifyTrainer, element: <CertifyTrainer /> },
         // 유저 프로필
         {
-          path: 'user',
+          path: pageRoutes.user.base,
           element: <User />,
           loader: profileLoader,
           children: [
             {
-              path: 'profile',
+              path: pageRoutes.user.profile,
               element: <Profile />,
             },
             {
-              path: 'edit',
+              path: pageRoutes.user.edit,
               element: <EditProfile />,
               loader: profileLoader,
             },
             {
-              path: 'posts',
+              path: pageRoutes.user.posts,
               element: <Posts />,
             },
             {
-              path: 'reservation',
+              path: pageRoutes.user.reservations,
               element: <Reservations />,
             },
             {
-              path: 'cancellation',
+              path: pageRoutes.user.cancellations,
               element: <Cancellation />,
             },
           ],
@@ -146,25 +146,29 @@ function App() {
     },
     // 비밀번호 찾기 (임시 비밀번호 발급)
     {
-      path: '/help',
+      path: pageRoutes.help.base,
       element: <Help />,
-      children: [{ path: 'password', element: <FindPassword /> }],
+      children: [
+        { path: pageRoutes.help.forgetPassword, element: <FindPassword /> },
+      ],
     },
 
     // 로그인
     {
-      path: '/login',
+      path: pageRoutes.login,
       element: <Login />,
     },
     // 회원가입
     {
-      path: '/signup',
+      path: pageRoutes.signup.base,
       element: <Signup />,
       children: [
-        { path: 'email', element: <EmailAuthentication /> },
-        { path: 'additional-info', element: <AdditionalInfo /> },
-        { path: 'success', element: <SignupSuccess /> },
-        { path: '*', element: <NotFound /> },
+        {
+          path: pageRoutes.signup.emailAuthentication,
+          element: <EmailAuthentication />,
+        },
+        { path: pageRoutes.signup.additionalInfo, element: <AdditionalInfo /> },
+        { path: pageRoutes.signup.success, element: <SignupSuccess /> },
       ],
     },
     // 트레이너 생성?
