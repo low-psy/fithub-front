@@ -19,6 +19,7 @@ import { getLikeBook, getPost, postComment } from '../../apis/post';
 import { LikesBookmarkStatusDto } from '../../types/swagger/model/likesBookmarkStatusDto';
 import { initialTokenState } from '../../redux/initialStates/initialStates';
 import RedirectModal from '../../components/common/module/RedirectModal';
+import { useAppSelector } from '../../hooks/reduxHooks';
 
 export const loader = (async () => {
   try {
@@ -42,14 +43,16 @@ const Post = () => {
   const [bookAndLikes, setBookAndLikes] = useState<LikesBookmarkStatusDto[]>([
     { bookmarkStatus: false, likesStatus: false, postId: undefined },
   ]);
+
+  const { isLogin } = useAppSelector((state) => state.user);
+
   useEffect(() => {
-    const { accessToken } = store.getState().token;
-    if (accessToken !== initialTokenState.accessToken) {
+    if (isLogin) {
       getLikeBook(PostDto.data.content).then((res) => {
         setBookAndLikes(res.data);
       });
     }
-  }, [PostDto.data.content]);
+  }, [PostDto.data.content, isLogin]);
   if (!isModal && postId) {
     return (
       <main className="mx-auto w-full border-[1px] border-zinc-300 lg:w-2/3 ">
