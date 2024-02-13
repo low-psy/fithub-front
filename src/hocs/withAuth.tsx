@@ -1,41 +1,49 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../hooks/reduxHooks';
+import { ROLE } from '../types/user';
 
-const withAuth = (
-  SpecificComponent: React.ComponentType,
-  option: boolean | null,
-  redirectPath: string,
-) => {
+function withAuth(InnerComponent: React.ComponentType, option: ROLE) {
   /*
-   * option = null : 아무나 출입 가능한 페이지
-   * option = true : 로그인한 유저만 출입 가능한 페이지
-   * option = false : 로그인한 유저는 출입 불가능한 페이지
+   * option = 'guest' : 아무나 출입 가능한 페이지
+   * option = 'user' : 로그인한 유저만 출입 가능한 페이지
+   * option = 'trainer' : 트레이너만 출입 가능합 페이지
+   * option = 'admin' : 관리자만 출입 가능한 페이지
    */
-  function CheckAuth() {
+
+  return () => {
     const navigate = useNavigate();
 
-    // 로그인 여부를 access token으로 확인
-    const isAccessToken = localStorage.getItem('accessToken');
+    const { isLogin, role } = useAppSelector((state) => state.user);
 
     useEffect(() => {
-      if (option === true && !isAccessToken) {
-        alert('로그인이 필요합니다.\n로그인 페이지로 이동합니다.');
-        navigate('/login', {
-          state: {
-            redirectPath,
-          },
-        });
+      if (option === 'user') {
+        if (!isLogin) {
+          alert('로그인이 필요합니다.');
+          navigate('/login');
+          return;
+        }
       }
-      if (option === false && isAccessToken) {
-        alert('비정상적인 접근입니다,\n이전 페이지로 이동합니다.');
-        navigate(-1);
+
+      if (option === 'trainer') {
+        if (role !== 'trainer') {
+          alert('트레이너만 이용 가능합니다.');
+          navigate(-1);
+          return;
+        }
       }
-    }, [isAccessToken, navigate]);
 
-    return <SpecificComponent />;
-  }
+      if (option === 'admin') {
+        if (role !== 'admin') {
+          alert('관리자만 이용 가능합니다.');
+          navigate(-1);
+          // return;
+        }
+      }
+    }, [isLogin, role, navigate]);
 
-  return CheckAuth;
-};
+    return <InnerComponent />;
+  };
+}
 
 export default withAuth;

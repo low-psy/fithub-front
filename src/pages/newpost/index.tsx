@@ -2,20 +2,16 @@ import React from 'react';
 
 import { ActionFunctionArgs, redirect } from 'react-router-dom';
 import PostForm from '../../components/post/PostForm';
-// import store from '../../redux/store';
 import { createPost } from '../../apis/post';
 import validatePostData from '../../validation/postValidation';
-import store from '../../redux/store';
+import { useAppSelector } from '../../hooks/reduxHooks';
+import withAuth from '../../hocs/withAuth';
 
 function NewPost() {
   return <PostForm useCase="create" />;
 }
 
 export const loader = async () => {
-  const { accessToken } = store.getState().token;
-  if (accessToken === 'initial access token') {
-    return redirect('/login');
-  }
   return null;
 };
 
@@ -41,4 +37,4 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   return redirect('/newpost');
 };
-export default NewPost;
+export default withAuth(NewPost, 'user');

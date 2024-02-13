@@ -4,9 +4,11 @@ import { useAppSelector } from '../../hooks/reduxHooks';
 import BookmarkIcon from '../../assets/icons/BookmarkIcon';
 import ChatIcon from '../../assets/icons/ChatIcon';
 import ProfileIcon from '../../assets/icons/ProfileIcon';
+import NavDropdown from './NavDropdown';
 
 const NavMenu = () => {
-  const accessToken = useAppSelector((store) => store.token.accessToken);
+  const { isLogin } = useAppSelector((state) => state.user);
+  const { isOpen } = useAppSelector((state) => state.profileDropdown);
   let profileTo = '/user/profile';
 
   let isCreateTrainer = true;
@@ -14,7 +16,7 @@ const NavMenu = () => {
   if (location.pathname === '/newpost') {
     isCreateTrainer = false;
   }
-  if (accessToken === 'initial access token') {
+  if (isLogin === false) {
     profileTo = '/login';
   }
   return (
@@ -39,10 +41,11 @@ const NavMenu = () => {
           <ChatIcon />
         </Link>
       </li>
-      <li key="user">
-        <Link to={profileTo}>
-          <ProfileIcon />
-        </Link>
+      <li key="user" className="relative">
+        {/* <Link to={profileTo}> */}
+        <ProfileIcon />
+        {isOpen && <NavDropdown />}
+        {/* </Link> */}
       </li>
     </ul>
   );

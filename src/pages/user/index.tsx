@@ -21,4 +21,4 @@ const User = () => {
   );
 };
 
-export default withAuth(User, true, '/user');
+export default withAuth(User, 'user');

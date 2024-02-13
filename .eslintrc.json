@@ -20,6 +20,7 @@
   },
   "plugins": ["@typescript-eslint", "react"],
   "rules": {
+    "no-alert": "off",
     "dot-notation": "off",
     "consistent-return": "warn",
     "no-nested-ternary": "off",
@@ -55,7 +56,10 @@
     ],
     "react/function-component-definition": [
       2,
-      { "namedComponents": ["arrow-function", "function-declaration"] }
+      {
+        "namedComponents": ["arrow-function", "function-declaration"],
+        "unnamedComponents": "arrow-function"
+      }
     ],
     "jsx-a11y/label-has-associated-control": [
       2,

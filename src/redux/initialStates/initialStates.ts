@@ -1,11 +1,12 @@
 import {
   CommentState,
+  IDropdownState,
   ITokenState,
+  IUserState,
   MapState,
   PaymentState,
 } from './initialStateTypes';
 
-// eslint-disable-next-line import/prefer-default-export
 export const initialTokenState: ITokenState = {
   accessToken: 'initial access token',
 };
@@ -28,4 +29,13 @@ export const initialPaymentState: PaymentState = {
 export const initialCommentState: CommentState = {
   replyTo: '',
   selectReplyId: null,
+};
+
+export const initialDropdownState: IDropdownState = {
+  isOpen: false,
+};
+
+export const initialUserState: IUserState = {
+  isLogin: false,
+  role: 'guest',
 };

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { useAppDispatch } from '../../hooks/reduxHooks';
-import { SET_TOKEN } from '../../redux/slices/tokenSlice';
 
 import { defaultLogin } from '../../apis/user';
 
@@ -24,6 +23,7 @@ import validateLoginForm from '../../validation/login/loginFormValidation';
 import FormLogo from '../../components/form/FormLogo';
 import Layout from '../../components/form/Layout';
 import BottomButtonLayout from '../../components/form/BottomButtonLayout';
+import { LOGIN } from '../../redux/slices/userSlice';
 
 function Login() {
   const [searchParams] = useSearchParams();
@@ -64,27 +64,21 @@ function Login() {
     event.preventDefault();
     const { email, password } = formValue;
 
-    // validation
-    // if (!validateLoginForm(email, password, setErrorMsg)) return;
-
     // send to server
     try {
       const response = await defaultLogin(email, password);
       if (response && response.status === 200) {
-        dispatch(SET_TOKEN(response.data.accessToken));
-        navigate(redirectPath || '/');
+        dispatch(LOGIN());
+        navigate('/');
       }
     } catch (err) {
       const error = err as unknown as AxiosError;
       console.log(error);
       if (error.status === 403) {
-        // eslint-disable-next-line no-alert
         alert('비밀번호가 일치하지 않습니다.');
       } else if (error.status === 404) {
-        // eslint-disable-next-line no-alert
         alert('존재하지 않는 회원입니다.');
       } else {
-        // eslint-disable-next-line no-alert
         alert('로그인 도중 문제가 발생하였습니다.');
       }
     }

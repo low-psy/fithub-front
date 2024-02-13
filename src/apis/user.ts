@@ -17,7 +17,6 @@ export const defaultLogin = async (email: string, password: string) => {
   const response = await defaultAxios.post('/auth/sign-in', data);
 
   const accessToken = response.headers.authorization.split(' ')[1];
-
   localStorage.setItem('accessToken', accessToken);
 
   return response;
@@ -186,6 +185,18 @@ export const updateProfileImg = async (formData: FormData) => {
       'Content-Type': 'multipart/form-data',
     },
   });
+
+  return response;
+};
+
+/**
+ * [DELETE] 로그아웃
+ * @returns
+ */
+export const logout = async () => {
+  const params = { accessToken: localStorage.getItem('accessToken') };
+
+  const response = await authAxios.delete('/auth/sign-out', { params });
 
   return response;
 };
