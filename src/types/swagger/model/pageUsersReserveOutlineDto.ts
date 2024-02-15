@@ -11,13 +11,13 @@
  */
 import { PageableObject } from './pageableObject';
 import { SortObject } from './sortObject';
-import { TrainingOutlineDto } from './trainingOutlineDto';
+import { UsersReserveOutlineDto } from './usersReserveOutlineDto';
 
-export interface PageTrainingOutlineDto { 
+export interface PageUsersReserveOutlineDto { 
     totalPages?: number;
     totalElements?: number;
     size?: number;
-    content?: Array<TrainingOutlineDto>;
+    content?: Array<UsersReserveOutlineDto>;
     number?: number;
     sort?: SortObject;
     numberOfElements?: number;

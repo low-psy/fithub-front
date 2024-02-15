@@ -9,17 +9,15 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { TrainingImgUpdateDto } from './trainingImgUpdateDto';
 
 /**
- * 결제 취소 dto
+ * 트레이닝 내용 수정 요청 Dto
  */
-export interface CancelReqDto { 
-    /**
-     * 결제 내역 id
-     */
-    reservationId: number;
-    /**
-     * 포트원 거래고유번호
-     */
-    impUid: string;
+export interface TrainingContentUpdateDto { 
+    title: string;
+    content: string;
+    price: number;
+    quota: number;
+    trainingImgUpdateDto?: TrainingImgUpdateDto;
 }

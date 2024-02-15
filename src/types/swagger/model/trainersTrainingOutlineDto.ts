@@ -10,16 +10,16 @@
  * Do not edit the class manually.
  */
 
-/**
- * 결제 취소 dto
- */
-export interface CancelReqDto { 
-    /**
-     * 결제 내역 id
-     */
-    reservationId: number;
-    /**
-     * 포트원 거래고유번호
-     */
-    impUid: string;
+export interface TrainersTrainingOutlineDto { 
+    trainingId?: number;
+    title?: string;
+    price?: number;
+    location?: string;
+    participants?: number;
+    quota?: number;
+    startDate?: string;
+    endDate?: string;
+    closed?: boolean;
+    createdDate?: Date;
+    modifiedDate?: Date;
 }

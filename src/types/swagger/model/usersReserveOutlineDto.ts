@@ -10,7 +10,10 @@
  * Do not edit the class manually.
  */
 
-export interface UsersReserveInfoDto { 
+/**
+ * 회원의 트레이닝 예약, 진행,종료 정보 확인
+ */
+export interface UsersReserveOutlineDto { 
     /**
      * 트레이닝 예약 id
      */
@@ -28,15 +31,10 @@ export interface UsersReserveInfoDto {
      */
     reserveDateTime?: Date;
     location?: string;
-    price?: number;
-    /**
-     * 트레이닝 결제(주문) 번호
-     */
-    impUid?: string;
     /**
      * 트레이닝 진행 상황(진행 전, 진행중, 진행완료)
      */
-    status?: UsersReserveInfoDto.StatusEnum;
+    status?: UsersReserveOutlineDto.StatusEnum;
     /**
      * 트레이닝 결제(예약)한 날짜, 시간
      */
@@ -46,7 +44,7 @@ export interface UsersReserveInfoDto {
      */
     modifiedDateTime?: Date;
 }
-export namespace UsersReserveInfoDto {
+export namespace UsersReserveOutlineDto {
     export type StatusEnum = 'BEFORE' | 'START' | 'COMPLETE' | 'CANCEL' | 'NOSHOW';
     export const StatusEnum = {
         BEFORE: 'BEFORE' as StatusEnum,
