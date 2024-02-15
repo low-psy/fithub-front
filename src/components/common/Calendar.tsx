@@ -13,12 +13,16 @@ interface CalendarProps {
   availableDates?: TrainingAvailableDateDto[];
   onSelectedDates?: (dates: SelectedDates) => void;
   singleDateSelect?: boolean;
+  defaultStartDate?: string;
+  defaultEndDate?: string;
 }
 
 const Calendar: React.FC<CalendarProps> = ({
   availableDates,
   onSelectedDates,
   singleDateSelect = false,
+  defaultStartDate,
+  defaultEndDate,
 }) => {
   const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -26,8 +30,8 @@ const Calendar: React.FC<CalendarProps> = ({
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [selectedDates, setSelectedDates] = useState<SelectedDates>({
-    startDate: null,
-    endDate: null,
+    startDate: defaultStartDate || null,
+    endDate: defaultEndDate || null,
   });
 
   const dispatch = useDispatch();
