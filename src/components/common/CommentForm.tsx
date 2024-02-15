@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useFetcher } from 'react-router-dom';
+import { useFetcher, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../hooks/reduxHooks';
 import { SET_REPLY_TO } from '../../redux/slices/commentSlice';
@@ -19,13 +19,15 @@ const CommentForm: React.FC<CommentFormProps> = ({
   const [inputValue, setInputValue] = useState<string | undefined>('');
   const fetcher = useFetcher();
   const inputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setReplyTo(cmt.replyTo);
     if (fetcher.data?.comment) {
       setInputValue(''); // input value 초기화
+      navigate(`/post`);
     }
-  }, [fetcher.data, cmt.replyTo]);
+  }, [fetcher.data, cmt.replyTo, navigate, postId]);
 
   const handleChange = () => {
     setInputValue(inputRef.current?.value);
@@ -36,8 +38,12 @@ const CommentForm: React.FC<CommentFormProps> = ({
   };
 
   return (
-    <fetcher.Form className="flex items-center" action="/post" method="post">
-      <div className="flex grow rounded-md  p-2 pl-0">
+    <fetcher.Form
+      className="flex items-center"
+      action={`/post/${postId}`}
+      method="post"
+    >
+      <div className="flex grow rounded-md p-2 pl-0">
         <div
           className="shrink-0 cursor-pointer rounded-md bg-slate-400"
           style={{
