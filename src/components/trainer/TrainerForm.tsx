@@ -11,24 +11,16 @@ import { FormErrors } from '../../types/common';
 import FormMultipleImage from '../post/FormMultipleImage';
 import Calendar from '../common/Calendar';
 import { SelectedDates } from '../../redux/initialStates/initialStateTypes';
+import TimeSelector from '../common/TimeSelector';
+import { TrainingInfoDto } from '../../types/swagger/model/trainingInfoDto';
 
 interface TrainerFormProps {
-  content?: string;
-  images?: string[];
-  hashTags?: string[];
   useCase: string;
   id?: number;
-  title?: string;
+  res?: TrainingInfoDto;
 }
 
-const TrainerForm: React.FC<TrainerFormProps> = ({
-  title,
-  content,
-  images,
-  hashTags,
-  useCase,
-  id,
-}) => {
+const TrainerForm: React.FC<TrainerFormProps> = ({ useCase, id, res }) => {
   const errors = useActionData() as FormErrors;
   const [showDetailInput, setShowDetailInput] = useState(false);
   const [formattedAddress, setformattedAddress] = useState('');
@@ -40,13 +32,10 @@ const TrainerForm: React.FC<TrainerFormProps> = ({
   };
 
   let method: FormMethod = 'post';
-  let action;
   if (useCase === 'create') {
     method = 'post';
-    action = '/trainer/new/create';
   } else if (useCase === 'update') {
     method = 'put';
-    action = '/trainer/update';
   }
 
   const handleDetailLocationInput = (detail: string) => {
@@ -54,8 +43,8 @@ const TrainerForm: React.FC<TrainerFormProps> = ({
     setFinalAddress(fullAddress);
   };
   const [selectedDates, setSelectedDates] = useState<SelectedDates>({
-    startDate: null,
-    endDate: null,
+    startDate: res?.startDate || null,
+    endDate: res?.endDate || null,
   });
   const { startDate } = selectedDates;
   let { endDate } = selectedDates;
@@ -68,7 +57,7 @@ const TrainerForm: React.FC<TrainerFormProps> = ({
   return (
     <Form
       method={method}
-      action={action}
+      action="/trainer/new/create"
       className="space-y-16 pb-6 pt-4"
       encType="multipart/form-data"
     >
@@ -84,8 +73,9 @@ const TrainerForm: React.FC<TrainerFormProps> = ({
             name="title"
             type="text"
             id="title"
-            value={title}
+            value={res?.title}
           />
+          <input className="hidden" name="trainingId" value={res?.id} />
         </PostInput>
       </div>
       <div>
@@ -101,16 +91,26 @@ const TrainerForm: React.FC<TrainerFormProps> = ({
             name="content"
             className="h-48"
             id="content"
-            value={content}
+            value={res?.content}
           />
         </PostInput>
       </div>
       <div>
-        <FormMultipleImage multiple value={images}>
-          이미지 선택
-        </FormMultipleImage>
+        {res && (
+          <h3 className="font-bold text-main">
+            *이미지를 다시 선택해주세요. 선택하지 않을 시 트레이닝 이미지가
+            표시되지 않습니다*
+          </h3>
+        )}
+        <FormMultipleImage multiple>이미지 선택</FormMultipleImage>
       </div>
       <div className="space-y-4">
+        {res && (
+          <h3 className="font-bold text-main">
+            *위치를 다시 입력해주세요. 입력하지 않을 시 위치가 존재하지
+            않게됩니다*
+          </h3>
+        )}
         <PostInput
           spanText="input location"
           htmlFor="location"
@@ -140,6 +140,7 @@ const TrainerForm: React.FC<TrainerFormProps> = ({
             id="price"
             min={10000}
             step={10000}
+            value={res?.price}
           />
         </PostInput>
       </div>
@@ -157,6 +158,7 @@ const TrainerForm: React.FC<TrainerFormProps> = ({
             id="quota"
             min={1}
             step={1}
+            value={res?.quota}
           />
         </PostInput>
       </div>
@@ -172,6 +174,8 @@ const TrainerForm: React.FC<TrainerFormProps> = ({
               onSelectedDates={(selectedDates) =>
                 setSelectedDates(selectedDates)
               }
+              defaultStartDate={res?.startDate}
+              defaultEndDate={res?.endDate}
             />
             <input
               name="startDate"
@@ -186,34 +190,33 @@ const TrainerForm: React.FC<TrainerFormProps> = ({
           </div>
         </PostInput>
       </div>
-      <div>
+      <div className="space-y-4">
+        {res && (
+          <h3 className="font-bold text-main">
+            *시간을 다시 입력해주세요. 입력하지 않을 시 시간을 설정할 수
+            없습니다*
+          </h3>
+        )}
         <PostInput
           spanText="시간을 입력하세요"
-          htmlFor="start_hour"
+          htmlFor="startHour"
           titleText="트레이닝 시간"
         >
-          <InputComponent
-            placeholder="시작 시간을 입력하세요"
-            name="start_hour"
-            type="time"
-            id="start_hour"
-          />
+          <TimeSelector inputName="startHour" />
         </PostInput>
-        <PostInput
-          spanText="시간을 입력하세요"
-          htmlFor="last_hour"
-          titleText=""
-        >
-          <InputComponent
-            placeholder="마감 시간을 입력하세요"
-            name="last_hour"
-            type="time"
-            id="last_hour"
-          />
+        <PostInput spanText="시간을 입력하세요" htmlFor="lastHour" titleText="">
+          <TimeSelector inputName="lastHour" />
         </PostInput>
       </div>
-
-      <MultipleDateInput />
+      <div>
+        {res && (
+          <h3 className="font-bold text-main">
+            *불가능한 날짜를 다시 입력해주세요. 입력하지 않을 시 불가능한 날짜는
+            없는걸로 간주됩니다*
+          </h3>
+        )}
+        <MultipleDateInput />
+      </div>
       <SubmitButton className="-mt-4 w-2/3 rounded-full py-5 text-2xl font-bold text-main">
         제출하기
       </SubmitButton>

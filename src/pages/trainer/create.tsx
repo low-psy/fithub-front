@@ -1,14 +1,43 @@
 import React from 'react';
-import { ActionFunctionArgs, redirect } from 'react-router-dom';
+import {
+  ActionFunctionArgs,
+  LoaderFunction,
+  LoaderFunctionArgs,
+  redirect,
+  useLoaderData,
+} from 'react-router-dom';
+import { AxiosError } from 'axios';
 import TrainerForm from '../../components/trainer/TrainerForm';
 import { FormErrors } from '../../types/common';
-import { createTraining } from '../../apis/trainig';
-import { fileToBase64 } from '../../utils/util';
+import {
+  createTraining,
+  getDetailTraining,
+  updateTraining,
+} from '../../apis/trainig';
+import { LoaderData } from '../../types/training';
+
+export const loader = (async ({ request }: LoaderFunctionArgs) => {
+  const url = new URL(request.url);
+  const trainingId = url.searchParams.get('trainingId');
+  if (!trainingId) return null;
+  try {
+    const response = await getDetailTraining(Number(trainingId));
+    if (response && response.status === 200) {
+      return response;
+    }
+
+    throw new Error(`Server is Troubling with ${response.status}`);
+  } catch (err) {
+    const error = err as unknown as AxiosError;
+    throw error;
+  }
+}) satisfies LoaderFunction;
 
 const CreateTrainer = () => {
+  const res = useLoaderData() as LoaderData<typeof loader>;
   return (
     <div className="space-y-8">
-      <TrainerForm useCase="create" />
+      <TrainerForm useCase="create" res={res?.data} />
     </div>
   );
 };
@@ -31,10 +60,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const priceNumber = price ? Number(price) : 0;
   const startDate = formData.get('startDate') as string;
   const endDate = formData.get('endDate') as string;
-  const startHour = formData.get('start_hour') as string;
-  const startHourString = `${startHour}:00`;
-  const endHour = formData.get('last_hour') as string;
-  const endHourString = `${endHour}:00`;
+  const startHour = formData.get('startHour') as string;
+  const endHour = formData.get('lastHour') as string;
   const unableDates = formData.getAll('unable_date') as string[];
   const nonEmptyUnableDates =
     unableDates.filter((date) => date).length === 0
@@ -42,6 +69,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       : unableDates.filter((date) => date);
 
   console.log(nonEmptyUnableDates);
+  const trainingId = formData.get('trainingId') as string;
+  const trainingNumber = Number(trainingId);
 
   // 필수 필드 유효성 검사
   if (!title || title.trim().length < 2 || title.trim().length > 100)
@@ -65,21 +94,27 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (Object.keys(errors).length > 0) {
     return errors;
   }
-
+  let response;
+  const trainingObj = {
+    title,
+    content,
+    images: nonEmptyImageFiles,
+    location,
+    quota: quotaNumber,
+    price: priceNumber,
+    startDate,
+    endDate,
+    startHour,
+    endHour,
+    unableDates: nonEmptyUnableDates,
+  };
   try {
-    const response = await createTraining({
-      title,
-      content,
-      images: nonEmptyImageFiles,
-      location,
-      quota: quotaNumber,
-      price: priceNumber,
-      startDate,
-      endDate,
-      startHour: startHourString,
-      endHour: endHourString,
-      unableDates: nonEmptyUnableDates,
-    });
+    if (request.method === 'post') {
+      response = await createTraining(trainingObj);
+    } else if (request.method === 'update') {
+      response = await updateTraining(trainingObj, trainingNumber);
+    }
+
     if (response && response.status === 200) {
       return redirect('/');
     }
