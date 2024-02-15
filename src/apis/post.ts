@@ -6,6 +6,12 @@ import { PagePostOutlineDto } from '../types/swagger/model/pagePostOutlineDto';
 import { LikesBookmarkStatusDto } from '../types/swagger/model/likesBookmarkStatusDto';
 import { PostDetailInfoDto } from '../types/swagger/model/postDetailInfoDto';
 import { PostOutlineDto } from '../types/swagger/model/postOutlineDto';
+import { PagePostInfoDto } from '../types/swagger/model/pagePostInfoDto';
+import { PostRequestDto } from '../types/swagger/model/postRequestDto';
+import { LikedUsersInfoDto } from '../types/swagger/model/likedUsersInfoDto';
+import { PostInfoDto } from '../types/swagger/model/postInfoDto';
+import { PageParentCommentInfoDto } from '../types/swagger/model/pageParentCommentInfoDto';
+import { CommentInfoDto } from '../types/swagger/model/commentInfoDto';
 
 /**
  * [POST] 게시물 생성
@@ -69,23 +75,29 @@ export const deletePost = async (id: string) => {
   return response;
 };
 
-export const getPost = async (): Promise<AxiosResponse<PagePostOutlineDto>> => {
-  return defaultAxios.get<PagePostOutlineDto>('/posts/public?page=0&size=10');
+export const getPost = async (): Promise<AxiosResponse<PagePostInfoDto>> => {
+  return defaultAxios.get<PagePostOutlineDto>('/posts?page=0&size=10');
 };
 
 export const getDetailPost = async (
   postId: number,
-): Promise<AxiosResponse<PostDetailInfoDto>> => {
-  return authAxios.get<PostDetailInfoDto>(`/posts/public/${postId}`);
+): Promise<AxiosResponse<PostInfoDto>> => {
+  return authAxios.get<PostInfoDto>(`/posts/${postId}`);
 };
 
 export const getLikeBook = async (
-  postOutlineDtos: PostOutlineDto[],
+  postRequestDtos: PostRequestDto[] | undefined,
 ): Promise<AxiosResponse<LikesBookmarkStatusDto[]>> => {
   return authAxios.post<LikesBookmarkStatusDto[]>(
-    '/posts/like-and-bookmark-status',
-    postOutlineDtos,
+    '/users/posts/status/likes-bookmarks',
+    postRequestDtos,
   );
+};
+
+export const getLikes = async (
+  postRequestDtos: PostRequestDto[] | undefined,
+): Promise<AxiosResponse<LikedUsersInfoDto[]>> => {
+  return authAxios.post<LikedUsersInfoDto[]>('/posts/likes', postRequestDtos);
 };
 
 export const getDetailLikeBook = async (): Promise<
@@ -103,19 +115,19 @@ export const getMyPost = async (): Promise<
 };
 
 export const postLike = async (id: number) => {
-  return authAxios.post(`/posts/likes?postId=${id}`);
+  return authAxios.post(`/users/posts/likes?postId=${id}`);
 };
 
 export const deleteLike = async (id: number) => {
-  return authAxios.delete(`/posts/likes?postId=${id}`);
+  return authAxios.delete(`/users/posts/likes?postId=${id}`);
 };
 
 export const postBook = async (id: number) => {
-  return authAxios.post(`/posts/bookmark?postId=${id}`);
+  return authAxios.post(`/users/posts/bookmarks?postId=${id}`);
 };
 
 export const deleteBook = async (id: number) => {
-  return authAxios.delete(`/posts/bookmark?postId=${id}`);
+  return authAxios.delete(`/users/posts/bookmarks?postId=${id}`);
 };
 
 export const postComment = async (
@@ -128,5 +140,20 @@ export const postComment = async (
     postId,
     parentCommentId,
   };
-  return authAxios.post('/comments', data);
+  return authAxios.post('/users/posts/comments', data);
+};
+
+export const getParentComments = async (
+  postId: number,
+): Promise<AxiosResponse<PageParentCommentInfoDto>> => {
+  return authAxios.get<PageParentCommentInfoDto>(`/posts/${postId}/comments`);
+};
+
+export const getChildComments = async (
+  postId: number,
+  commentId: number,
+): Promise<AxiosResponse<CommentInfoDto>> => {
+  return authAxios.get<CommentInfoDto>(
+    `/posts/${postId}/comments/${commentId}`,
+  );
 };
