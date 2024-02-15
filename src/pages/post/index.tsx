@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   redirect,
   Link,
@@ -9,16 +9,18 @@ import {
   useParams,
   ActionFunctionArgs,
   json,
+  useActionData,
 } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import store from '../../redux/store';
 import FilterLayout from '../../components/filter/FilterLayout';
 import PostItem from '../../components/post/PostItem';
 import { LoaderData } from '../../types/training';
-import { getLikeBook, getPost, postComment } from '../../apis/post';
+import { getLikeBook, getLikes, getPost, postComment } from '../../apis/post';
 import { LikesBookmarkStatusDto } from '../../types/swagger/model/likesBookmarkStatusDto';
 import { initialTokenState } from '../../redux/initialStates/initialStates';
 import RedirectModal from '../../components/common/module/RedirectModal';
+import { LikedUsersInfoDto } from '../../types/swagger/model/likedUsersInfoDto';
 
 export const loader = (async () => {
   try {
@@ -39,17 +41,28 @@ const Post = () => {
   const isModal = location.state?.isModal;
 
   const PostDto = useLoaderData() as LoaderData<typeof loader>;
+  const PostRequestDtos = useMemo(() => {
+    return PostDto.data.content?.map((post) => {
+      return { postId: post.postId as number };
+    });
+  }, [PostDto.data.content]);
   const [bookAndLikes, setBookAndLikes] = useState<LikesBookmarkStatusDto[]>([
     { bookmarkStatus: false, likesStatus: false, postId: undefined },
+  ]);
+  const [likedInfos, setLikedInfos] = useState<LikedUsersInfoDto[]>([
+    { likedCount: 0, likedUsers: [{ nickname: '', profileUrl: '' }] },
   ]);
   useEffect(() => {
     const { accessToken } = store.getState().token;
     if (accessToken !== initialTokenState.accessToken) {
-      getLikeBook(PostDto.data.content).then((res) => {
+      getLikeBook(PostRequestDtos).then((res) => {
         setBookAndLikes(res.data);
       });
     }
-  }, [PostDto.data.content]);
+    getLikes(PostRequestDtos).then((res) => {
+      setLikedInfos(res.data);
+    });
+  }, [PostRequestDtos]);
   if (!isModal && postId) {
     return (
       <main className="mx-auto w-full border-[1px] border-zinc-300 lg:w-2/3 ">
@@ -73,10 +86,19 @@ const Post = () => {
         </div>
       </FilterLayout>
       <section className="mx-auto w-[728px] space-y-12">
-        {PostDto.data.content[0] ? (
+        {PostDto.data.content?.[0] ? (
           PostDto.data.content.map((post) =>
             bookAndLikes.map((likeAndBook) => {
-              return <PostItem {...post} bookAndLikes={likeAndBook} />;
+              return likedInfos.map((likedInfo) => {
+                return (
+                  <PostItem
+                    {...post}
+                    bookAndLikes={likeAndBook}
+                    likedUsers={likedInfo.likedUsers}
+                    likedCount={likedInfo.likedCount}
+                  />
+                );
+              });
             }),
           )
         ) : (
@@ -92,30 +114,6 @@ const Post = () => {
       )}
     </div>
   );
-};
-
-export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
-  const content = formData.get('content')?.toString();
-  const postId = Number(formData.get('postId'));
-  const parentCommentId = Number(formData.get('parentCommentId'))
-    ? Number(formData.get('parentCommentId'))
-    : null;
-  console.log(content, typeof postId, parentCommentId);
-  if (!content && !content?.trim()) {
-    return redirect('/post'); // 빈 입력은 무시
-  }
-  try {
-    const response = await postComment(content, postId, parentCommentId); // postComment API 호출
-    if (response.status === 200) {
-      return json({ comment: true });
-    }
-    return redirect('/');
-  } catch (err) {
-    const error = err as unknown as AxiosError;
-    alert(error.message);
-    return redirect('/post');
-  }
 };
 
 export default Post;

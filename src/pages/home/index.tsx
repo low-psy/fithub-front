@@ -12,9 +12,8 @@ import mapFilter from '../../assets/mapFilter.png';
 import newpostFilter from '../../assets/newpostFilter.png';
 import FilterIcon from '../../assets/icons/filterIcon';
 import MainSection from '../../components/item/TrainerItem';
-// import useInfiniteScroll from '../../hooks/infiniteScroll';
-// import { createFakeData } from '../../types/trainingClass';
-// import { TrainingOutlineDto } from '../../types/swagger/model/trainingOutlineDto';
+import useInfiniteScroll from '../../hooks/infiniteScroll';
+import { TrainingOutlineDto } from '../../types/swagger/model/trainingOutlineDto';
 import { PageTrainingOutlineDto } from '../../types/swagger/model/pageTrainingOutlineDto';
 
 export const loader: LoaderFunction = async () => {
@@ -26,25 +25,24 @@ export const loader: LoaderFunction = async () => {
     throw error;
   }
 };
-
 const Home: React.FC = () => {
   const response = useLoaderData() as AxiosResponse<PageTrainingOutlineDto>;
-  // let trainerInfoDto = response.data;
+  const trainerInfoDto = response.data;
 
-  // const { data, loaderIndicator } = useInfiniteScroll<TrainingOutlineDto>({
-  //   initialData: trainerInfoDto?.content || [],
-  //   fetchData: async (page): Promise<TrainingOutlineDto[] | []> => {
-  //     if (response.data.content && response.data.content.length < 10) {
-  //       return [];
-  //     }
-  //     const nextPageData = await getNextPageData(page);
-  //     console.log(nextPageData);
-  //     if (!nextPageData) {
-  //       return [];
-  //     }
-  //     return nextPageData.data.content || [];
-  //   },
-  // });
+  const { data, loaderIndicator } = useInfiniteScroll<TrainingOutlineDto>({
+    initialData: trainerInfoDto?.content || [],
+    fetchData: async (page): Promise<TrainingOutlineDto[] | []> => {
+      if (response.data.content && response.data.content.length < 8) {
+        return [];
+      }
+      console.log('next page data');
+      const nextPageData = await getNextPageData(page);
+      if (!nextPageData) {
+        return [];
+      }
+      return nextPageData.data.content || [];
+    },
+  });
 
   return (
     <div className="space-y-4 md:space-y-10">
@@ -80,12 +78,12 @@ const Home: React.FC = () => {
         </article>
         <article>
           <ul className="grid grid-cols-1 gap-6  sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-            {response.data.content &&
-              response.data.content.map((value) => (
+            {data &&
+              data.map((value) => (
                 <MainSection key={value.id} trainerInfoDto={value} />
               ))}
           </ul>
-          {/* <div ref={loaderIndicator} /> */}
+          <div ref={loaderIndicator} />
         </article>
       </section>
     </div>
