@@ -7,10 +7,12 @@ import { useAppSelector } from '../../hooks/reduxHooks';
 
 interface LocationSearchInputProps {
   onLocationSelect: (address: string) => void;
+  address?: string;
 }
 
 const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
   onLocationSelect,
+  address,
 }) => {
   const [selected, setSelected] = useState(false);
 

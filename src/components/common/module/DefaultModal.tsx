@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  children: React.ReactNode;
+  children: React.ReactNode | ReactElement | string;
   modalWidth?: string;
   modalMaxHeight?: string;
 }
@@ -18,7 +18,7 @@ const DefaultModal: React.FC<ModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50">
       <div
         className="overflow-auto rounded-md bg-white p-4"
         style={{ width: modalWidth, maxHeight: modalMaxHeight }}
