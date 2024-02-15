@@ -9,11 +9,11 @@ const Replys = () => {
   return (
     <div className="ml-12 py-2">
       <Reply />
-      <div className="flex flex-row gap-2">
+      <div className="flex flex-row gap-2 ">
         <input
           value={input}
           onChange={handleInput}
-          className="h-8 w-full rounded border border-gray-500 p-2"
+          className="h-10 w-full rounded border border-gray-400 p-2"
         />
         <button
           type="button"

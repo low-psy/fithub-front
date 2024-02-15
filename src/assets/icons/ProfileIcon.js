@@ -1,6 +1,11 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+
+import { TOGGLE_OPEN } from '../../redux/slices/profileDropdownSlice';
 
 export default function ProfileIcon() {
+  const dispatch = useDispatch();
+
   return (
     <svg
       width="36"
@@ -8,6 +13,8 @@ export default function ProfileIcon() {
       viewBox="0 0 50 50"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      onClick={() => dispatch(TOGGLE_OPEN())}
+      className="cursor-pointer"
     >
       <path
         d="M24.6673 2C12.1485 2 2 12.1485 2 24.6673C2 37.186 12.1485 47.3346 24.6673 47.3346C37.186 47.3346 47.3346 37.186 47.3346 24.6673C47.3346 12.1485 37.186 2 24.6673 2Z"

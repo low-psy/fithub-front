@@ -1,18 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  redirect,
   Link,
   LoaderFunction,
   useLoaderData,
   Outlet,
   useLocation,
   useParams,
-  ActionFunctionArgs,
-  json,
-  useActionData,
 } from 'react-router-dom';
 import { AxiosError } from 'axios';
-import store from '../../redux/store';
 import FilterLayout from '../../components/filter/FilterLayout';
 import PostItem from '../../components/post/PostItem';
 import { LoaderData } from '../../types/training';
@@ -21,6 +16,7 @@ import { LikesBookmarkStatusDto } from '../../types/swagger/model/likesBookmarkS
 import { initialTokenState } from '../../redux/initialStates/initialStates';
 import RedirectModal from '../../components/common/module/RedirectModal';
 import { LikedUsersInfoDto } from '../../types/swagger/model/likedUsersInfoDto';
+import { useAppSelector } from '../../hooks/reduxHooks';
 
 export const loader = (async () => {
   try {
@@ -52,9 +48,11 @@ const Post = () => {
   const [likedInfos, setLikedInfos] = useState<LikedUsersInfoDto[]>([
     { likedCount: 0, likedUsers: [{ nickname: '', profileUrl: '' }] },
   ]);
+
+  const { isLogin } = useAppSelector((state) => state.user);
+
   useEffect(() => {
-    const { accessToken } = store.getState().token;
-    if (accessToken !== initialTokenState.accessToken) {
+    if (isLogin) {
       getLikeBook(PostRequestDtos).then((res) => {
         setBookAndLikes(res.data);
       });
@@ -62,7 +60,7 @@ const Post = () => {
     getLikes(PostRequestDtos).then((res) => {
       setLikedInfos(res.data);
     });
-  }, [PostRequestDtos]);
+  }, [PostDto.data.content, isLogin]);
   if (!isModal && postId) {
     return (
       <main className="mx-auto w-full border-[1px] border-zinc-300 lg:w-2/3 ">

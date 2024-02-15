@@ -1,4 +1,4 @@
-import { defaultAxios } from './axios';
+import { authAxios, defaultAxios } from './axios';
 
 import { Gender, ISignupProps } from '../types/user';
 
@@ -15,6 +15,9 @@ export const defaultLogin = async (email: string, password: string) => {
     password,
   };
   const response = await defaultAxios.post('/auth/sign-in', data);
+
+  const accessToken = response.headers.authorization.split(' ')[1];
+  localStorage.setItem('accessToken', accessToken);
 
   return response;
 };
@@ -68,8 +71,9 @@ export const sendCertifyNumber = async (email: string) => {
 /**
  * [POST] 이메일로 받은 인증번호를 서버에 생성된 인증번호와 비교 요청
  * number를 인자로 받아 서버로 전송
- * @param number 이메일로 받은 인증번호
- * @returns 일단 response 반환
+ * @param certificationNumber 이메일로 받은 인증번호
+ * @param email 사용자 이메일
+ * @returns
  */
 export const compareCertifyNumber = async (
   certificationNumber: string,
@@ -91,7 +95,7 @@ export const compareCertifyNumber = async (
  * @param phone 사용자 전화번호
  * @param gender 사용자 성별
  *  @param providerId 소셜 provider id
- * @returns 일단 response 반환
+ * @returns
  */
 export const socialSignup = async (
   email: string,
@@ -109,6 +113,90 @@ export const socialSignup = async (
     providerId,
   };
   const response = defaultAxios.post('/auth/oauth/regist', data);
+
+  return response;
+};
+
+/**
+ * [PATCH] 임시 비밀번호 발급
+ * @param email 사용자 이메일
+ * @returns
+ */
+export const getTempPassword = (email: string) => {
+  const response = defaultAxios.patch('/auth/email/send/temporary-password', {
+    to: email,
+  });
+
+  return response;
+};
+
+/**
+ * [POST] 비밀번호 변경
+ * @param email 사용자 이메일
+ * @param password 변경 후 비밀번호
+ * @returns
+ */
+export const changePassword = (email: string, password: string) => {
+  const response = authAxios.post('/auth/change/password', {
+    email,
+    password,
+  });
+
+  return response;
+};
+
+/**
+ * [PUT] 프로필 정보 변경
+ * @param name
+ * @param nickname
+ * @param phone
+ * @param gender
+ * @param bio
+ * @returns
+ */
+export const updateProfile = async (
+  name: string,
+  nickname: string,
+  phone: string,
+  gender: Gender,
+  bio: string,
+) => {
+  const response = await authAxios.put('/users/profile/update', null, {
+    params: {
+      name,
+      nickname,
+      phone,
+      gender,
+      bio,
+    },
+  });
+
+  return response;
+};
+
+/**
+ * [PUT] 프로필 이미지 변경
+ * @param formData
+ * @returns
+ */
+export const updateProfileImg = async (formData: FormData) => {
+  const response = await authAxios.put('/users/image/update', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
+  return response;
+};
+
+/**
+ * [DELETE] 로그아웃
+ * @returns
+ */
+export const logout = async () => {
+  const params = { accessToken: localStorage.getItem('accessToken') };
+
+  const response = await authAxios.delete('/auth/sign-out', { params });
 
   return response;
 };
