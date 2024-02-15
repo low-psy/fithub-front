@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { deleteBook, postBook } from '../apis/post';
 
-const useBook = (postId: number | undefined, booked: boolean | undefined) => {
+const useBook = (
+  id: number | undefined,
+  booked: boolean | undefined,
+  postAction: (id: number) => Promise<any>, // 찜하기 API 호출 함수
+  deleteAction: (id: number) => Promise<any>, // 찜 취소 API 호출 함수
+) => {
   const navigate = useNavigate();
   const [isBooked, setIsBooked] = useState(booked);
 
@@ -11,7 +15,7 @@ const useBook = (postId: number | undefined, booked: boolean | undefined) => {
   }, [booked]);
 
   const toggleBook = async () => {
-    if (!postId) {
+    if (!id) {
       return navigate('/login');
     }
     const previousBookedState = isBooked;
@@ -20,9 +24,9 @@ const useBook = (postId: number | undefined, booked: boolean | undefined) => {
     try {
       let response;
       if (!previousBookedState) {
-        response = await postBook(postId);
+        response = await postAction(id);
       } else {
-        response = await deleteBook(postId);
+        response = await deleteAction(id);
       }
 
       if (response.status !== 200) {

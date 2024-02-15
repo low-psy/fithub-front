@@ -13,7 +13,8 @@ const useLike = (
 
   useEffect(() => {
     setLiked(liked);
-  }, [liked]);
+    setLikesCount(defaultCount as number);
+  }, [liked, defaultCount]);
 
   const toggleLike = async () => {
     // 먼저 UI 업데이트
@@ -38,12 +39,12 @@ const useLike = (
         // 현재 상태가 '좋아요'였으므로, 좋아요를 제거하는 API 호출
         response = await deleteLike(postId);
       }
-
       // 응답 상태가 200이 아니면 롤백
       if (response.status !== 200) {
         setLiked(isLiked);
         setLikesCount(likesCount);
       }
+      navigate('/post');
     } catch (error) {
       console.error('Error toggling like', error);
       // 에러 발생 시 롤백

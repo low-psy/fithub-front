@@ -26,7 +26,8 @@ const useInfiniteScroll = <T>({
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !isLoading) {
+        if (entries[0].isIntersecting && !isLoading && initialData.length > 8) {
+          console.log('observer');
           loadMoreData();
         }
       },
@@ -44,7 +45,7 @@ const useInfiniteScroll = <T>({
         observer.unobserve(currentLoader);
       }
     };
-  }, [loaderIndicator, loadMoreData, isLoading]);
+  }, [loaderIndicator, loadMoreData, isLoading, initialData]);
 
   return { data, loaderIndicator };
 };
