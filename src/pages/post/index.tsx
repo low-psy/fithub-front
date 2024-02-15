@@ -60,7 +60,7 @@ const Post = () => {
     getLikes(PostRequestDtos).then((res) => {
       setLikedInfos(res.data);
     });
-  }, [PostDto.data.content, isLogin]);
+  }, [PostRequestDtos, isLogin]);
   if (!isModal && postId) {
     return (
       <main className="mx-auto w-full border-[1px] border-zinc-300 lg:w-2/3 ">
