@@ -18,10 +18,10 @@ import NewPost, {
 } from './pages/newpost/index';
 
 import Signup from './pages/signup';
-import TrainerHome from './pages/trainer';
+import TrainerHome, { loader as TrainerLoader } from './pages/trainer';
 import TrainerRoot from './pages/TrainerRoot';
 import RootErrorBoundary from './components/common/ErrorBoundary';
-import Post, { action as postAction, loader as postLoader } from './pages/post';
+import Post, { loader as postLoader } from './pages/post';
 
 import CertifyTrainer from './pages/certifyTrainer';
 import SocialSignup from './pages/signup/SocialSignup';
@@ -33,6 +33,7 @@ import NotFound from './pages/NotFound';
 import NewTrainer from './pages/trainer/new';
 import CreateTrainer, {
   action as createTrainerAction,
+  loader as createTrainerLoader,
 } from './pages/trainer/create';
 import Detail, { loader as detailedTrainingLoader } from './pages/detail';
 import useGoogleMapsApiLoader from './hooks/useGoogleMap';
@@ -49,8 +50,11 @@ import profileLoader from './pages/user/loader';
 import withAuth from './hocs/withAuth';
 import DetailPost, {
   loader as detailPostLoader,
+  action as detailPostAction,
 } from './pages/post/detailPost';
 import TrainingCancel from './pages/home/Cancel';
+import SuccessPage from './pages/detail/success';
+import TrainingBook, { loader as TrainingBookLoader } from './pages/book';
 
 function App() {
   const AuthedCertifyTrainer = withAuth(
@@ -74,6 +78,12 @@ function App() {
           action: homeAction,
           errorElement: <RootErrorBoundary />,
         },
+        // 트레이닝 예약
+        {
+          path: 'book',
+          element: <TrainingBook />,
+          loader: TrainingBookLoader,
+        },
         // 게시글 작성
         {
           path: 'newpost',
@@ -86,12 +96,12 @@ function App() {
           path: 'post',
           element: <Post />,
           loader: postLoader,
-          action: postAction,
           children: [
             {
               path: ':postId',
               element: <DetailPost />,
               loader: detailPostLoader,
+              action: detailPostAction,
             },
           ],
         },
@@ -126,6 +136,7 @@ function App() {
             },
           ],
         },
+        // 트레이닝 세부사항 조회
         {
           path: 'detail',
           children: [
@@ -133,6 +144,7 @@ function App() {
               path: ':trainingId',
               element: <Detail />,
               loader: detailedTrainingLoader,
+              children: [{ path: 'success', element: <SuccessPage /> }],
             },
           ],
         },
@@ -167,12 +179,12 @@ function App() {
       ],
     },
 
-    // 트레이너 생성?
+    // 트레이너 생성
     {
       path: '/trainer',
       element: <TrainerRoot />,
       children: [
-        { path: 'home', element: <TrainerHome /> },
+        { path: 'home', element: <TrainerHome />, loader: TrainerLoader },
         {
           path: 'new',
           children: [
@@ -181,6 +193,7 @@ function App() {
               path: 'create',
               element: <CreateTrainer />,
               action: createTrainerAction,
+              loader: createTrainerLoader,
             },
           ],
         },

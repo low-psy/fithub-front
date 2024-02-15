@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ImageSlider from '../common/ImageSlice';
 import DefaultModal from '../common/module/DefaultModal';
@@ -10,26 +10,37 @@ import PostForm from './PostForm';
 import DeleteItem from '../common/DeleteItem';
 import useLike from '../../hooks/likeHook';
 import useBook from '../../hooks/bookHook';
-import { formatDate } from '../item/TrainerItem';
-import { PostOutlineDto } from '../../types/swagger/model/postOutlineDto';
 import { LikesBookmarkStatusDto } from '../../types/swagger/model/likesBookmarkStatusDto';
 import CommentForm from '../common/CommentForm';
 import RoundedIcon from '../common/icon/Rounded';
+import { PostInfoDto } from '../../types/swagger/model/postInfoDto';
+import { LikesInfoDto } from '../../types/swagger/model/likesInfoDto';
+import { postBook, deleteBook } from '../../apis/post';
+import { formatDate } from '../../utils/util';
 
-interface PostItemProps extends PostOutlineDto {
+interface PostItemProps extends PostInfoDto {
   postUse?: string;
   bookAndLikes: LikesBookmarkStatusDto;
+  likedCount: number | undefined;
+  likedUsers: LikesInfoDto[] | undefined;
   // 기타 필요한 추가 props
 }
 
 const PostItem: React.FunctionComponent<PostItemProps> = ({
-  postInfo,
-  postLikedInfo,
+  createdDate,
+  modifiedDate,
+  content,
+  hashTags,
+  views,
+  documentUrls,
   postCommentsCount,
   postUse,
   bookAndLikes,
+  postId,
+  writerInfo,
+  likedCount,
+  likedUsers,
 }) => {
-  console.log(postCommentsCount);
   const [modalsOpen, setModalsOpen] = useState<{ [key: string]: boolean }>({
     deleteModal: false,
     editModal: false,
@@ -50,21 +61,23 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
   const { isLiked, likesCount, toggleLike } = useLike(
     bookAndLikes.postId,
     bookAndLikes.likesStatus,
-    postLikedInfo.likedCount,
+    likedCount,
   );
   const { isBooked, toggleBook } = useBook(
     bookAndLikes.postId,
     bookAndLikes.bookmarkStatus,
+    postBook,
+    deleteBook,
   );
-  const date = formatDate(postInfo.createdDate?.toString());
+  const date = formatDate(createdDate?.toString());
 
   return (
-    <article key={postInfo.postId}>
+    <article key={postId}>
       <div className="space-y-4  bg-white p-4 shadow-sm drop-shadow-xl ">
         <div className="flex items-center justify-between ">
           <ProfileSection
-            profileName={postInfo.writerInfo?.nickname}
-            profileImage={postInfo.writerInfo?.profileUrl}
+            profileName={writerInfo?.nickname}
+            profileImage={writerInfo?.profileUrl}
             date={date}
           />
           {postUse === 'update' && (
@@ -72,9 +85,9 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
           )}
         </div>
         <div className="space-y-4">
-          <h3 className="pl-1">{postInfo.content}</h3>
-          {postInfo.documentUrls && (
-            <ImageSlider postImages={postInfo.documentUrls} imageSize="468" />
+          <h3 className="pl-1">{content}</h3>
+          {documentUrls && (
+            <ImageSlider postImages={documentUrls} imageSize="468" />
           )}
         </div>
         <div className="flex  justify-between">
@@ -90,21 +103,21 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
               bookmark
             </RoundedIcon>
           </div>
-          <Hashtags hashtags={postInfo.hashTags} />
+          <Hashtags hashtags={hashTags} />
         </div>
         <LikesSection
           likes={likesCount}
           onLikesClick={() => toggleModal('likeModal')}
         />
         <div>
-          {postCommentsCount > 0 ? (
+          {postCommentsCount && postCommentsCount > 0 ? (
             <div>
-              <Link to={`${postInfo.postId}`} state={{ isModal: true }}>
+              <Link to={`${postId}`} state={{ isModal: true }}>
                 {`댓글 ${postCommentsCount}개 보기...`}
               </Link>
             </div>
           ) : null}
-          <CommentForm postId={postInfo.postId} parentCommentId={0} />
+          <CommentForm postId={postId} parentCommentId={0} />
         </div>
         <div />
       </div>
@@ -114,7 +127,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
         modalMaxHeight="400px"
       >
         <ul className="w-[200px] space-y-6">
-          {postLikedInfo.likedUsers?.map((likeInfoDto) => {
+          {likedUsers?.map((likeInfoDto) => {
             return (
               <li
                 className="flex items-center justify-between "
@@ -141,11 +154,11 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
       >
         <div className="w-full space-y-6">
           <PostForm
-            content={postInfo.content}
-            images={postInfo.documentUrls}
-            hashTags={postInfo.hashTags}
+            content={content}
+            images={documentUrls}
+            hashTags={hashTags}
             useCase="update"
-            id={postInfo.postId}
+            id={postId}
           />
         </div>
       </DefaultModal>
@@ -155,11 +168,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
         modalMaxHeight="400"
       >
         <div className="w-[400px] space-y-6">
-          <DeleteItem
-            id={postInfo.postId}
-            action="/profile/mypost"
-            itemName="게시물"
-          />
+          <DeleteItem id={postId} action="/profile/mypost" itemName="게시물" />
         </div>
       </DefaultModal>
     </article>

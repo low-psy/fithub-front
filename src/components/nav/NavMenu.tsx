@@ -22,7 +22,7 @@ const NavMenu = () => {
       <li key="trainer" className="grow text-center">
         {isCreateTrainer ? (
           <Link
-            to="/trainer/new"
+            to="/trainer/home"
             className="hidden whitespace-nowrap rounded-full px-4 py-3 hover:bg-slate-200 md:inline-block"
           >
             트레이너신가요?
