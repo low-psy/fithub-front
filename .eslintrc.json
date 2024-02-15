@@ -20,6 +20,7 @@
   },
   "plugins": ["@typescript-eslint", "react"],
   "rules": {
+    "no-plusplus": "off",
     "consistent-return": "warn",
     "no-nested-ternary": "off",
     "no-undef": ["error", { "typeof": true }],
