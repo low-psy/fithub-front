@@ -1,5 +1,3 @@
-import { time } from 'console';
-import { LocalTime } from '../types/swagger/model/localTime';
 import { TrainingAvailableDateDto } from '../types/swagger/model/trainingAvailableDateDto';
 
 // 'YYYY-MM-DD HH-MM-SS' 형식의 dateTime string
@@ -45,15 +43,12 @@ export const extractTimesForSelectedDate = (
 export const convertToDateObjects = (
   availableDates?: Array<TrainingAvailableDateDto>,
 ) => {
-  console.log(availableDates);
   return (
     availableDates &&
     availableDates
       .map((dateInfo) => {
         return dateInfo.availableTimes?.map((timeInfo) => {
-          console.log(timeInfo);
-          const { hour, minute, second } = timeInfo.time as LocalTime;
-          const dateTimeString = `${dateInfo.date}T${hour?.toString().padStart(2, '0')}:${minute?.toString().padStart(2, '0')}:${second?.toString().padStart(2, '0')}`;
+          const dateTimeString = `${dateInfo.date}T${timeInfo.time}`;
           return new Date(dateTimeString);
         });
       })
@@ -72,3 +67,18 @@ export function fileToBase64(file: File) {
 
 export const generateRandomString = () =>
   window.btoa(Math.random().toString()).slice(0, 20);
+
+export function formatPriceToKRW(price: number) {
+  return price.toLocaleString();
+}
+
+export function formatDate(dateString: string | undefined) {
+  if (!dateString) {
+    return;
+  }
+  const date = new Date(dateString);
+  const month = date.getMonth() + 1; // getMonth()는 0부터 시작하므로 1을 더해줍니다.
+  const day = date.getDate();
+
+  return `${month}월 ${day}일`;
+}
