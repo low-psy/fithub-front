@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface IconComponentProps {
   children: string;
@@ -15,6 +15,10 @@ const FloatRoundedIcon: React.FC<IconComponentProps> = ({
 }) => {
   const [isClicked, setIsClicked] = useState(false);
   const [isStarFilled, setIsStarFilled] = useState(defaultState || false);
+
+  useEffect(() => {
+    setIsStarFilled(defaultState as boolean);
+  }, [defaultState]);
 
   const handleIconClick = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
