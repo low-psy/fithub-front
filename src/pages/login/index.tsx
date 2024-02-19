@@ -33,7 +33,6 @@ function Login() {
 
   useEffect(() => {
     if (searchParams.get('status') === '400 BAD_REQUEST') {
-      // eslint-disable-next-line no-alert
       alert(searchParams.get('message'));
       navigate('/login');
     }
@@ -42,10 +41,6 @@ function Login() {
   const kakaoSocialLoginRequestUrl = `${process.env.REACT_APP_BASE_SERVER_URL}/oauth2/authorization/kakao`;
   const naverSocialLoginRequestUrl = `${process.env.REACT_APP_BASE_SERVER_URL}/oauth2/authorization/naver`;
   const googleSocialLoginRequestUrl = `${process.env.REACT_APP_BASE_SERVER_URL}/oauth2/authorization/google`;
-
-  const redirectPath = location.state?.redirectPath
-    ? location.state.redirectPath
-    : false;
 
   const initFormValue: ILoginFormValue = {
     email: '',

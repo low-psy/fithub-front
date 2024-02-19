@@ -37,7 +37,6 @@ function withAuth(InnerComponent: React.ComponentType, option: ROLE) {
         if (role !== 'admin') {
           alert('관리자만 이용 가능합니다.');
           navigate(-1);
-          // return;
         }
       }
     }, [isLogin, role, navigate]);

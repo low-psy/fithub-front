@@ -7,7 +7,7 @@ import { Gender, ISignupProps } from '../types/user';
  * email, password를 인자로 받아 서버로 전송
  * @param email
  * @param password
- * @returns 일단 response 반환
+ * @returns
  */
 export const defaultLogin = async (email: string, password: string) => {
   const data = {
@@ -27,7 +27,7 @@ export const defaultLogin = async (email: string, password: string) => {
  * platform(kakao, naver, google)과 code(소셜 서비스에서 받아온 인가코드)를 인자로 받아 서버로 전송
  * @param platform kakao | naver | google
  * @param code authentication code
- * @returns 일단 response 반환
+ * @returns
  */
 export const socialLogin = async (platform: string, code: string) => {
   const response = await defaultAxios.post(`/auth/login?code=${code}`);
@@ -39,7 +39,7 @@ export const socialLogin = async (platform: string, code: string) => {
  * [POST] 일반 회원가입
  * nickname, email, password, phone, gender를 인자로 받아 서버로 전송
  * @param props nickname, email, password, phone, gender를 담은 객체
- * @returns 일단 response 반환
+ * @returns
  */
 export const signup = async (props: ISignupProps, profileImg = '') => {
   const signupDto = { ...props, bio: 'dummyBio' };
@@ -60,7 +60,7 @@ export const signup = async (props: ISignupProps, profileImg = '') => {
  * [POST] 이메일 인증 (인증번호 전송)
  * email을 인자로 받아 서버로 전송
  * @param email
- * @returns 일단 response 반환
+ * @returns
  */
 export const sendCertifyNumber = async (email: string) => {
   const response = defaultAxios.post('/auth/email/send', { to: email });
