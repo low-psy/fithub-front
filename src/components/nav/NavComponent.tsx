@@ -11,7 +11,6 @@ const NavComponent = () => {
 
   if (location.pathname.startsWith('/newpost')) {
     title = '게시물 작성하기';
-    isNavSearch = false;
   } else if (
     location.pathname.startsWith('/login') ||
     location.pathname.startsWith('/signup') ||

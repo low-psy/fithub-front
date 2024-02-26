@@ -1,21 +1,27 @@
-import React from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActionFunctionArgs,
   LoaderFunction,
   useLoaderData,
 } from 'react-router-dom';
 import { AxiosError, AxiosResponse } from 'axios';
-import { getTraining, getNextPageData } from '../../apis/trainig';
-import FilterSection from '../../components/item/LinkItemWithBg';
+import { useDispatch } from 'react-redux';
+import {
+  getTraining,
+  getNextPageData,
+  getUsersTrainingLikes,
+} from '../../apis/trainig';
+import FilterSection from '../../components/btn/LinkBtnWithUrl';
 import lookupFilter from '../../assets/lookupFilter.png';
 import mapFilter from '../../assets/mapFilter.png';
 import newpostFilter from '../../assets/newpostFilter.png';
 import FilterIcon from '../../assets/icons/filterIcon';
-import MainSection from '../../components/item/TrainerItem';
-// import useInfiniteScroll from '../../hooks/infiniteScroll';
-// import { createFakeData } from '../../types/trainingClass';
-// import { TrainingOutlineDto } from '../../types/swagger/model/trainingOutlineDto';
+import useInfiniteScroll from '../../hooks/infiniteScroll';
+import { TrainingOutlineDto } from '../../types/swagger/model/trainingOutlineDto';
 import { PageTrainingOutlineDto } from '../../types/swagger/model/pageTrainingOutlineDto';
+import { errorFunc } from '../../utils/util';
+import UserTrainingItem from './UserTrainingItem';
+import { useAppSelector } from '../../hooks/reduxHooks';
 
 export const loader: LoaderFunction = async () => {
   try {
@@ -26,25 +32,55 @@ export const loader: LoaderFunction = async () => {
     throw error;
   }
 };
-
 const Home: React.FC = () => {
   const response = useLoaderData() as AxiosResponse<PageTrainingOutlineDto>;
-  // let trainerInfoDto = response.data;
+  const pageTrainersTraining = useMemo(() => response.data, [response.data]);
+  const idList = useMemo(
+    () =>
+      pageTrainersTraining.content?.map((training) => training.id as number),
+    [pageTrainersTraining.content],
+  );
+  const dispatch = useDispatch();
+  const [usersTrainingLike, setUsersTrainingLike] = useState<boolean[]>([]);
+  const { isLogin } = useAppSelector((state) => state.user);
 
-  // const { data, loaderIndicator } = useInfiniteScroll<TrainingOutlineDto>({
-  //   initialData: trainerInfoDto?.content || [],
-  //   fetchData: async (page): Promise<TrainingOutlineDto[] | []> => {
-  //     if (response.data.content && response.data.content.length < 10) {
-  //       return [];
-  //     }
-  //     const nextPageData = await getNextPageData(page);
-  //     console.log(nextPageData);
-  //     if (!nextPageData) {
-  //       return [];
-  //     }
-  //     return nextPageData.data.content || [];
-  //   },
-  // });
+  useEffect(() => {
+    const fetchUsersTrainingLike = async () => {
+      try {
+        if (!idList) return;
+        const res = await getUsersTrainingLikes(idList);
+        if (res.status === 200) {
+          setUsersTrainingLike(res.data);
+          return null;
+        }
+        throw new Error(`server is trouble with${res.status}`);
+      } catch (err) {
+        errorFunc(err);
+      }
+    };
+    if (isLogin) {
+      fetchUsersTrainingLike();
+    }
+  }, [idList, isLogin, dispatch]);
+  const fetchData = useCallback(
+    async (page: number): Promise<TrainingOutlineDto[] | []> => {
+      if (response.data.content && response.data.content.length < 9) {
+        return [];
+      }
+      console.log('next page data');
+      const nextPageData = await getNextPageData(page);
+      if (!nextPageData) {
+        return [];
+      }
+      return nextPageData.data.content || [];
+    },
+    [response.data.content],
+  );
+
+  const { data, loaderIndicator } = useInfiniteScroll<TrainingOutlineDto>({
+    initialData: pageTrainersTraining?.content || [],
+    fetchData,
+  });
 
   return (
     <div className="space-y-4 md:space-y-10">
@@ -80,12 +116,19 @@ const Home: React.FC = () => {
         </article>
         <article>
           <ul className="grid grid-cols-1 gap-6  sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-            {response.data.content &&
-              response.data.content.map((value) => (
-                <MainSection key={value.id} trainerInfoDto={value} />
-              ))}
+            {data &&
+              data.map((value, index) => {
+                const userTrainingLike = usersTrainingLike[index];
+                return (
+                  <UserTrainingItem
+                    key={value.id}
+                    trainerInfoDto={value}
+                    usersTrainingLike={userTrainingLike}
+                  />
+                );
+              })}
           </ul>
-          {/* <div ref={loaderIndicator} /> */}
+          <div ref={loaderIndicator} />
         </article>
       </section>
     </div>

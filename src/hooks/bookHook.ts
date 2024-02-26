@@ -1,17 +1,24 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { deleteBook, postBook } from '../apis/post';
+import { AxiosError } from 'axios';
+import { errorFunc } from '../utils/util';
+import { ErrorResponseDto } from '../types/swagger/model/errorResponseDto';
 
-const useBook = (postId: number | undefined, booked: boolean | undefined) => {
+const useBook = (
+  id: number | undefined,
+  booked: boolean | undefined,
+  postAction: (id: number) => Promise<any>, // 찜하기 API 호출 함수
+  deleteAction: (id: number) => Promise<any>, // 찜 취소 API 호출 함수
+) => {
   const navigate = useNavigate();
   const [isBooked, setIsBooked] = useState(booked);
 
   useEffect(() => {
     setIsBooked(booked);
-  }, [booked]);
+  }, [booked, id]);
 
   const toggleBook = async () => {
-    if (!postId) {
+    if (!id) {
       return navigate('/login');
     }
     const previousBookedState = isBooked;
@@ -20,19 +27,24 @@ const useBook = (postId: number | undefined, booked: boolean | undefined) => {
     try {
       let response;
       if (!previousBookedState) {
-        response = await postBook(postId);
+        response = await postAction(id);
       } else {
-        response = await deleteBook(postId);
+        response = await deleteAction(id);
       }
 
       if (response.status !== 200) {
         // 요청이 실패한 경우, 원래 상태로 되돌림
         setIsBooked(previousBookedState);
+      } else {
+        navigate(0);
       }
-    } catch (error) {
-      console.error('Error toggling book', error);
+    } catch (err) {
+      const error = err as AxiosError<ErrorResponseDto>;
+
       // 에러가 발생한 경우, 원래 상태로 되돌림
       setIsBooked(previousBookedState);
+      errorFunc(error);
+      navigate('/');
     }
   };
 

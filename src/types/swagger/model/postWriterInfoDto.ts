@@ -19,6 +19,10 @@ export interface PostWriterInfoDto {
      */
     nickname?: string;
     /**
+     * 작성자 이메일
+     */
+    email?: string;
+    /**
      * 게시글 작성자 프로필 url
      */
     profileUrl?: string;

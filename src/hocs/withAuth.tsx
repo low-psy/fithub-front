@@ -23,6 +23,7 @@ function withAuth(InnerComponent: React.ComponentType, option: ROLE) {
           navigate('/login');
           return;
         }
+        return;
       }
 
       if (option === 'trainer') {
@@ -31,6 +32,7 @@ function withAuth(InnerComponent: React.ComponentType, option: ROLE) {
           navigate(-1);
           return;
         }
+        return;
       }
 
       if (option === 'admin') {

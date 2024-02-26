@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { InputHTMLAttributes } from 'react';
 
 export interface IDefaultButtonProps {
   text: string;
@@ -9,12 +9,8 @@ export interface ILinkButtonProps extends IDefaultButtonProps {
   to: string;
 }
 
-export interface IInputProps {
+export interface IInputProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
-  type: string;
-  value: string;
-  placeholder: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  error: string;
-  disabled?: boolean;
+  error?: any;
 }

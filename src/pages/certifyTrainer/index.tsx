@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { AxiosError } from 'axios';
 import Header from './Header';
 import LicenseImageInput from './LicenseImageInput';
 import LicenseNameInput from './LicenseNameInput';
 import CareerInput from './CareerInput';
 import CareerListTable from './CareerListTable';
-import Layout from './Layout';
+import Layout from '../post/Layout';
 import certifyTrainer from '../../apis/trainer';
+import { SET_TRAINER } from '../../redux/slices/userSlice';
+import withAuth from '../../hocs/withAuth';
+import { ErrorResponseDto } from '../../types/swagger/model/errorResponseDto';
 
 interface ICareer {
   [key: string]: string | boolean | (() => void);
@@ -102,6 +107,8 @@ function CertifyTrainer() {
     setLicenseNames([...prevLicenseNamse]);
   };
 
+  const dispsatch = useDispatch();
+
   const handleCertifyTrainer = async () => {
     // 자격증 사진 첨부 여부
     if (images.length === 0) {
@@ -139,10 +146,15 @@ function CertifyTrainer() {
         alert(
           '트레이너 인증 요청이 완료되었습니다.\n인증 완료까지 몇일이 소요될 수 있습니다.',
         );
-        navigate('/');
+        dispsatch(SET_TRAINER());
+        navigate('/trainer/new');
       }
     } catch (error) {
-      console.log(error);
+      const err = error as AxiosError<ErrorResponseDto>;
+      if (err.response?.data.code === 'DUPLICATE') {
+        dispsatch(SET_TRAINER());
+        navigate('/trainer/home');
+      }
     }
   };
 
@@ -245,4 +257,4 @@ function CertifyTrainer() {
   );
 }
 
-export default CertifyTrainer;
+export default withAuth(CertifyTrainer, 'user');

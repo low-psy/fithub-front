@@ -15,10 +15,6 @@
  */
 export interface CancelReqDto { 
     /**
-     * 결제했던 트레이닝 id
-     */
-    trainingId: number;
-    /**
      * 결제 내역 id
      */
     reservationId: number;
@@ -26,8 +22,4 @@ export interface CancelReqDto {
      * 포트원 거래고유번호
      */
     impUid: string;
-    /**
-     * 결제했던 금액(환불 금액)
-     */
-    amount: string;
 }

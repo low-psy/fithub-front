@@ -5,6 +5,7 @@ interface UseInfiniteScrollProps<T> {
   fetchData: (page: number) => Promise<T[] | []>;
 }
 
+// 무한 스크롤 훅
 const useInfiniteScroll = <T>({
   initialData,
   fetchData,
@@ -26,7 +27,8 @@ const useInfiniteScroll = <T>({
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !isLoading) {
+        if (entries[0].isIntersecting && !isLoading && initialData.length > 8) {
+          console.log('observer');
           loadMoreData();
         }
       },
@@ -44,7 +46,7 @@ const useInfiniteScroll = <T>({
         observer.unobserve(currentLoader);
       }
     };
-  }, [loaderIndicator, loadMoreData, isLoading]);
+  }, [loaderIndicator, loadMoreData, isLoading, initialData]);
 
   return { data, loaderIndicator };
 };

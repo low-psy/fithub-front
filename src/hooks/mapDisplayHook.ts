@@ -15,7 +15,6 @@ const useMapDisplay = ({ initialAddress }: UseMapDisplayProps) => {
   const geocodeAddress = (address: string) => {
     const geocoder = new google.maps.Geocoder();
     geocoder.geocode({ address }, (results, status) => {
-      console.log(results);
       if (status === 'OK' && results[0]) {
         const { location } = results[0].geometry;
         setFinalLocation({

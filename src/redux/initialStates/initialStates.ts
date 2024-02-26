@@ -1,3 +1,4 @@
+import { PostDocumentUpdateDto } from '../../types/swagger/model/postDocumentUpdateDto';
 import {
   CommentState,
   IDropdownState,
@@ -18,8 +19,6 @@ export const initialMapLoaderState: MapState = {
 export const initialPaymentState: PaymentState = {
   selectedDate: { startDate: '', endDate: '' },
   selectedTime: '',
-  trainingId: 0,
-  pg: '',
   payMethod: '',
   merchantUid: '',
   impUid: '',
@@ -30,6 +29,8 @@ export const initialCommentState: CommentState = {
   replyTo: '',
   selectReplyId: null,
 };
+
+export const initialUpdateImageState: PostDocumentUpdateDto[] = [];
 
 export const initialDropdownState: IDropdownState = {
   isOpen: false,

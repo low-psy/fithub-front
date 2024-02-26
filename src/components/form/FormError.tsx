@@ -1,14 +1,13 @@
 import React from 'react';
+import { DivProps } from '../../types/common';
 
-import { IErrorTextProps, IFormErrorProps } from '../../types/form';
-
-export function ErrorText({ text }: IErrorTextProps) {
-  return <p className="text-sm text-red-400 md:text-base ">{text}</p>;
-}
-
-function FormError({ children }: IFormErrorProps) {
-  // return <div className="h-[12px] sm:h-[20px]">{children}</div>;
-  return <div>{children}</div>;
-}
-
+const FormError: React.FC<DivProps> = ({ children, className }) => {
+  return (
+    <div
+      className={`${className} rounded-md bg-accent_sub py-2 text-center text-lg font-bold text-accent`}
+    >
+      {children}
+    </div>
+  );
+};
 export default FormError;

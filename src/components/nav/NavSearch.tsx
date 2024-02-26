@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Form } from 'react-router-dom';
 import SearchIcon from '../../assets/icons/SearchIcon';
-import SearchModule from '../common/module/SearchModule';
+import SearchModule from '../modal/SearchModule';
 import { EventListener } from '../../types/common';
 
 const NavSearch = () => {

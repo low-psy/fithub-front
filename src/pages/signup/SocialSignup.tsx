@@ -5,7 +5,7 @@ import {
   sendCertifyNumber,
   socialSignup,
 } from '../../apis/user';
-import FormError, { ErrorText } from '../../components/form/FormError';
+import FormError from '../../components/form/FormError';
 import FormInput from '../../components/form/FormInput';
 import FormLabel from '../../components/form/FormLabel';
 import FormLogo from '../../components/form/FormLogo';
@@ -154,8 +154,10 @@ function SocialSignup() {
     }
   };
 
-  const handleChangeInputValue = (id: string, value: string) => {
-    setFormValue((prevInput) => ({ ...prevInput, [id]: value }));
+  const handleChangeInputValue = (id?: string, value?: string) => {
+    if (id && value) {
+      setFormValue((prevInput) => ({ ...prevInput, [id]: value }));
+    }
   };
 
   const handleGender = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -199,9 +201,7 @@ function SocialSignup() {
               </button>
             )}
           </div>
-          <FormError>
-            {errorMsg?.email && <ErrorText text={errorMsg.email} />}
-          </FormError>
+          <FormError>{errorMsg?.email}</FormError>
         </FormLabel>
         {/* 인증번호 입력 */}
         {isSent && (
@@ -239,9 +239,7 @@ function SocialSignup() {
                 onChange={handleChangeInputValue}
                 error={errorMsg}
               />
-              <FormError>
-                {errorMsg.name && <ErrorText text={errorMsg.name} />}
-              </FormError>
+              {errorMsg.name && <FormError>{errorMsg.name}</FormError>}
             </FormLabel>
             {/* 전화번호 */}
             <FormLabel htmlFor="phone" text="전화번호">
@@ -253,9 +251,7 @@ function SocialSignup() {
                 onChange={handleChangeInputValue}
                 error={errorMsg}
               />
-              <FormError>
-                {errorMsg.phone && <ErrorText text={errorMsg.phone} />}
-              </FormError>
+              {errorMsg.phone && <FormError>{errorMsg.phone}</FormError>}
             </FormLabel>
             {/* 성별 */}
             <div className="mt-2 flex flex-row gap-4">

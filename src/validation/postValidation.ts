@@ -1,24 +1,25 @@
-interface ValidationErrors {
-  message: string;
-}
+import { INewPostError } from '../types/form';
 
 const validatePostData = (
   content: string,
   images: File[],
   hashtag: string,
-): ValidationErrors | null => {
-  if (!content && images.length === 0 && !hashtag) {
-    return { message: '내용, 이미지, 해시태그 중 하나는 입력해주셔야 합니다.' };
+): INewPostError | null => {
+  let error = {};
+  if (content.replace(/ /g, '').length < 2) {
+    error = {
+      ...error,
+      content: '최소 2글자 이상의 내용을 입력해주어야 합니다 ',
+    };
   }
   if (images.length <= 1 && images.filter((v) => v.name !== '').length === 0) {
-    return { message: '이미지는 최소 1개 이상 업로드 해주셔야 합니다.' };
+    error = { ...error, images: '최소 1개의 이미지를 업로드 해주셔야 합니다' };
   }
 
   if (images.length > 10) {
-    return { message: '이미지는 최대 10개까지만 업로드 가능합니다.' };
+    error = { ...error, images: '이미지는 최대 10개까지 업로드 가능합니다' };
   }
-
-  return null;
+  return error;
 };
 
 export default validatePostData;

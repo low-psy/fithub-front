@@ -1,14 +1,16 @@
 import React from 'react';
 import { ActionFunctionArgs, redirect } from 'react-router-dom';
-import TrainerForm from '../../components/trainer/TrainerForm';
+import { AxiosError } from 'axios';
+import TrainerForm from './TrainerForm';
 import { FormErrors } from '../../types/common';
 import { createTraining } from '../../apis/trainig';
-import { fileToBase64 } from '../../utils/util';
+import { errorFunc } from '../../utils/util';
+import { ErrorResponseDto } from '../../types/swagger/model/errorResponseDto';
 
 const CreateTrainer = () => {
   return (
     <div className="space-y-8">
-      <TrainerForm useCase="create" />
+      <TrainerForm />
     </div>
   );
 };
@@ -31,17 +33,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const priceNumber = price ? Number(price) : 0;
   const startDate = formData.get('startDate') as string;
   const endDate = formData.get('endDate') as string;
-  const startHour = formData.get('start_hour') as string;
-  const startHourString = `${startHour}:00`;
-  const endHour = formData.get('last_hour') as string;
-  const endHourString = `${endHour}:00`;
+  const startHour = formData.get('startHour') as string;
+  const endHour = formData.get('lastHour') as string;
   const unableDates = formData.getAll('unable_date') as string[];
   const nonEmptyUnableDates =
     unableDates.filter((date) => date).length === 0
       ? undefined
       : unableDates.filter((date) => date);
-
-  console.log(nonEmptyUnableDates);
 
   // 필수 필드 유효성 검사
   if (!title || title.trim().length < 2 || title.trim().length > 100)
@@ -49,7 +47,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (!content) errors.content = '내용을 입력해야 합니다.';
   if (images.length === 0) errors.images = '이미지를 업로드해야 합니다.';
   if (!location) errors.location = '위치를 입력해야 합니다.';
-  if (!quota) errors.quota = '최소 모집인원(1명) 이상 입력해주세요.';
   if (!price) errors.price = '가격을 입력해야 합니다.';
   if (!startDate || !endDate || !startHour || !endHour) {
     errors.dateTime = '날짜와 시간을 입력해야 합니다';
@@ -65,30 +62,35 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (Object.keys(errors).length > 0) {
     return errors;
   }
+  const trainingObj = {
+    title,
+    content,
+    images: nonEmptyImageFiles,
+    location,
+    quota: quotaNumber,
+    price: priceNumber,
+    startDate,
+    endDate,
+    startHour,
+    endHour,
+    unableDates: nonEmptyUnableDates,
+  };
 
   try {
-    const response = await createTraining({
-      title,
-      content,
-      images: nonEmptyImageFiles,
-      location,
-      quota: quotaNumber,
-      price: priceNumber,
-      startDate,
-      endDate,
-      startHour: startHourString,
-      endHour: endHourString,
-      unableDates: nonEmptyUnableDates,
-    });
+    const response = await createTraining(trainingObj);
+
     if (response && response.status === 200) {
       return redirect('/');
     }
   } catch (err) {
-    console.log(err);
-    return '/trainer/new/create';
+    const error = err as AxiosError<ErrorResponseDto>;
+    errorFunc(error);
+    if (error.response?.data.code === 'PERMISSION_DENIED') {
+      return redirect('/');
+    }
+    return redirect('/trainer/new/create');
   }
-
-  return redirect('/trainer/home');
+  return null;
 };
 
 export default CreateTrainer;

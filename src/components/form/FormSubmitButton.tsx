@@ -1,16 +1,15 @@
 import React from 'react';
+import { SubmitButtonProps } from '../../types/common';
 
-import { IFormSubmitButtonProps } from '../../types/form';
-
-function FormSubmitButton({ text, className }: IFormSubmitButtonProps) {
+const SubmitButton: React.FC<SubmitButtonProps> = ({ children, className }) => {
   return (
     <button
       type="submit"
-      className={`mt-2 h-12 rounded bg-main text-xl font-semibold text-white hover:bg-[#976fff] ${className} w-full`}
+      className={`${className} h-full w-full rounded-3xl bg-sub px-4 py-3`}
     >
-      {text}
+      {children}
     </button>
   );
-}
+};
 
-export default FormSubmitButton;
+export default SubmitButton;

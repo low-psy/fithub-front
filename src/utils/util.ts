@@ -1,11 +1,12 @@
-import { time } from 'console';
-import { LocalTime } from '../types/swagger/model/localTime';
+import { AxiosError } from 'axios';
 import { TrainingAvailableDateDto } from '../types/swagger/model/trainingAvailableDateDto';
+import { ErrorResponseDto } from '../types/swagger/model/errorResponseDto';
 
 // 'YYYY-MM-DD HH-MM-SS' 형식의 dateTime string
 export const createLocalDateTimeFunc = (
   selectedDate: string,
   selectedTime: string,
+  useCase: string,
 ) => {
   const selectedDateTime = `${selectedDate}T${selectedTime}:00`;
   const dateObj = new Date(selectedDateTime);
@@ -15,8 +16,14 @@ export const createLocalDateTimeFunc = (
   const hours = dateObj.getHours().toString().padStart(2, '0');
   const minutes = dateObj.getMinutes().toString().padStart(2, '0');
   const seconds = dateObj.getSeconds().toString().padStart(2, '0');
-
-  const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  let formattedDateTime;
+  if (useCase === 'date') {
+    formattedDateTime = Number(`${year}${month}${day}`);
+  } else if (useCase === 'time') {
+    formattedDateTime = Number(`${hours}${minutes}${seconds}`);
+  } else {
+    formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  }
   return formattedDateTime;
 };
 
@@ -45,15 +52,12 @@ export const extractTimesForSelectedDate = (
 export const convertToDateObjects = (
   availableDates?: Array<TrainingAvailableDateDto>,
 ) => {
-  console.log(availableDates);
   return (
     availableDates &&
     availableDates
       .map((dateInfo) => {
         return dateInfo.availableTimes?.map((timeInfo) => {
-          console.log(timeInfo);
-          const { hour, minute, second } = timeInfo.time as LocalTime;
-          const dateTimeString = `${dateInfo.date}T${hour?.toString().padStart(2, '0')}:${minute?.toString().padStart(2, '0')}:${second?.toString().padStart(2, '0')}`;
+          const dateTimeString = `${dateInfo.date}T${timeInfo.time}`;
           return new Date(dateTimeString);
         });
       })
@@ -72,3 +76,44 @@ export function fileToBase64(file: File) {
 
 export const generateRandomString = () =>
   window.btoa(Math.random().toString()).slice(0, 20);
+
+export function formatPriceToKRW(price: number) {
+  return price.toLocaleString();
+}
+
+export function formatDate(dateString: string | undefined) {
+  if (!dateString) {
+    return;
+  }
+  const date = new Date(dateString);
+  const month = date.getMonth() + 1; // getMonth()는 0부터 시작하므로 1을 더해줍니다.
+  const day = date.getDate();
+
+  return `${month}월 ${day}일`;
+}
+
+export const getDateString = (date: Date) => {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1; // getMonth()는 0부터 시작하므로 1을 더합니다.
+  const day = date.getDate();
+
+  return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+};
+
+export const errorFunc = (err: unknown) => {
+  const error = err as AxiosError<ErrorResponseDto>;
+  const errorText = error.response?.data.message;
+  if (error.status === 400) {
+    console.error(error);
+    alert(errorText);
+  } else if (error.status === 401) {
+    console.error(error);
+    alert(errorText);
+  } else if (error.status === 404) {
+    console.error(error);
+    alert(errorText);
+  } else {
+    console.error(error);
+    alert(errorText);
+  }
+};

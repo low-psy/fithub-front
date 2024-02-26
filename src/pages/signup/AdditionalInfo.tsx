@@ -2,7 +2,7 @@ import React from 'react';
 import { useOutletContext } from 'react-router-dom';
 import FormInput from '../../components/form/FormInput';
 import FormLabel from '../../components/form/FormLabel';
-import FormError, { ErrorText } from '../../components/form/FormError';
+import FormError from '../../components/form/FormError';
 import { ISignupFormError, ISignupInputForm } from '../../types/user';
 
 interface IAdditionalInfoProps {
@@ -31,9 +31,7 @@ function AdditionalInfo() {
           onChange={handleFormInput}
           error={errorMsg}
         />
-        <FormError>
-          {errorMsg.password && <ErrorText text={errorMsg.password} />}
-        </FormError>
+        {errorMsg.password && <FormError>{errorMsg.password}</FormError>}
       </FormLabel>
       {/* 비밀번호 확인 */}
       <FormLabel htmlFor="checkPassword" text="비밀번호 확인">
@@ -45,11 +43,9 @@ function AdditionalInfo() {
           onChange={handleFormInput}
           error={errorMsg}
         />
-        <FormError>
-          {errorMsg.checkPassword && (
-            <ErrorText text={errorMsg.checkPassword} />
-          )}
-        </FormError>
+        {errorMsg.checkPassword && (
+          <FormError>{errorMsg.checkPassword}</FormError>
+        )}
       </FormLabel>
       {/* 이름 */}
       <FormLabel htmlFor="nickname" text="이름">
@@ -61,9 +57,7 @@ function AdditionalInfo() {
           onChange={handleFormInput}
           error={errorMsg}
         />
-        <FormError>
-          {errorMsg.name && <ErrorText text={errorMsg.name} />}
-        </FormError>
+        {errorMsg.name && <FormError>{errorMsg.name}</FormError>}
       </FormLabel>
       {/* 닉네임 */}
       <FormLabel htmlFor="nickname" text="닉네임">
@@ -75,9 +69,7 @@ function AdditionalInfo() {
           onChange={handleFormInput}
           error={errorMsg}
         />
-        <FormError>
-          {errorMsg.nickname && <ErrorText text={errorMsg.nickname} />}
-        </FormError>
+        {errorMsg.nickname && <FormError>{errorMsg.nickname}</FormError>}
       </FormLabel>
       {/* 전화번호 */}
       <FormLabel htmlFor="phone" text="전화번호">
@@ -89,9 +81,7 @@ function AdditionalInfo() {
           onChange={handleFormInput}
           error={errorMsg}
         />
-        <FormError>
-          {errorMsg.phone && <ErrorText text={errorMsg.phone} />}
-        </FormError>
+        {errorMsg.phone && <FormError>{errorMsg.phone}</FormError>}
       </FormLabel>
       {/* 성별 */}
       <FormLabel htmlFor="gender" text="성별">
