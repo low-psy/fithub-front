@@ -11,6 +11,8 @@ export const defaultAxios = axios.create({
   withCredentials: true,
 });
 
+console.log(process.env.REACT_APP_BASE_SERVER_URL);
+
 export const authAxios = axios.create({
   baseURL: process.env.REACT_APP_BASE_SERVER_URL,
   withCredentials: true,
