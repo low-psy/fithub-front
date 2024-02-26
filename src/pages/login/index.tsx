@@ -7,7 +7,7 @@ import { defaultLogin } from '../../apis/user';
 
 import FormLabel from '../../components/form/FormLabel';
 import FormInput from '../../components/form/FormInput';
-import FormError, { ErrorText } from '../../components/form/FormError';
+import FormError from '../../components/form/FormError';
 import FormHelperLink from '../../components/form/FormHelperLink';
 import SocialLoginButton from '../../components/form/SocialLoginButton';
 import SocialLoginHeader from '../../components/form/SocialLoginHeader';
@@ -84,8 +84,10 @@ function Login() {
     }
   };
 
-  const handleChange = (id: string, value: string) => {
-    setFormValue((prevInput) => ({ ...prevInput, [id]: value }));
+  const handleChange = (id?: string, value?: string) => {
+    if (id && value) {
+      setFormValue((prevInput) => ({ ...prevInput, [id]: value }));
+    }
   };
 
   return (
@@ -107,9 +109,7 @@ function Login() {
             onChange={handleChange}
             error={errorMsg}
           />
-          <FormError>
-            {errorMsg.email && <ErrorText text={errorMsg.email} />}
-          </FormError>
+          {errorMsg.email && <FormError>{errorMsg.email}</FormError>}
         </FormLabel>
 
         {/* 비밀번호 */}
@@ -122,9 +122,7 @@ function Login() {
             onChange={handleChange}
             error={errorMsg}
           />
-          <FormError>
-            {errorMsg.password && <ErrorText text={errorMsg.password} />}
-          </FormError>
+          {errorMsg.password && <FormError>{errorMsg.password}</FormError>}
         </FormLabel>
 
         {/* 회원가입하기 <-> 아이디, 비밀번호 찾기 */}
@@ -156,10 +154,7 @@ function Login() {
             src={googleBtn}
           />
         </div>
-
-        <BottomButtonLayout>
-          <FormSubmitButton text="로그인" />
-        </BottomButtonLayout>
+        <FormSubmitButton>로그인</FormSubmitButton>
       </form>
     </Layout>
   );

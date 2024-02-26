@@ -28,10 +28,6 @@ export interface TrainingCreateDto {
      */
     location: string;
     /**
-     * 모집 인원
-     */
-    quota?: number;
-    /**
      * 가격
      */
     price?: number;

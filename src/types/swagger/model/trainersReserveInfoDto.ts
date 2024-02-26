@@ -15,6 +15,10 @@
  */
 export interface TrainersReserveInfoDto { 
     /**
+     * 트레이닝 예약 id
+     */
+    reservationId?: number;
+    /**
      * 트레이닝 id
      */
     trainingId?: number;

@@ -18,6 +18,5 @@ export interface TrainingContentUpdateDto {
     title: string;
     content: string;
     price: number;
-    quota: number;
     trainingImgUpdateDto?: TrainingImgUpdateDto;
 }

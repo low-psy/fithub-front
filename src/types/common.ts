@@ -3,6 +3,7 @@ import {
   InputHTMLAttributes,
   TextareaHTMLAttributes,
 } from 'react';
+import { LoaderFunction } from 'react-router-dom';
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   customProp?: string;
@@ -38,35 +39,6 @@ export interface FilterItemsProps {
   className: string;
 }
 
-interface Sort {
-  empty: boolean;
-  sorted: boolean;
-  unsorted: boolean;
-}
-
-interface Pageable {
-  offset: number;
-  sort: Sort;
-  pageNumber: number;
-  pageSize: number;
-  paged: boolean;
-  unpaged: boolean;
-}
-
-export interface ApiResponse<T> {
-  totalPages: number;
-  totalElements: number;
-  size: number;
-  content: T[];
-  number: number;
-  sort: Sort;
-  numberOfElements: number;
-  pageable: Pageable;
-  first: boolean;
-  last: boolean;
-  empty: boolean;
-}
-
 export interface FormErrors {
   title?: string;
   content?: string;
@@ -76,3 +48,6 @@ export interface FormErrors {
   price?: string;
   dateTime?: string;
 }
+
+export type LoaderData<TLoaderFn extends LoaderFunction> =
+  Awaited<ReturnType<TLoaderFn>> extends Response | infer D ? D : never;

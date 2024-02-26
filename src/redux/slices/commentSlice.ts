@@ -15,9 +15,13 @@ export const commentSlice = createSlice({
       state.replyTo = replyPrefix;
       state.selectReplyId = action.payload.replyId;
     },
+    SET_REPLY_INITIALIZE: (state) => {
+      state.replyTo = '';
+      state.selectReplyId = null;
+    },
   },
 });
 
-export const { SET_REPLY_TO } = commentSlice.actions;
+export const { SET_REPLY_TO, SET_REPLY_INITIALIZE } = commentSlice.actions;
 
 export default commentSlice.reducer;

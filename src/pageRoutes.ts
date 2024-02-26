@@ -1,8 +1,17 @@
 const mainRoutes = {
   base: '/',
-  newPost: 'newpost',
-  post: 'post',
-  postDetail: ':postId',
+  userNewPost: 'newpost',
+};
+
+const userPostRoutes = {
+  base: 'post',
+  detail: ':postId',
+};
+
+const userTrainingRoutes = {
+  book: 'book',
+  detail: ':trainingId',
+  paymentSuccess: 'success/:reservationId',
 };
 
 const userRoutes = {
@@ -12,6 +21,13 @@ const userRoutes = {
   posts: 'posts',
   reservations: 'reservations',
   cancellations: 'cancellations',
+};
+
+const trainerRoutes = {
+  base: '/trainer',
+  index: 'home',
+  new: 'new',
+  create: 'create',
 };
 
 const helpRoutes = {
@@ -34,6 +50,9 @@ const pageRoutes = {
   socialSignup: 'ouath2/regist',
   certifyTrainer: 'certify-trainer',
   user: userRoutes,
+  userPost: userPostRoutes,
+  userTraining: userTrainingRoutes,
+  trainer: trainerRoutes,
 };
 
 export default pageRoutes;

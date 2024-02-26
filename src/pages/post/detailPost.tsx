@@ -9,13 +9,14 @@ import {
   useLoaderData,
 } from 'react-router-dom';
 import { getDetailPost, getParentComments, postComment } from '../../apis/post';
-import { LoaderData } from '../../types/training';
-import ImageSlider from '../../components/common/ImageSlice';
-import ProfileSection from '../../components/item/ProfileSection';
-import Comment from '../../components/common/Comment';
-import CommentForm from '../../components/common/CommentForm';
+import { LoaderData } from '../../types/common';
+import ImageSlider from '../../components/imageSlider/ImageBtnSlider';
+import ProfileSection from '../../components/common/ProfileSection';
+import Comment from './Comment';
+import CommentForm from './CommentForm';
 import { useAppSelector } from '../../hooks/reduxHooks';
 import { ParentCommentInfoDto } from '../../types/swagger/model/parentCommentInfoDto';
+import { errorFunc } from '../../utils/util';
 
 export const loader = (async ({ params }: LoaderFunctionArgs) => {
   const { postId } = params;
@@ -61,15 +62,14 @@ const DetailPost = () => {
           throw new Error(`Server responded with status: ${res.status}`);
         }
       } catch (err) {
-        const error = err as AxiosError<unknown>;
-        alert(error.message);
+        errorFunc(err);
       }
     };
     fetchParentComments();
   }, [postId, cmt]);
 
   return (
-    <section className="flex">
+    <section className="flex bg-white">
       <article className="basis-1/2">
         {documentUrls && <ImageSlider postImages={documentUrls} />}
       </article>
@@ -115,6 +115,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const error = err as unknown as AxiosError;
     alert(error.message);
   }
+  return null;
 };
 
 export default DetailPost;

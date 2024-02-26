@@ -1,17 +1,15 @@
 import { AxiosResponse } from 'axios';
-import { ApiResponse } from '../types/common';
-import { Post } from '../types/post';
 import { authAxios, defaultAxios } from './axios';
 import { PagePostOutlineDto } from '../types/swagger/model/pagePostOutlineDto';
 import { LikesBookmarkStatusDto } from '../types/swagger/model/likesBookmarkStatusDto';
-import { PostDetailInfoDto } from '../types/swagger/model/postDetailInfoDto';
-import { PostOutlineDto } from '../types/swagger/model/postOutlineDto';
 import { PagePostInfoDto } from '../types/swagger/model/pagePostInfoDto';
 import { PostRequestDto } from '../types/swagger/model/postRequestDto';
 import { LikedUsersInfoDto } from '../types/swagger/model/likedUsersInfoDto';
 import { PostInfoDto } from '../types/swagger/model/postInfoDto';
 import { PageParentCommentInfoDto } from '../types/swagger/model/pageParentCommentInfoDto';
 import { CommentInfoDto } from '../types/swagger/model/commentInfoDto';
+import { PostUpdateDto } from '../types/swagger/model/postUpdateDto';
+import { PostCreateDto } from '../types/swagger/model/postCreateDto';
 
 /**
  * [POST] 게시물 생성
@@ -22,21 +20,8 @@ import { CommentInfoDto } from '../types/swagger/model/commentInfoDto';
  * @returns 일단 response 반환
  */
 
-type FormDataEntryValue = string | File;
-
-export const createPost = async (
-  content: string,
-  images: FormDataEntryValue[],
-  hashtag: string,
-) => {
-  const formData = new FormData();
-  images.forEach((image) => {
-    formData.append(`images`, image);
-  });
-  formData.append('content', content);
-  formData.append('hashTags', hashtag);
-
-  const response = await authAxios.post('/posts', formData, {
+export const createPost = async (data: PostCreateDto) => {
+  const response = await authAxios.post('/users/posts', data, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -44,23 +29,8 @@ export const createPost = async (
   return response;
 };
 
-export const updatePost = async (
-  id: string,
-  content: string,
-  editedImages: FormDataEntryValue[],
-  hashtag: string,
-  imageChanged: boolean,
-) => {
-  const formData = new FormData();
-  editedImages.forEach((image, index) => {
-    formData.append(`image[${index}]`, image);
-  });
-  formData.append('content', content);
-  formData.append('hashTags', hashtag);
-  formData.append('id', id);
-  formData.append('imageChanged', imageChanged.toString());
-
-  const response = await authAxios.put('/posts', formData, {
+export const updatePost = async (data: PostUpdateDto) => {
+  const response = await authAxios.put('/users/posts', data, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -68,8 +38,8 @@ export const updatePost = async (
   return response;
 };
 
-export const deletePost = async (id: string) => {
-  const response = await authAxios.delete(`/posts?postId=${id}`, {
+export const deletePost = async (id: number) => {
+  const response = await authAxios.delete(`/users/posts?postId=${id}`, {
     headers: {},
   });
   return response;
@@ -106,12 +76,6 @@ export const getDetailLikeBook = async (): Promise<
   return authAxios.post<LikesBookmarkStatusDto>(
     '/posts/like-and-bookmark-status',
   );
-};
-
-export const getMyPost = async (): Promise<
-  AxiosResponse<ApiResponse<Post>>
-> => {
-  return authAxios.get<ApiResponse<Post>>('/posts?');
 };
 
 export const postLike = async (id: number) => {

@@ -2,22 +2,18 @@ import React, { useEffect, useRef } from 'react';
 
 import { IInputProps } from '../../types/form';
 
-function FormInput({
-  id,
-  type,
-  value,
-  placeholder,
-  onChange,
-  error,
-  disabled,
-}: IInputProps) {
+function FormInput({ error, isTextArea, className, ...rest }: IInputProps) {
   const ref = useRef<HTMLInputElement>(null);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(id, event.target.value);
+    if (rest.onChange) {
+      rest.onChange(rest.id, event.target.value);
+    }
   };
+  console.log(error);
 
-  const isError = !!error[id];
-  const textColor = disabled ? 'text-gray-500' : 'text-black';
+  const isError = !!error?.[rest.id];
+  const textColor = rest.disabled ? 'text-gray-400' : 'text-gray-700';
+  console.log(rest.defaultValue);
 
   useEffect(() => {
     if (isError) {
@@ -25,18 +21,34 @@ function FormInput({
     }
   }, [isError]);
 
+  if (isTextArea) {
+    return (
+      <textarea
+        id={rest.id}
+        placeholder={rest.placeholder}
+        className={`${className} hover:outlined-none mt-2 h-40 rounded border bg-[#eaeaea] p-2 focus:outline-none  ${
+          isError && 'border-2 border-accent '
+        } ${textColor} w-full`}
+        disabled={rest.disabled}
+        defaultValue={rest.defaultValue}
+        name={rest.name}
+      />
+    );
+  }
+
   return (
     <input
       ref={ref}
-      id={id}
-      type={type}
-      placeholder={placeholder}
-      className={`hover:outlined-none mt-2 h-10 rounded border bg-[#eaeaea] p-2 focus:outline-none  ${
-        isError && 'border border-red-400'
+      id={rest.id}
+      type={rest.type}
+      placeholder={rest.placeholder}
+      className={`${className}  hover:outlined-none mt-2 h-10 rounded border bg-[#eaeaea] p-2 focus:outline-none  ${
+        isError && 'border-2 border-accent'
       } ${textColor} w-full`}
-      value={value}
       onChange={handleChange}
-      disabled={disabled}
+      disabled={rest.disabled}
+      defaultValue={rest.defaultValue}
+      name={rest.name}
     />
   );
 }

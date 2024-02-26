@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { InputHTMLAttributes } from 'react';
 import { Gender } from './user';
 
 export interface ILayoutProps {
@@ -20,7 +20,7 @@ export interface IHelperLinkProps {
 
 export interface ILabelProps {
   htmlFor: string;
-  text: string;
+  text?: string;
   children?: React.ReactNode;
 }
 
@@ -56,6 +56,13 @@ export interface ILoginFormError {
   gender?: Gender;
 }
 
+export interface INewPostError {
+  [key: string]: string;
+  content?: string;
+  hashtag?: string;
+  images?: string;
+}
+
 export interface ISignupFormError {
   [key: string]: string;
   email: string;
@@ -66,12 +73,9 @@ export interface ISignupFormError {
   phone: string;
 }
 
-export interface IInputProps {
+export interface IInputProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
-  type: string;
-  value: string;
-  placeholder: string;
-  onChange: (id: string, value: string) => void;
-  error: ILoginFormError;
-  disabled?: boolean;
+  onChange?: (id: string, value: string) => void;
+  error?: any;
+  isTextArea?: boolean;
 }

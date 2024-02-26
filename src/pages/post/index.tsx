@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Link,
   LoaderFunction,
@@ -8,15 +8,15 @@ import {
   useParams,
 } from 'react-router-dom';
 import { AxiosError } from 'axios';
-import FilterLayout from '../../components/filter/FilterLayout';
-import PostItem from '../../components/post/PostItem';
-import { LoaderData } from '../../types/training';
-import { getLikeBook, getLikes, getPost, postComment } from '../../apis/post';
+import PostItem from './PostItem';
+import { LoaderData } from '../../types/common';
+import { getLikeBook, getLikes, getPost } from '../../apis/post';
 import { LikesBookmarkStatusDto } from '../../types/swagger/model/likesBookmarkStatusDto';
-import { initialTokenState } from '../../redux/initialStates/initialStates';
-import RedirectModal from '../../components/common/module/RedirectModal';
+import RedirectModal from '../../components/modal/RedirectModal';
 import { LikedUsersInfoDto } from '../../types/swagger/model/likedUsersInfoDto';
 import { useAppSelector } from '../../hooks/reduxHooks';
+import UndefinedCover from '../../components/common/UndefinedCover';
+import FilterLayout from '../../components/filter/FilterLayout';
 
 export const loader = (async () => {
   try {
@@ -37,11 +37,6 @@ const Post = () => {
   const isModal = location.state?.isModal;
 
   const PostDto = useLoaderData() as LoaderData<typeof loader>;
-  const PostRequestDtos = useMemo(() => {
-    return PostDto.data.content?.map((post) => {
-      return { postId: post.postId as number };
-    });
-  }, [PostDto.data.content]);
   const [bookAndLikes, setBookAndLikes] = useState<LikesBookmarkStatusDto[]>([
     { bookmarkStatus: false, likesStatus: false, postId: undefined },
   ]);
@@ -52,7 +47,11 @@ const Post = () => {
   const { isLogin } = useAppSelector((state) => state.user);
 
   useEffect(() => {
-    if (isLogin) {
+    const PostRequestDtos = PostDto.data.content?.map((post) => {
+      return { postId: post.postId as number };
+    });
+
+    if (isLogin && PostRequestDtos) {
       getLikeBook(PostRequestDtos).then((res) => {
         setBookAndLikes(res.data);
       });
@@ -60,10 +59,11 @@ const Post = () => {
     getLikes(PostRequestDtos).then((res) => {
       setLikedInfos(res.data);
     });
-  }, [PostRequestDtos, isLogin]);
+  }, [PostDto.data.content, isLogin]);
+
   if (!isModal && postId) {
     return (
-      <main className="mx-auto w-full border-[1px] border-zinc-300 lg:w-2/3 ">
+      <main className="mx-auto w-full border-[1px] border-zinc-300 lg:w-2/3">
         <Outlet />
       </main>
     );
@@ -83,27 +83,24 @@ const Post = () => {
           <div>chat</div>
         </div>
       </FilterLayout>
-      <section className="mx-auto w-[728px] space-y-12">
-        {PostDto.data.content?.[0] ? (
-          PostDto.data.content.map((post) =>
-            bookAndLikes.map((likeAndBook) => {
-              return likedInfos.map((likedInfo) => {
-                return (
-                  <PostItem
-                    {...post}
-                    bookAndLikes={likeAndBook}
-                    likedUsers={likedInfo.likedUsers}
-                    likedCount={likedInfo.likedCount}
-                  />
-                );
-              });
-            }),
-          )
-        ) : (
-          <div className="text-center text-2xl font-extrabold">
-            작성한 게시물이 없습니다
+      <section className="relative mx-auto w-[728px] space-y-12 ">
+        {!PostDto.data.content?.[0] && (
+          <div className="relative h-[400px] bg-gray-100">
+            <UndefinedCover>생성한 게시물이 없습니다</UndefinedCover>
           </div>
         )}
+        {PostDto.data.content?.map((post, index) => {
+          const likeAndBook = bookAndLikes[index];
+          const likedInfo = likedInfos[index];
+          return (
+            <PostItem
+              key={post.postId}
+              {...post}
+              bookAndLikes={likeAndBook}
+              likedUsers={likedInfo?.likedUsers}
+            />
+          );
+        })}
       </section>
       {isModal && (
         <RedirectModal>

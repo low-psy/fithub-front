@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
+import { errorFunc } from '../utils/util';
+import { ErrorResponseDto } from '../types/swagger/model/errorResponseDto';
 
 const useBook = (
   id: number | undefined,
@@ -12,7 +15,7 @@ const useBook = (
 
   useEffect(() => {
     setIsBooked(booked);
-  }, [booked]);
+  }, [booked, id]);
 
   const toggleBook = async () => {
     if (!id) {
@@ -32,11 +35,16 @@ const useBook = (
       if (response.status !== 200) {
         // 요청이 실패한 경우, 원래 상태로 되돌림
         setIsBooked(previousBookedState);
+      } else {
+        navigate(0);
       }
-    } catch (error) {
-      console.error('Error toggling book', error);
+    } catch (err) {
+      const error = err as AxiosError<ErrorResponseDto>;
+
       // 에러가 발생한 경우, 원래 상태로 되돌림
       setIsBooked(previousBookedState);
+      errorFunc(error);
+      navigate('/');
     }
   };
 

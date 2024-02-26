@@ -15,9 +15,21 @@
  */
 export interface TrainerCareerRequestDto { 
     /**
-     * 근무지
+     * 회사명
      */
     company: string;
+    /**
+     * 회사 주소
+     */
+    address: string;
+    /**
+     * 경도
+     */
+    longitude?: number;
+    /**
+     * 위도
+     */
+    latitude?: number;
     /**
      * 담당 업무
      */
@@ -29,7 +41,7 @@ export interface TrainerCareerRequestDto {
     /**
      * 퇴사년월
      */
-    endDate: string;
+    endDate?: string;
     /**
      * 현 근무지 재직 여부
      */

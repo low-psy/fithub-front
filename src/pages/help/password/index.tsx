@@ -4,7 +4,7 @@ import axios from 'axios';
 import { getTempPassword } from '../../../apis/user';
 
 import HelpInput from '../../../components/help/HelpInput';
-import FormError, { ErrorText } from '../../../components/form/FormError';
+import FormError from '../../../components/form/FormError';
 import { DefaultButton, LinkButton } from '../../../components/help/HelpButton';
 import { validateHelpEmail } from '../../../validation/help/findPasswordValidation';
 import FormLabel from '../../../components/form/FormLabel';
@@ -72,7 +72,7 @@ function FindPassword() {
           disabled={isSent}
         />
       </div>
-      <FormError>{emailError && <ErrorText text={emailError} />}</FormError>
+      <FormError>{emailError}</FormError>
 
       {/* 이메일 전송 이후 안내 */}
       {isSent && <Guide onClick={onSendTempPasswordAgain} />}

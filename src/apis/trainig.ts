@@ -1,4 +1,5 @@
 import { AxiosResponse } from 'axios';
+import qs from 'qs';
 import { authAxios, defaultAxios } from './axios';
 import { TrainingInfoDto } from '../types/swagger/model/trainingInfoDto';
 import { PageTrainingOutlineDto } from '../types/swagger/model/pageTrainingOutlineDto';
@@ -7,6 +8,9 @@ import { PaymentReqDto } from '../types/swagger/model/paymentReqDto';
 import { ReserveReqDto } from '../types/swagger/model/reserveReqDto';
 import { PageTrainersReserveInfoDto } from '../types/swagger/model/pageTrainersReserveInfoDto';
 import { TrainingLikesInfoDto } from '../types/swagger/model/trainingLikesInfoDto';
+import { UsersReserveInfoDto } from '../types/swagger/model/usersReserveInfoDto';
+import { PageTrainersTrainingOutlineDto } from '../types/swagger/model/pageTrainersTrainingOutlineDto';
+import { TrainingImgUpdateDto } from '../types/swagger/model/trainingImgUpdateDto';
 
 /**
  * [POST] 트레이닝 조회
@@ -21,6 +25,11 @@ export const getTraining = async (): Promise<
   );
 };
 
+/**
+ * [GET] 회원 트레이닝 다음 페이지 조회
+ * @param currentPage 이전 페이지 인덱스
+ * @returns AxiosResponse<PageTrainingOutlineDto>
+ */
 export const getNextPageData = async (
   currentPage: number,
 ): Promise<AxiosResponse<PageTrainingOutlineDto>> => {
@@ -38,22 +47,6 @@ export const createTraining = async (data: TrainingCreateDto) => {
   return response;
 };
 
-export const updateTraining = async (
-  data: TrainingCreateDto,
-  trainingId: number,
-) => {
-  const response = await authAxios.post(
-    `/trainer/training?${trainingId}`,
-    data,
-    {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    },
-  );
-  return response;
-};
-
 export const getDetailTraining = async (
   trainingId: number,
 ): Promise<AxiosResponse<TrainingInfoDto>> => {
@@ -68,12 +61,54 @@ export const postPaymentValidation = async (postData: PaymentReqDto) => {
   return authAxios.post<PaymentReqDto>(`/payment/validation`, postData);
 };
 
+export const getTrainingReservation = async (
+  reverationId: number,
+): Promise<AxiosResponse<UsersReserveInfoDto>> => {
+  return authAxios.get<UsersReserveInfoDto>(
+    `/users/training/reservation?reservationId=${reverationId}`,
+  );
+};
+
+/**
+ * [GET] 회원 트레이닝 찜 조회
+ * @param trainingIdList 트레이닝 id 리스트
+ * @returns AxiosResponse<boolean[]
+ */
+export const getUsersTrainingLikes = async (
+  trainingIdList: number[],
+): Promise<AxiosResponse<boolean[]>> => {
+  return authAxios.post<boolean[]>(
+    `/users/training/like/check/list`,
+    trainingIdList,
+  );
+};
+
 export const getTrainersReserve = async (): Promise<
   AxiosResponse<PageTrainersReserveInfoDto>
 > => {
   return authAxios.get<PageTrainersReserveInfoDto>(
-    '/trainer/training/reservations',
+    '/trainer/training/reservations/all',
   );
+};
+
+export const getTrainersTraining = async (
+  closed: boolean,
+): Promise<AxiosResponse<PageTrainersTrainingOutlineDto>> => {
+  return authAxios.get<PageTrainersTrainingOutlineDto>(
+    `/trainer/training?closed=${closed}`,
+  );
+};
+
+export const getTrainersClosedTraining = async (
+  closed: boolean,
+): Promise<AxiosResponse<PageTrainersTrainingOutlineDto>> => {
+  return authAxios.get<PageTrainersTrainingOutlineDto>(
+    `/trainer/training?closed=true`,
+  );
+};
+
+export const postTrainerClosed = async (trainingId: number) => {
+  return authAxios.put(`/trainer/training/close?trainingId=${trainingId}`);
 };
 
 export const postTrainerNoShow = async (reservationId: number) => {
@@ -94,4 +129,32 @@ export const getTrainingLikes = async (): Promise<
   AxiosResponse<TrainingLikesInfoDto[]>
 > => {
   return authAxios.get<TrainingLikesInfoDto[]>('/users/training/like/all');
+};
+
+export const deleteTraining = async (trainingId: number) => {
+  return authAxios.delete(`/trainer/training?trainingId=${trainingId}`);
+};
+
+export const closeTraining = async (trainingId: number) => {
+  return authAxios.put(`/trainer/training/close?trainingId=${trainingId}`);
+};
+
+export const openTraining = async (trainingId: number) => {
+  return authAxios.put(`/trainer/training/open?trainingId=${trainingId}`);
+};
+
+export const updateTraining = async (
+  trainingId: number,
+  data: {
+    title: string;
+    content: string;
+    price: number;
+    trainingImgUpdate: TrainingImgUpdateDto;
+  },
+) => {
+  return authAxios.put(`/trainer/training?trainingId=${trainingId}`, data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };

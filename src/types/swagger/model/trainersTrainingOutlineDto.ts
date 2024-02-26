@@ -14,9 +14,8 @@ export interface TrainersTrainingOutlineDto {
     trainingId?: number;
     title?: string;
     price?: number;
-    location?: string;
+    address?: string;
     participants?: number;
-    quota?: number;
     startDate?: string;
     endDate?: string;
     closed?: boolean;

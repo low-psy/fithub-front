@@ -2,9 +2,9 @@ import { AxiosError } from 'axios';
 import React from 'react';
 import { LoaderFunction, redirect, useLoaderData } from 'react-router-dom';
 import { getTrainingLikes } from '../../apis/trainig';
-import { LoaderData } from '../../types/training';
-import MainItem from '../../components/item/TrainerItem';
-import { TrainingOutlineDto } from '../../types/swagger/model/trainingOutlineDto';
+import { LoaderData } from '../../types/common';
+import UndefinedCover from '../../components/common/UndefinedCover';
+import LinkBtnWithImg from '../../components/btn/LinkBtnWithImg';
 
 export const loader = (async () => {
   try {
@@ -23,24 +23,33 @@ export const loader = (async () => {
       alert('존재하지 않는 회원입니다');
       redirect('/signup');
     }
+    return null;
   }
 }) satisfies LoaderFunction;
 
 const TrainingBook = () => {
   const res = useLoaderData() as LoaderData<typeof loader>;
   const data = res?.data;
+
   return (
     <section className="mx-4 space-y-6">
       <h1 className="text-2xl font-extrabold">트레이닝 찜</h1>
       <article className="">
+        <div className="relative">
+          {!res?.data[0] && (
+            <UndefinedCover>찜한 트레이닝이 없습니다</UndefinedCover>
+          )}
+        </div>
         <ul className="grid grid-cols-1 gap-6  sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
           {data &&
             data.map((value) => (
               <div className="rounded-xl bg-gray-100 p-6">
-                <MainItem
+                <LinkBtnWithImg
                   key={value.id}
-                  trainerInfoDto={
-                    value.trainingOutlineDto as TrainingOutlineDto
+                  {...value.trainingOutlineDto}
+                  to={`/detail/${value.trainingOutlineDto?.id}`}
+                  img={
+                    value.trainingOutlineDto?.trainerInfoDto?.trainerProfileImg
                   }
                 />
               </div>

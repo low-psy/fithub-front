@@ -14,5 +14,5 @@ export interface TrainerInfoDto {
     trainerId?: number;
     name?: string;
     trainerProfileImg?: string;
-    location?: string;
+    address?: string;
 }

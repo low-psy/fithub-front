@@ -15,7 +15,10 @@ import NewPost, {
   action as newPostAction,
 } from './pages/newpost/index';
 import Signup from './pages/signup';
-import TrainerHome, { loader as TrainerLoader } from './pages/trainer';
+import TrainerHome, {
+  action as TrainerAction,
+  loader as TrainerLoader,
+} from './pages/trainer';
 import TrainerRoot from './pages/TrainerRoot';
 import Post, { loader as postLoader } from './pages/post';
 import CertifyTrainer from './pages/certifyTrainer';
@@ -34,15 +37,12 @@ import DetailPost, {
   loader as detailPostLoader,
   action as detailPostAction,
 } from './pages/post/detailPost';
-import TrainingCancel from './pages/home/Cancel';
 import Help from './pages/help';
 
 // components
-import RootErrorBoundary from './components/common/ErrorBoundary';
 import NewTrainer from './pages/trainer/new';
 import CreateTrainer, {
   action as createTrainerAction,
-  loader as createTrainerLoader,
 } from './pages/trainer/create';
 import Detail, { loader as detailedTrainingLoader } from './pages/detail';
 import pageRoutes from './pageRoutes';
@@ -51,7 +51,9 @@ import pageRoutes from './pageRoutes';
 import useGoogleMapsApiLoader from './hooks/useGoogleMap';
 import { LOGIN } from './redux/slices/userSlice';
 import TrainingBook, { loader as TrainingBookLoader } from './pages/book';
-import SuccessPage from './pages/detail/success';
+import SuccessPage, {
+  loader as successPaymentLoader,
+} from './pages/detail/success';
 
 function App() {
   // 전역 로그인 상태 관리
@@ -76,29 +78,29 @@ function App() {
           element: <Home />,
           loader: homeLoader,
           action: homeAction,
-          errorElement: <RootErrorBoundary />,
         },
         // 트레이닝 예약
         {
-          path: 'book',
+          path: pageRoutes.userTraining.book,
           element: <TrainingBook />,
           loader: TrainingBookLoader,
         },
         // 게시글 작성
         {
-          path: pageRoutes.main.newPost,
+          path: pageRoutes.main.userNewPost,
           element: <NewPost />,
           loader: newPostLoader,
           action: newPostAction,
         },
-        // 게시글
+        // 게시글 조회
         {
-          path: pageRoutes.main.post,
+          path: pageRoutes.userPost.base,
           element: <Post />,
           loader: postLoader,
+          // 게시글 상세 조회
           children: [
             {
-              path: pageRoutes.main.postDetail,
+              path: pageRoutes.userPost.detail,
               element: <DetailPost />,
               loader: detailPostLoader,
               action: detailPostAction,
@@ -143,16 +145,16 @@ function App() {
           path: 'detail',
           children: [
             {
-              path: ':trainingId',
+              path: pageRoutes.userTraining.detail,
               element: <Detail />,
               loader: detailedTrainingLoader,
-              children: [{ path: 'success', element: <SuccessPage /> }],
             },
           ],
         },
         {
-          path: '/training/cancel',
-          element: <TrainingCancel />,
+          path: pageRoutes.userTraining.paymentSuccess,
+          element: <SuccessPage />,
+          loader: successPaymentLoader,
         },
       ],
     },
@@ -183,21 +185,27 @@ function App() {
         { path: pageRoutes.signup.success, element: <SignupSuccess /> },
       ],
     },
-    // 트레이너 생성
+    // 트레이너 페이지
     {
-      path: '/trainer',
+      path: pageRoutes.trainer.base,
       element: <TrainerRoot />,
       children: [
-        { path: 'home', element: <TrainerHome />, loader: TrainerLoader },
+        // 트레이너 예약 및 트레이닝 조회
         {
-          path: 'new',
+          path: pageRoutes.trainer.index,
+          element: <TrainerHome />,
+          loader: TrainerLoader,
+          action: TrainerAction,
+        },
+        // 트레이너 생성
+        {
+          path: pageRoutes.trainer.new,
           children: [
             { index: true, element: <NewTrainer /> },
             {
-              path: 'create',
+              path: pageRoutes.trainer.create,
               element: <CreateTrainer />,
               action: createTrainerAction,
-              loader: createTrainerLoader,
             },
           ],
         },

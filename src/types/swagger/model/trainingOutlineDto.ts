@@ -16,7 +16,11 @@ export interface TrainingOutlineDto {
     trainerInfoDto?: TrainerInfoDto;
     title?: string;
     price?: number;
-    location?: string;
+    address?: string;
+    /**
+     * 보내준 위치와의 거리. 위치로 트레이닝 검색할 때만 값이 들어가있음
+     */
+    dist?: number;
     startDate?: string;
     endDate?: string;
     closed?: boolean;

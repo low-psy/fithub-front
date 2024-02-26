@@ -23,6 +23,7 @@ function withAuth(InnerComponent: React.ComponentType, option: ROLE) {
           navigate('/login');
           return;
         }
+        return;
       }
 
       if (option === 'trainer') {
@@ -31,13 +32,13 @@ function withAuth(InnerComponent: React.ComponentType, option: ROLE) {
           navigate(-1);
           return;
         }
+        return;
       }
 
       if (option === 'admin') {
         if (role !== 'admin') {
           alert('관리자만 이용 가능합니다.');
           navigate(-1);
-          // return;
         }
       }
     }, [isLogin, role, navigate]);

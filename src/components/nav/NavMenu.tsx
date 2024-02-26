@@ -7,7 +7,7 @@ import ProfileIcon from '../../assets/icons/ProfileIcon';
 import NavDropdown from './NavDropdown';
 
 const NavMenu = () => {
-  const { isLogin } = useAppSelector((state) => state.user);
+  const { isLogin, role } = useAppSelector((state) => state.user);
   const { isOpen } = useAppSelector((state) => state.profileDropdown);
   let profileTo = '/user/profile';
 
@@ -19,15 +19,16 @@ const NavMenu = () => {
   if (isLogin === false) {
     profileTo = '/login';
   }
+  const to = role === 'trainer' ? '/trainer/home' : '/certify-trainer';
   return (
     <ul className="hidden items-center justify-end gap-5 md:flex  md:grow md:basis-1/3">
       <li key="trainer" className="grow text-center">
         {isCreateTrainer ? (
           <Link
-            to="/trainer/home"
+            to={to}
             className="hidden whitespace-nowrap rounded-full px-4 py-3 hover:bg-slate-200 md:inline-block"
           >
-            트레이너신가요?
+            {role === 'trainer' ? '트레이너 모드 전환' : '트레이너신가요?'}
           </Link>
         ) : null}
       </li>
@@ -42,10 +43,10 @@ const NavMenu = () => {
         </Link>
       </li>
       <li key="user" className="relative">
-        {/* <Link to={profileTo}> */}
-        <ProfileIcon />
-        {isOpen && <NavDropdown />}
-        {/* </Link> */}
+        <Link to={profileTo}>
+          <ProfileIcon />
+          {isOpen && <NavDropdown />}
+        </Link>
       </li>
     </ul>
   );

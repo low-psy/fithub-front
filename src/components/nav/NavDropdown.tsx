@@ -15,6 +15,7 @@ const NavDropdown = () => {
 
   const handleLogout = async () => {
     try {
+      navigate('/');
       const response = await logout();
       if (response && response.status === 200) {
         navigate('/');

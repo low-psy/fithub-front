@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import TrainerHeader from '../components/trainer/TrainerHeader';
+import TrainerHeader from './trainer/TrainerHeader';
 
 const TrainerRoot = () => {
   return (

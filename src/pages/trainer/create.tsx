@@ -1,43 +1,16 @@
 import React from 'react';
-import {
-  ActionFunctionArgs,
-  LoaderFunction,
-  LoaderFunctionArgs,
-  redirect,
-  useLoaderData,
-} from 'react-router-dom';
+import { ActionFunctionArgs, redirect } from 'react-router-dom';
 import { AxiosError } from 'axios';
-import TrainerForm from '../../components/trainer/TrainerForm';
+import TrainerForm from './TrainerForm';
 import { FormErrors } from '../../types/common';
-import {
-  createTraining,
-  getDetailTraining,
-  updateTraining,
-} from '../../apis/trainig';
-import { LoaderData } from '../../types/training';
-
-export const loader = (async ({ request }: LoaderFunctionArgs) => {
-  const url = new URL(request.url);
-  const trainingId = url.searchParams.get('trainingId');
-  if (!trainingId) return null;
-  try {
-    const response = await getDetailTraining(Number(trainingId));
-    if (response && response.status === 200) {
-      return response;
-    }
-
-    throw new Error(`Server is Troubling with ${response.status}`);
-  } catch (err) {
-    const error = err as unknown as AxiosError;
-    throw error;
-  }
-}) satisfies LoaderFunction;
+import { createTraining } from '../../apis/trainig';
+import { errorFunc } from '../../utils/util';
+import { ErrorResponseDto } from '../../types/swagger/model/errorResponseDto';
 
 const CreateTrainer = () => {
-  const res = useLoaderData() as LoaderData<typeof loader>;
   return (
     <div className="space-y-8">
-      <TrainerForm useCase="create" res={res?.data} />
+      <TrainerForm />
     </div>
   );
 };
@@ -68,17 +41,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       ? undefined
       : unableDates.filter((date) => date);
 
-  console.log(nonEmptyUnableDates);
-  const trainingId = formData.get('trainingId') as string;
-  const trainingNumber = Number(trainingId);
-
   // 필수 필드 유효성 검사
   if (!title || title.trim().length < 2 || title.trim().length > 100)
     errors.title = '제목은 2글자 이상 100글자 이하로 입력해야 합니다.';
   if (!content) errors.content = '내용을 입력해야 합니다.';
   if (images.length === 0) errors.images = '이미지를 업로드해야 합니다.';
   if (!location) errors.location = '위치를 입력해야 합니다.';
-  if (!quota) errors.quota = '최소 모집인원(1명) 이상 입력해주세요.';
   if (!price) errors.price = '가격을 입력해야 합니다.';
   if (!startDate || !endDate || !startHour || !endHour) {
     errors.dateTime = '날짜와 시간을 입력해야 합니다';
@@ -94,7 +62,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (Object.keys(errors).length > 0) {
     return errors;
   }
-  let response;
   const trainingObj = {
     title,
     content,
@@ -108,22 +75,22 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     endHour,
     unableDates: nonEmptyUnableDates,
   };
+
   try {
-    if (request.method === 'post') {
-      response = await createTraining(trainingObj);
-    } else if (request.method === 'update') {
-      response = await updateTraining(trainingObj, trainingNumber);
-    }
+    const response = await createTraining(trainingObj);
 
     if (response && response.status === 200) {
       return redirect('/');
     }
   } catch (err) {
-    console.log(err);
-    return '/trainer/new/create';
+    const error = err as AxiosError<ErrorResponseDto>;
+    errorFunc(error);
+    if (error.response?.data.code === 'PERMISSION_DENIED') {
+      return redirect('/');
+    }
+    return redirect('/trainer/new/create');
   }
-
-  return redirect('/trainer/home');
+  return null;
 };
 
 export default CreateTrainer;

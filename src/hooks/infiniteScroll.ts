@@ -5,6 +5,7 @@ interface UseInfiniteScrollProps<T> {
   fetchData: (page: number) => Promise<T[] | []>;
 }
 
+// 무한 스크롤 훅
 const useInfiniteScroll = <T>({
   initialData,
   fetchData,

@@ -4,6 +4,7 @@ import paymentReducer from './slices/paymentSlice';
 import commentReducer from './slices/commentSlice';
 import profileDropdownReducer from './slices/profileDropdownSlice';
 import userReducer from './slices/userSlice';
+import updateImageReducer from './slices/updateImageSlice';
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     comment: commentReducer,
     profileDropdown: profileDropdownReducer,
     user: userReducer,
+    images: updateImageReducer,
   },
 });
 

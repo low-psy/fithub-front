@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import FormLabel from '../../components/form/FormLabel';
 import FormInput from '../../components/form/FormInput';
-import FormError, { ErrorText } from '../../components/form/FormError';
+import FormError from '../../components/form/FormError';
 import { ISignupFormError, ISignupInputForm } from '../../types/user';
 import { compareCertifyNumber, sendCertifyNumber } from '../../apis/user';
 import HelpInput from '../../components/help/HelpInput';
@@ -103,9 +103,7 @@ function EmailAuthentication() {
             인증번호 전송
           </button>
         </div>
-        <FormError>
-          {errorMsg.email && <ErrorText text={errorMsg.email} />}
-        </FormError>
+        {errorMsg.email && <FormError>{errorMsg.email}</FormError>}
       </FormLabel>
       {/* 인증번호 */}
       {isSent && (
@@ -130,11 +128,9 @@ function EmailAuthentication() {
           <p className="text-sm">
             인증번호 전송까지 약간의 시간이 소요될 수 있습니다.
           </p>
-          <FormError>
-            {certificationNumberError && (
-              <ErrorText text={certificationNumberError} />
-            )}
-          </FormError>
+          {certificationNumberError && (
+            <FormError>{certificationNumberError}</FormError>
+          )}
         </FormLabel>
       )}
       <div className="absolute bottom-4 left-1/2 w-full -translate-x-1/2 sm:bottom-8 md:px-2">

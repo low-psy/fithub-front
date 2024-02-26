@@ -18,9 +18,8 @@ export interface TrainingInfoDto {
     trainerInfoDto?: TrainerInfoDto;
     title?: string;
     content?: string;
-    location?: string;
+    address?: string;
     images?: Array<TrainingDocumentDto>;
-    quota?: number;
     price?: number;
     startDate?: string;
     endDate?: string;

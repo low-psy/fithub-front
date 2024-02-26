@@ -20,6 +20,9 @@
   },
   "plugins": ["@typescript-eslint", "react"],
   "rules": {
+    "react/no-array-index-key": "off",
+    "react/no-children-prop": "off",
+    "radix": "warn",
     "no-plusplus": "off",
     "no-alert": "off",
     "dot-notation": "off",
@@ -49,7 +52,7 @@
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": "warn",
     "no-param-reassign": [
-      "error",
+      "off",
       {
         "props": true,
         "ignorePropertyModificationsFor": ["state"]

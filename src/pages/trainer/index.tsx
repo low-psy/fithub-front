@@ -1,18 +1,40 @@
-import React, { useState } from 'react';
-import { LoaderFunction, useLoaderData } from 'react-router-dom';
+import React, { useCallback, useMemo, useState } from 'react';
+import {
+  ActionFunctionArgs,
+  Link,
+  LoaderFunction,
+  redirect,
+  useLoaderData,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 import { AxiosError } from 'axios';
-import SelectableButtons from '../../components/common/SelectedBtn';
-import { LoaderData } from '../../types/training';
-import { getTrainersReserve } from '../../apis/trainig';
-import { formatPriceToKRW } from '../../utils/util';
-import TrainerReservation from '../../components/trainer/TrainerRservation';
-import TrainerNotReservation from '../../components/trainer/TrainerNotReservation';
+import SelectableButtons from '../../components/btn/SelectedBtn';
+import { FormErrors, LoaderData } from '../../types/common';
+import {
+  getTrainersReserve,
+  getTrainersTraining,
+  updateTraining,
+} from '../../apis/trainig';
+import TrainerReservation from './TrainerReservation';
+import { ErrorResponseDto } from '../../types/swagger/model/errorResponseDto';
+import { errorFunc } from '../../utils/util';
+import { getImages } from '../../redux/slices/updateImageSlice';
+import store from '../../redux/store';
+import TrainingItem from './TrainingItem';
+import UndefinedCover from '../../components/common/UndefinedCover';
 
-export const loader = (async () => {
+export const loader = (async ({ request }) => {
+  const url = new URL(request.url);
+  const isClosed = url.searchParams.get('isClosed');
   try {
-    const response = await getTrainersReserve();
-    if (response && response.status === 200) {
-      return response;
+    const reservation = await getTrainersReserve();
+    const training = await getTrainersTraining(!!isClosed);
+    if (reservation.status === 200 && training.status === 200) {
+      return {
+        reservation,
+        training,
+      };
     }
     throw new Error('server is troubling');
   } catch (err) {
@@ -24,96 +46,284 @@ export const loader = (async () => {
 const TrainerHome = () => {
   const res = useLoaderData() as LoaderData<typeof loader>;
   const [selectedButtonId, setSelectedButtonId] = useState<number>(1);
-  const bookBtnHandler = (id: number) => {
-    setSelectedButtonId(id);
-  };
-  let isNotFilteredText;
+  const location = useLocation();
+  console.log(location.search);
+  const trainingDefaultNum = location.search ? 2 : 1;
+  const [selectedTrainingButtonId, setSelectedTrainingButtonId] =
+    useState<number>(trainingDefaultNum);
+  const navigate = useNavigate();
+  const btnHandler = useCallback(
+    (id: number, setFunc: (id: number) => void) => {
+      setFunc(id);
+      if (id === 1 && setFunc === setSelectedTrainingButtonId) {
+        navigate('/trainer/home');
+      }
+      if (id === 2 && setFunc === setSelectedTrainingButtonId) {
+        navigate('/trainer/home?isClosed=true');
+      }
+    },
+    [navigate],
+  );
+
   // 선택된 id에 따라 필터링 조건 설정
-  const statusFilter = (id: number) => {
+  const statusFilter = useCallback((id: number) => {
     switch (id) {
       case 1:
-        isNotFilteredText = '현재 진행중인 트레이닝이 없습니다';
         return 'START';
       case 2:
-        isNotFilteredText = '예정된 트레이닝이 없습니다';
         return 'BEFORE';
       case 3:
-        isNotFilteredText = '취소된 트레이닝이 없습니다';
         return 'COMPLETE';
       case 4:
-        isNotFilteredText = '노쇼한 트레이닝이 없습니다';
         return 'NOSHOW';
       default:
         return '';
     }
-  };
-  const filteredData = res.data.content?.filter(
-    (session) => session.status === statusFilter(selectedButtonId),
+  }, []);
+
+  const trainingStatusFilter = useCallback((id: number) => {
+    switch (id) {
+      case 1:
+        return false;
+      case 2:
+        return true;
+      default:
+        return false;
+    }
+  }, []);
+
+  const noReservationText = useCallback(() => {
+    switch (selectedButtonId) {
+      case 1:
+        return '현재 진행중인 트레이닝이 없습니다.';
+      case 2:
+        return '예정된 트레이닝이 없습니다.';
+      case 3:
+        return '종료된 트레이닝이 없습니다.';
+      case 4:
+        return '노쇼한 트레이닝이 없습니다.';
+      default:
+        return '예약된 트레이닝이 없습니다.';
+    }
+  }, [selectedButtonId]);
+
+  const noTrainingText = useCallback(() => {
+    switch (selectedTrainingButtonId) {
+      case 1:
+        return '현재 모집중인 트레이닝이 없습니다.';
+      case 2:
+        return '마감된 트레이닝이 없습니다.';
+      default:
+        return '생성한 트레이닝이 없습니다.';
+    }
+  }, [selectedTrainingButtonId]);
+
+  const reservationfilteredData = useMemo(() => {
+    return res.reservation.data.content?.filter(
+      (session) => session.status === statusFilter(selectedButtonId),
+    );
+  }, [res.reservation, selectedButtonId, statusFilter]);
+
+  const trainingfilteredData = useMemo(() => {
+    return res.training.data.content?.filter(
+      (session) =>
+        session.closed === trainingStatusFilter(selectedTrainingButtonId),
+    );
+  }, [res.training, selectedTrainingButtonId, trainingStatusFilter]);
+
+  const buttonInfos = [
+    { id: 1, text: '진행' },
+    { id: 2, text: '예정' },
+    { id: 3, text: '종료' },
+    { id: 4, text: '노쇼' },
+  ];
+
+  const btnTrainingInfos = [
+    { id: 1, text: '모집중' },
+    { id: 2, text: '마감' },
+  ];
+
+  const renderNoReservation = (textFunc: () => string) => (
+    <UndefinedCover>
+      <div className="space-y-2 text-center">
+        <span className="material-symbols-rounded">no_backpack</span>
+        <h2>{textFunc()}</h2>
+      </div>
+    </UndefinedCover>
   );
+
   return (
-    <div className="mx-8">
+    <div className="mx-8 space-y-8">
       <section className="space-y-6">
         <h1 className="text-3xl font-bold">예약</h1>
         <div className="flex gap-x-1">
-          <SelectableButtons
-            id={1}
-            selectedBtnId={selectedButtonId}
-            onClick={bookBtnHandler}
-          >
-            진행
-          </SelectableButtons>
-          <SelectableButtons
-            id={2}
-            selectedBtnId={selectedButtonId}
-            onClick={bookBtnHandler}
-          >
-            예정
-          </SelectableButtons>
-          <SelectableButtons
-            id={3}
-            selectedBtnId={selectedButtonId}
-            onClick={bookBtnHandler}
-          >
-            종료
-          </SelectableButtons>
-          <SelectableButtons
-            id={4}
-            selectedBtnId={selectedButtonId}
-            onClick={bookBtnHandler}
-          >
-            노쇼
-          </SelectableButtons>
+          {buttonInfos.map(({ id, text }) => (
+            <SelectableButtons
+              key={id}
+              id={id}
+              selectedBtnId={selectedButtonId}
+              onClick={(id) => btnHandler(id, setSelectedButtonId)}
+            >
+              {text}
+            </SelectableButtons>
+          ))}
         </div>
         <div className="relative min-h-[200px] space-y-2 rounded-lg bg-gray-200 p-8">
           {selectedButtonId === 3 && (
-            <h3 className="break-keep text-main">
+            <h3 className="-mt-2 break-keep font-bold text-accent">
               *회원님이 트레이닝에 참석하지 않으셨다면 진행 완료된 트레이닝을
               노쇼 처리 해주세요*
             </h3>
           )}
-          {filteredData && filteredData.length < 1 && (
-            <TrainerNotReservation>
-              <div className="space-y-2 text-center">
-                <span className="material-symbols-rounded">no_backpack</span>
-                <h2>{isNotFilteredText}</h2>
-              </div>
-            </TrainerNotReservation>
-          )}
-          <div className="grid grid-cols-1 gap-6  sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {filteredData &&
-              filteredData.map((session) => {
-                return (
+          {reservationfilteredData && reservationfilteredData.length > 0 ? (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {reservationfilteredData &&
+                reservationfilteredData.map((session) => (
                   <TrainerReservation
+                    key={session.trainingId}
                     selectedBtnId={selectedButtonId}
                     session={session}
                   />
-                );
-              })}
-          </div>
+                ))}
+            </div>
+          ) : (
+            renderNoReservation(noReservationText)
+          )}
+        </div>
+      </section>
+      <section className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold">트레이닝</h1>
+          <Link
+            to="/trainer/new"
+            className="shrink-0 rounded-full bg-slate-50 px-4 py-4"
+          >
+            트레이닝 생성하기
+          </Link>
+        </div>
+        <div className="flex gap-x-1">
+          {btnTrainingInfos.map(({ id, text }) => (
+            <SelectableButtons
+              key={id}
+              id={id}
+              selectedBtnId={selectedTrainingButtonId}
+              onClick={(id) => btnHandler(id, setSelectedTrainingButtonId)}
+            >
+              {text}
+            </SelectableButtons>
+          ))}
+        </div>
+        <div className="relative min-h-[200px] space-y-2 rounded-lg bg-gray-200 p-8">
+          {trainingfilteredData && trainingfilteredData.length > 0 ? (
+            <div className="grid gap-6 lg:grid-cols-2">
+              {trainingfilteredData &&
+                trainingfilteredData.map((session) => {
+                  const isTimeout =
+                    new Date() > new Date(session.endDate as string);
+                  const isClosed = selectedTrainingButtonId === 2;
+                  return (
+                    <div
+                      className={`rounded-md bg-white  p-4 shadow-xl ${isTimeout && 'pointer-events-none opacity-50'}`}
+                    >
+                      <TrainingItem
+                        trainerInfoDto={session}
+                        isClosed={isClosed}
+                      />
+                    </div>
+                  );
+                })}
+            </div>
+          ) : (
+            renderNoReservation(noTrainingText)
+          )}
         </div>
       </section>
     </div>
   );
+};
+
+export interface TrainingImgUpdateDto {
+  /**
+   * 삭제된 이미지가 있다면 true로 주면 됨
+   */
+  imgDeleted?: boolean;
+  /**
+   * imgDeleted = true일 때만 주면 됨, 남아있는 이미지 url 리스트
+   */
+  unModifiedImgList?: Array<string>;
+  /**
+   * 새로 추가된 이미지가 있다면 true로
+   */
+  imgAdded?: boolean;
+  /**
+   * 새로 추가한 이미지
+   */
+  newImgList?: Array<Blob>;
+}
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const formData = await request.formData();
+  const errors: FormErrors = {};
+  const title = formData.get('title') as string;
+  const content = formData.get('content') as string;
+  const imgDeleted = formData.get('imgDeleted') as string;
+
+  const documentDto = getImages(store.getState());
+  const unModifiedImgList: string[] = [];
+  const newImgList: Blob[] = [];
+  documentDto.forEach((document) => {
+    if (document.image) {
+      newImgList.push(document.image);
+    } else {
+      unModifiedImgList.push(document.awsS3Url as string);
+    }
+  });
+  const imgAdded = newImgList[0];
+  const updateImgDto = {
+    imgDeleted: !!imgDeleted,
+    imgAdded: !!imgAdded,
+    unModifiedImgList,
+    newImgList,
+  };
+  console.log(updateImgDto);
+  console.log(imgDeleted);
+
+  const price = formData.get('price');
+  const priceNumber = price ? Number(price) : 0;
+  const id = formData.get('id') as string;
+
+  // 필수 필드 유효성 검사
+  if (
+    content.replace(/ /g, '').length < 2 ||
+    content.replace(/ /g, '').length > 100
+  )
+    errors.title = '제목은 2글자 이상 100글자 이하로 입력해야 합니다.';
+  if (content.replace(/ /g, '').length === 0)
+    errors.content = '내용을 입력해야 합니다.';
+  if (!price) errors.price = '가격을 입력해야 합니다.';
+
+  if (Object.keys(errors).length > 0) {
+    return errors;
+  }
+  const trainingObj = {
+    title,
+    content,
+    trainingImgUpdate: updateImgDto,
+    price: priceNumber,
+  };
+
+  try {
+    const response = await updateTraining(Number(id), trainingObj);
+
+    if (response && response.status === 200) {
+      return redirect('/');
+    }
+  } catch (err) {
+    const error = err as AxiosError<ErrorResponseDto>;
+    errorFunc(error);
+    return redirect('/trainer/new/create');
+  }
+  return null;
 };
 
 export default TrainerHome;
