@@ -3,11 +3,15 @@ import React, { useEffect, useRef, useState } from 'react';
 interface DropdownMenuProps {
   onMenuItemClick: (value: string) => void;
   menuArray: string[];
+  children?: any;
+  onToggleMenuClick?: () => void;
 }
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({
   onMenuItemClick,
   menuArray,
+  children,
+  onToggleMenuClick,
 }) => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -15,6 +19,9 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   const toggleMenu = (e: React.MouseEvent) => {
     e.preventDefault();
     setShowMenu((prev) => !prev);
+    if (onToggleMenuClick) {
+      onToggleMenuClick();
+    }
   };
 
   useEffect(() => {
@@ -31,11 +38,13 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   }, []);
 
   return (
-    <div className="relative" ref={menuRef}>
+    <div className="relative flex items-center" ref={menuRef}>
       <button type="button" className="" onClick={toggleMenu}>
-        <span className="material-symbols-outlined text-zinc-500">
-          more_vert
-        </span>
+        {children || (
+          <span className="material-symbols-outlined text-zinc-500">
+            more_vert
+          </span>
+        )}
       </button>
       {showMenu && (
         <ul className="absolute right-7 top-0 z-20 w-36 overflow-hidden rounded-lg  bg-white shadow-md">
