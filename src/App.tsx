@@ -54,11 +54,13 @@ import TrainingBook, { loader as TrainingBookLoader } from './pages/book';
 import SuccessPage, {
   loader as successPaymentLoader,
 } from './pages/detail/success';
+import { checkAccessTokenExpiration } from './utils/util';
 
 function App() {
   // 전역 로그인 상태 관리
   const dispatch = useDispatch();
   useEffect(() => {
+    checkAccessTokenExpiration();
     const accessToken = localStorage.getItem('accessToken');
     if (accessToken) {
       dispatch(LOGIN());

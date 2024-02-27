@@ -3,6 +3,7 @@ import {
   ActionFunctionArgs,
   LoaderFunction,
   useLoaderData,
+  useNavigate,
 } from 'react-router-dom';
 import { AxiosError, AxiosResponse } from 'axios';
 import { useDispatch } from 'react-redux';
@@ -19,7 +20,7 @@ import FilterIcon from '../../assets/icons/filterIcon';
 import useInfiniteScroll from '../../hooks/infiniteScroll';
 import { TrainingOutlineDto } from '../../types/swagger/model/trainingOutlineDto';
 import { PageTrainingOutlineDto } from '../../types/swagger/model/pageTrainingOutlineDto';
-import { errorFunc } from '../../utils/util';
+import { checkAccessTokenExpiration, errorFunc } from '../../utils/util';
 import UserTrainingItem from './UserTrainingItem';
 import { useAppSelector } from '../../hooks/reduxHooks';
 
