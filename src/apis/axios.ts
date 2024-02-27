@@ -1,13 +1,13 @@
 import axios, {
   AxiosError,
   AxiosHeaders,
-  // AxiosRequestConfig,
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios';
 
 const baseUrl = `${process.env.REACT_APP_BASE_SERVER_URL}`.trim();
 
+// authorization이 필요없는 axios 인스턴스
 export const defaultAxios = axios.create({
   baseURL: baseUrl,
   withCredentials: true,
@@ -15,12 +15,14 @@ export const defaultAxios = axios.create({
 
 console.log(process.env.REACT_APP_BASE_SERVER_URL);
 
+// authorization이 필요한 authAxios
 export const authAxios = axios.create({
   baseURL: baseUrl,
   withCredentials: true,
 });
 
 // request 전에 호출되는 함수
+// Authorization 필드에 access token 추가
 const onRequest = (
   config: InternalAxiosRequestConfig,
 ): InternalAxiosRequestConfig => {
@@ -42,6 +44,7 @@ const onRequestError = (error: AxiosError | Error): Promise<AxiosError> => {
 const onResponse = (
   response: AxiosResponse,
 ): AxiosResponse | Promise<AxiosResponse> => {
+  // access token 갱신 시 토큰 갱신
   if (response.status === 201) {
     const newAccessToken = response.data.accessToken;
     localStorage.setItem('accessToken', newAccessToken);
@@ -55,27 +58,11 @@ const onResponseError = async (
 ): Promise<AxiosError> => {
   const error = err as unknown as AxiosError;
   const { response } = error;
-  // const prevConfig = error?.config as AxiosRequestConfig;
 
   if (response?.status === 405) {
     window.location.replace('/login');
   }
 
-  // TODO: access token 만료 시 재발급 요청 추가하기
-  // if (response && response.status === 403) {
-  //   // access token 재발급 요청
-  //   try {
-  //     await defaultAxios.patch('/auth/reissue');
-
-  //     if (response) {
-  //       // TODO: 아직 확인중
-
-  //       return await authAxios.request(prevConfig);
-  //     }
-  //   } catch (er) {
-  //     console.log(er);
-  //   }
-  // }
   return Promise.reject(error);
 };
 

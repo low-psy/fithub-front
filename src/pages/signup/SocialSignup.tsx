@@ -4,7 +4,6 @@ import {
   compareCertifyNumber,
   sendCertifyNumber,
   socialSignup,
-  // socialSignup,
 } from '../../apis/user';
 import FormError from '../../components/form/FormError';
 import FormInput from '../../components/form/FormInput';
