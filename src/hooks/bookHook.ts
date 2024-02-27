@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
-import { errorFunc } from '../utils/util';
+import { checkAccessToken, errorFunc } from '../utils/util';
 import { ErrorResponseDto } from '../types/swagger/model/errorResponseDto';
 
 const useBook = (
@@ -18,7 +18,9 @@ const useBook = (
   }, [booked, id]);
 
   const toggleBook = async () => {
-    if (!id) {
+    const isAccessToken = checkAccessToken();
+    console.log(isAccessToken);
+    if (!id || !isAccessToken) {
       return navigate('/login');
     }
     const previousBookedState = isBooked;

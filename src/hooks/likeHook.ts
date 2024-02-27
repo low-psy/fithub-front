@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { deleteLike, postLike } from '../apis/post';
+import { checkAccessToken } from '../utils/util';
 
 const useLike = (postId: number | undefined, liked: boolean | undefined) => {
   const navigate = useNavigate();
@@ -9,10 +10,10 @@ const useLike = (postId: number | undefined, liked: boolean | undefined) => {
   useEffect(() => {
     setLiked(liked);
   }, [liked]);
-  console.log('useLike');
   const toggleLike = async () => {
+    const isAccessToken = checkAccessToken();
     // 먼저 UI 업데이트
-    if (!postId) {
+    if (!postId || !isAccessToken) {
       return navigate('/login');
     }
 
