@@ -60,6 +60,7 @@ const Detail = () => {
     trainerInfoDto,
     content,
   } = trainingInfo;
+  console.log(address);
   const imageUrls =
     images?.map((value) => {
       return value.url;
@@ -116,7 +117,7 @@ const Detail = () => {
         pg: 'html5_inicis.INIpayTest',
         pay_method: 'card', // 결제수단
         merchant_uid: `${generateRandomString()}`, // 주문번호
-        amount: 100, // 결제금액
+        amount: price as number, // 결제금액
         name: title, // 주문명
         buyer_name: '홍길동', // 구매자 이름
         buyer_tel: '01012341234', // 구매자 전화번호
@@ -154,11 +155,7 @@ const Detail = () => {
 
   return (
     <div className="mb-8 space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className=" break-keep  text-3xl font-bold">
-          {trainingInfo.title}
-        </h1>
-      </div>
+      <h1 className=" break-keep  text-3xl font-bold">{trainingInfo.title}</h1>
       <ImageXScroll imageUrls={imageUrls as string[]} />
       <div className="flex flex-col gap-8 md:flex-row">
         <div className="grow space-y-6 ">
