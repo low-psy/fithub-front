@@ -6,15 +6,17 @@ import axios, {
   InternalAxiosRequestConfig,
 } from 'axios';
 
+const baseUrl = `${process.env.REACT_APP_BASE_SERVER_URL}`.trim();
+
 export const defaultAxios = axios.create({
-  baseURL: process.env.REACT_APP_BASE_SERVER_URL,
+  baseURL: baseUrl,
   withCredentials: true,
 });
 
 console.log(process.env.REACT_APP_BASE_SERVER_URL);
 
 export const authAxios = axios.create({
-  baseURL: process.env.REACT_APP_BASE_SERVER_URL,
+  baseURL: baseUrl,
   withCredentials: true,
 });
 
