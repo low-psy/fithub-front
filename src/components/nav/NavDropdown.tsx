@@ -1,54 +1,62 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 
 import axios from 'axios';
 
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../hooks/reduxHooks';
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 
 import { logout } from '../../apis/user';
 
 import { TOGGLE_OPEN } from '../../redux/slices/profileDropdownSlice';
+import DropdownMenu from '../btn/DropdownMenu';
+import { errorFunc } from '../../utils/util';
+import ProfileIcon from '../../assets/icons/ProfileIcon';
 
 const NavDropdown = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const menuArray = ['프로필', '로그아웃'];
 
-  const handleLogout = async () => {
-    try {
-      navigate('/');
-      const response = await logout();
-      if (response && response.status === 200) {
-        navigate('/');
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error(error);
+  const { isLogin } = useAppSelector((state) => state.user);
+
+  const navMenuClickHandler = async (value: string) => {
+    if (!isLogin) {
+      return navigate('/login');
+    }
+    if (value === '프로필') {
+      navigate('/user/profile');
+      dispatch(TOGGLE_OPEN());
+    } else if (value === '로그아웃') {
+      try {
+        const response = await logout();
+        if (response && response.status === 200) {
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('expirationTime');
+          navigate(0);
+        }
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          errorFunc(error);
+          navigate('/login');
+        }
       }
     }
   };
 
+  const toggleMenuClickHandler = () => {
+    if (!isLogin) {
+      navigate('/login');
+    }
+  };
+
   return (
-    <div className="absolute right-0 z-50 mt-1 rounded bg-white pt-2 shadow-md">
-      <ul className="whitespace-nowrap text-center font-semibold">
-        <li
-          className="mb-2 w-full cursor-pointer rounded px-4 py-2 hover:bg-sub"
-          onClick={() => {
-            navigate('/user/profile');
-            dispatch(TOGGLE_OPEN());
-          }}
-          aria-hidden
-        >
-          프로필
-        </li>
-        <li
-          className="mb-2 w-full cursor-pointer rounded px-4 py-2 hover:bg-sub"
-          onClick={handleLogout}
-          aria-hidden
-        >
-          로그아웃
-        </li>
-      </ul>
-    </div>
+    <DropdownMenu
+      menuArray={menuArray}
+      onMenuItemClick={navMenuClickHandler}
+      onToggleMenuClick={toggleMenuClickHandler}
+    >
+      <ProfileIcon />
+    </DropdownMenu>
   );
 };
 
