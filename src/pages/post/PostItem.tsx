@@ -35,7 +35,6 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
   writerInfo,
   likedUsers,
 }) => {
-  console.log(postId);
   const [modalsOpen, setModalsOpen] = useState<{ [key: string]: boolean }>({
     deleteModal: false,
     editModal: false,
