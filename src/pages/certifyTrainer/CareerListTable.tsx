@@ -1,5 +1,6 @@
 import React from 'react';
 import CareerTableData from './CareerTableData';
+import { TrainerCareerRequestDto } from '../../types/swagger/model/trainerCareerRequestDto';
 
 interface ICareer {
   [key: string]: string | boolean | (() => void);
@@ -11,7 +12,7 @@ interface ICareer {
 }
 
 interface ICareerListTableProps {
-  careerList: ICareer[];
+  careerList: TrainerCareerRequestDto[];
   handleDeleteCareer: (idx: number) => void;
 }
 
