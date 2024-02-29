@@ -6,29 +6,54 @@ import {
   Outlet,
   useLocation,
   useParams,
+  redirect,
 } from 'react-router-dom';
-import { AxiosError } from 'axios';
 import PostItem from './PostItem';
-import { LoaderData } from '../../types/common';
-import { getLikeBook, getLikes, getPost } from '../../apis/post';
+import { LoaderData, refreshResData } from '../../types/common';
+import {
+  getBookedPost,
+  getLikeBook,
+  getLikedPost,
+  getLikes,
+  getPost,
+} from '../../apis/post';
 import { LikesBookmarkStatusDto } from '../../types/swagger/model/likesBookmarkStatusDto';
 import { LikedUsersInfoDto } from '../../types/swagger/model/likedUsersInfoDto';
 import { useAppSelector } from '../../hooks/reduxHooks';
 import UndefinedCover from '../../components/common/UndefinedCover';
 import FilterLayout from '../../components/filter/FilterLayout';
+import { errorFunc, setRefreshToken } from '../../utils/util';
 
 export const loader = (async ({ request }) => {
   const url = new URL(request.url);
   const booked = url.searchParams.get('booked');
+  console.log(booked);
+  const liked = url.searchParams.get('liked');
   try {
-    const response = await getPost();
-    if (response && response.status === 200) {
-      return response;
+    let res;
+    if (booked) {
+      res = await getBookedPost();
+    } else if (liked) {
+      res = await getLikedPost();
+    } else {
+      res = await getPost();
     }
-    return response;
+    if (res && res.status === 200) {
+      return res;
+    }
+    if (res.status === 201) {
+      console.log(res.data);
+      const { accessToken } = res.data as refreshResData;
+      setRefreshToken(accessToken);
+      return redirect('/post');
+    }
+    return res;
   } catch (err) {
-    const error = err as unknown as AxiosError;
-    throw error;
+    const status = errorFunc(err);
+    if (status === 401) {
+      redirect('/login');
+    }
+    return redirect('/');
   }
 }) satisfies LoaderFunction;
 
@@ -36,6 +61,9 @@ const Post = () => {
   const { postId } = useParams<{ postId?: string }>();
   const location = useLocation();
   const isModal = location.state?.isModal;
+  const searchParams = new URLSearchParams(location.search);
+  const booked = searchParams.get('booked');
+  const liked = searchParams.get('liked');
 
   const PostDto = useLoaderData() as LoaderData<typeof loader>;
   const [bookAndLikes, setBookAndLikes] = useState<LikesBookmarkStatusDto[]>([
@@ -69,6 +97,32 @@ const Post = () => {
       </main>
     );
   }
+  if (booked || liked) {
+    const text = booked ? '북마크한 게시물' : '좋아요 누른 게시글';
+    return (
+      <section className="relative mx-auto w-[728px] space-y-4 ">
+        <h2 className="text-4xl font-extrabold ">{text}</h2>
+        {!PostDto.data.content?.[0] && (
+          <div className="relative h-[400px] bg-gray-100">
+            <UndefinedCover>{text}이 없습니다</UndefinedCover>
+          </div>
+        )}
+        {PostDto.data.content?.map((post, index) => {
+          const likeAndBook = bookAndLikes[index];
+          const likedInfo = likedInfos[index];
+          return (
+            <PostItem
+              key={post.postId}
+              {...post}
+              bookAndLikes={likeAndBook}
+              likedUsers={likedInfo?.likedUsers}
+            />
+          );
+        })}
+      </section>
+    );
+  }
+
   return (
     <div className="flex gap-8 space-y-4 md:space-y-0">
       <FilterLayout>
