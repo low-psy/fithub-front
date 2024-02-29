@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { TrainersReserveInfoDto } from '../../types/swagger/model/trainersReserveInfoDto';
 import { formatPriceToKRW } from '../../utils/util';
 import DefaultModal from '../../components/modal/DefaultModal';
 import { postTrainerNoShow } from '../../apis/trainig';
+import useModal from '../../hooks/useModal';
+import ConfirmationModal from '../../components/modal/ConfirmationModal';
+import ReservationItem from './ReservationItem';
 
 const TrainerReservation: React.FC<{
   session: TrainersReserveInfoDto;
@@ -18,14 +21,23 @@ const TrainerReservation: React.FC<{
   const { trainingId } = session;
   const navigate = useNavigate();
 
-  const [isNoShowModal, setIsNoShowModal] = useState<boolean>(false);
+  const reservationConfirmModal = useModal(); // 수정 모달 상태 관리
+  const noShowModal = useModal(); // 수정 모달 상태 관리
+
+  const modlaToggleHandler = (selectedBtnId: number) => {
+    if (selectedBtnId === 2) {
+      reservationConfirmModal.toggle();
+    } else if (selectedBtnId === 3) {
+      noShowModal.toggle();
+    }
+  };
 
   const noShowClkHandler = async () => {
     try {
       const res = await postTrainerNoShow(trainingId as number);
       if (res.status === 200) {
         navigate('/trainer/home');
-        setIsNoShowModal(false);
+        noShowModal.toggle();
       } else {
         throw new Error(`Server is Troubling : ${res.status}`);
       }
@@ -53,70 +65,54 @@ const TrainerReservation: React.FC<{
     <>
       <div
         key={trainingId}
-        className={`rounded-xl ${(selectedBtnId === 3 || selectedBtnId === 4) && 'opacity-50 '}  ${selectedBtnId === 1 && 'bg-sub'} bg-white  p-4 shadow-lg hover:opacity-100 ${selectedBtnId !== 3 && 'pointer-events-none'}`}
-        onClick={() => {
-          if (selectedBtnId !== 3) {
-            return;
-          }
-          return setIsNoShowModal(true);
-        }}
+        className={`rounded-xl ${selectedBtnId === 3 && 'opacity-50 '}  ${selectedBtnId === 1 && 'bg-sub'} bg-white  p-4 shadow-lg hover:opacity-100`}
+        onClick={() => modlaToggleHandler(selectedBtnId)}
         role="presentation"
       >
-        <p className="mb-6 text-2xl font-extrabold">{session.userName}</p>
+        <p className="mb-6  truncate text-2xl font-extrabold">
+          {session.title}
+        </p>
         <div className="space-y-4">
-          <div className="flex justify-between">
-            <h2 className="flex items-center gap-x-1">
-              <span className="material-symbols-rounded">calendar_month</span>
-              예약일
-            </h2>
-            <p className="text-xl font-bold">{`${month}월 ${date}일`}</p>
-          </div>
-          <div className="flex justify-between">
-            <h2 className="flex items-center gap-x-1">
-              <span className="material-symbols-rounded">schedule</span>
-              예약시간
-            </h2>
-            <p className="text-xl font-bold">{timeString}</p>
-          </div>
-          <div className="flex justify-between">
-            <h2 className="flex items-center gap-x-1">
-              <span className="material-symbols-rounded">sell</span>
-              예약금액
-            </h2>
-            <p className="text-xl font-bold">
-              {formatPriceToKRW(session.price as number)}원
-            </p>
-          </div>
+          <ReservationItem
+            title="예약자 이름"
+            value={session.userName}
+            iconString="badge"
+          />
+          <ReservationItem
+            title="예약일"
+            value={`${month}월 ${date}일`}
+            iconString="calendar_month"
+          />
+          <ReservationItem
+            title="예약시간"
+            value={timeString}
+            iconString="schedule"
+          />
+          <ReservationItem
+            title="예약금액"
+            value={`${formatPriceToKRW(session.price as number)}원`}
+            iconString="sell"
+          />
         </div>
       </div>
-      {selectedBtnId === 3 && (
-        <DefaultModal
-          isOpen={isNoShowModal}
-          onClose={() => setIsNoShowModal(false)}
-        >
-          <div className="space-y-6 p-2 pr-4">
-            <h2>
-              회원님께서 트레이닝에 참석하지 않으셔서 노쇼 처리를 원하시나요?
-            </h2>
-            <div className="-mb-4 -mr-2 flex justify-end gap-2">
-              <button
-                type="button"
-                className="rounded-full bg-gray-300 px-8 py-2"
-                onClick={noShowClkHandler}
-              >
-                네
-              </button>
-              <button
-                type="button"
-                className="rounded-full bg-accent_sub px-8 py-2"
-                onClick={() => setIsNoShowModal(false)}
-              >
-                아니요
-              </button>
-            </div>
-          </div>
-        </DefaultModal>
-      )}
+      <ConfirmationModal
+        isOpen={noShowModal.isOpen}
+        onClose={noShowModal.toggle}
+        onConfirm={() => noShowClkHandler()}
+        confirmText="네"
+      >
+        해당 예약을 회원님이 방문하지 않으셨나요?
+      </ConfirmationModal>
+      <DefaultModal
+        isOpen={reservationConfirmModal.isOpen}
+        onClose={reservationConfirmModal.toggle}
+        modalMaxHeight="600px"
+        modalWidth="1000px"
+      >
+        <div className="w-full space-y-6">
+          <div>reservation</div>
+        </div>
+      </DefaultModal>
     </>
   );
 };

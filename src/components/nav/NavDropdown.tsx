@@ -12,10 +12,9 @@ import DropdownMenu from '../btn/DropdownMenu';
 import { errorFunc } from '../../utils/util';
 import ProfileIcon from '../../assets/icons/ProfileIcon';
 
-const NavDropdown = () => {
+const NavDropdown: React.FC<{ menuArray: string[] }> = ({ menuArray }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const menuArray = ['프로필', '로그아웃'];
 
   const { isLogin } = useAppSelector((state) => state.user);
 
@@ -40,6 +39,8 @@ const NavDropdown = () => {
           navigate('/login');
         }
       }
+    } else if (value === '저장한 게시물') {
+      navigate('/post?booked=true');
     }
   };
 

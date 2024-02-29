@@ -6,7 +6,7 @@ import {
   redirect,
   useLoaderData,
   useLocation,
-  useNavigate,
+  useSearchParams,
 } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import SelectableButtons from '../../components/btn/SelectedBtn';
@@ -15,6 +15,7 @@ import {
   getTrainersReserve,
   getTrainersTraining,
   updateTraining,
+  updateTrainingCalendar,
 } from '../../apis/trainig';
 import TrainerReservation from './TrainerReservation';
 import { ErrorResponseDto } from '../../types/swagger/model/errorResponseDto';
@@ -27,8 +28,9 @@ import UndefinedCover from '../../components/common/UndefinedCover';
 export const loader = (async ({ request }) => {
   const url = new URL(request.url);
   const isClosed = url.searchParams.get('isClosed');
+  const status = url.searchParams.get('status');
   try {
-    const reservation = await getTrainersReserve();
+    const reservation = await getTrainersReserve(status);
     const training = await getTrainersTraining(!!isClosed);
     if (reservation.status === 200 && training.status === 200) {
       return {
@@ -36,10 +38,13 @@ export const loader = (async ({ request }) => {
         training,
       };
     }
-    throw new Error('server is troubling');
   } catch (err) {
-    const error = err as unknown as AxiosError;
-    throw error;
+    const errorStatus = errorFunc(err);
+    console.log(errorStatus);
+    if (errorStatus === 401) {
+      console.log('redirect');
+      return redirect('/login');
+    }
   }
 }) satisfies LoaderFunction;
 
@@ -47,22 +52,41 @@ const TrainerHome = () => {
   const res = useLoaderData() as LoaderData<typeof loader>;
   const [selectedButtonId, setSelectedButtonId] = useState<number>(1);
   const location = useLocation();
-  console.log(location.search);
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const trainingDefaultNum = location.search ? 2 : 1;
   const [selectedTrainingButtonId, setSelectedTrainingButtonId] =
     useState<number>(trainingDefaultNum);
-  const navigate = useNavigate();
+
   const btnHandler = useCallback(
     (id: number, setFunc: (id: number) => void) => {
       setFunc(id);
-      if (id === 1 && setFunc === setSelectedTrainingButtonId) {
-        navigate('/trainer/home');
+
+      if (setFunc === setSelectedTrainingButtonId) {
+        if (id === 2) {
+          searchParams.set('isClosed', 'true');
+        } else {
+          searchParams.delete('isClosed');
+        }
+      } else if (setFunc === setSelectedButtonId) {
+        const status =
+          id === 3
+            ? 'COMPLETE'
+            : id === 4
+              ? 'NOSHOW'
+              : id === 5
+                ? 'CANCEL'
+                : '';
+        if (status) {
+          searchParams.set('status', status);
+        } else {
+          searchParams.delete('status');
+        }
       }
-      if (id === 2 && setFunc === setSelectedTrainingButtonId) {
-        navigate('/trainer/home?isClosed=true');
-      }
+
+      setSearchParams(searchParams);
     },
-    [navigate],
+    [searchParams, setSearchParams],
   );
 
   // 선택된 id에 따라 필터링 조건 설정
@@ -119,23 +143,24 @@ const TrainerHome = () => {
   }, [selectedTrainingButtonId]);
 
   const reservationfilteredData = useMemo(() => {
-    return res.reservation.data.content?.filter(
+    return res?.reservation.data.content?.filter(
       (session) => session.status === statusFilter(selectedButtonId),
     );
-  }, [res.reservation, selectedButtonId, statusFilter]);
+  }, [res?.reservation, selectedButtonId, statusFilter]);
 
   const trainingfilteredData = useMemo(() => {
-    return res.training.data.content?.filter(
+    return res?.training.data.content?.filter(
       (session) =>
         session.closed === trainingStatusFilter(selectedTrainingButtonId),
     );
-  }, [res.training, selectedTrainingButtonId, trainingStatusFilter]);
+  }, [res?.training, selectedTrainingButtonId, trainingStatusFilter]);
 
   const buttonInfos = [
     { id: 1, text: '진행' },
     { id: 2, text: '예정' },
     { id: 3, text: '종료' },
     { id: 4, text: '노쇼' },
+    { id: 5, text: '취소' },
   ];
 
   const btnTrainingInfos = [
@@ -176,7 +201,7 @@ const TrainerHome = () => {
             </h3>
           )}
           {reservationfilteredData && reservationfilteredData.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
               {reservationfilteredData &&
                 reservationfilteredData.map((session) => (
                   <TrainerReservation
@@ -218,13 +243,9 @@ const TrainerHome = () => {
             <div className="grid gap-6 lg:grid-cols-2">
               {trainingfilteredData &&
                 trainingfilteredData.map((session) => {
-                  const isTimeout =
-                    new Date() > new Date(session.endDate as string);
                   const isClosed = selectedTrainingButtonId === 2;
                   return (
-                    <div
-                      className={`rounded-md bg-white  p-4 shadow-xl ${isTimeout && 'pointer-events-none opacity-50'}`}
-                    >
+                    <div className={`rounded-md bg-white  p-4 shadow-xl `}>
                       <TrainingItem
                         trainerInfoDto={session}
                         isClosed={isClosed}
@@ -242,86 +263,106 @@ const TrainerHome = () => {
   );
 };
 
-export interface TrainingImgUpdateDto {
-  /**
-   * 삭제된 이미지가 있다면 true로 주면 됨
-   */
-  imgDeleted?: boolean;
-  /**
-   * imgDeleted = true일 때만 주면 됨, 남아있는 이미지 url 리스트
-   */
-  unModifiedImgList?: Array<string>;
-  /**
-   * 새로 추가된 이미지가 있다면 true로
-   */
-  imgAdded?: boolean;
-  /**
-   * 새로 추가한 이미지
-   */
-  newImgList?: Array<Blob>;
-}
-
 export const action = async ({ request }: ActionFunctionArgs) => {
+  const url = new URL(request.url);
+  const type = url.searchParams.get('type');
+
   const formData = await request.formData();
-  const errors: FormErrors = {};
-  const title = formData.get('title') as string;
-  const content = formData.get('content') as string;
-  const imgDeleted = formData.get('imgDeleted') as string;
-
-  const documentDto = getImages(store.getState());
-  const unModifiedImgList: string[] = [];
-  const newImgList: Blob[] = [];
-  documentDto.forEach((document) => {
-    if (document.image) {
-      newImgList.push(document.image);
-    } else {
-      unModifiedImgList.push(document.awsS3Url as string);
-    }
-  });
-  const imgAdded = newImgList[0];
-  const updateImgDto = {
-    imgDeleted: !!imgDeleted,
-    imgAdded: !!imgAdded,
-    unModifiedImgList,
-    newImgList,
-  };
-  console.log(updateImgDto);
-  console.log(imgDeleted);
-
-  const price = formData.get('price');
-  const priceNumber = price ? Number(price) : 0;
   const id = formData.get('id') as string;
+  const errors: FormErrors = {};
+  if (type === 'content') {
+    const title = formData.get('title') as string;
+    const content = formData.get('content') as string;
+    const imgDeleted = formData.get('imgDeleted') as string;
 
-  // 필수 필드 유효성 검사
-  if (
-    content.replace(/ /g, '').length < 2 ||
-    content.replace(/ /g, '').length > 100
-  )
-    errors.title = '제목은 2글자 이상 100글자 이하로 입력해야 합니다.';
-  if (content.replace(/ /g, '').length === 0)
-    errors.content = '내용을 입력해야 합니다.';
-  if (!price) errors.price = '가격을 입력해야 합니다.';
+    const documentDto = getImages(store.getState());
+    const unModifiedImgList: string[] = [];
+    const newImgList: Blob[] = [];
 
-  if (Object.keys(errors).length > 0) {
-    return errors;
-  }
-  const trainingObj = {
-    title,
-    content,
-    trainingImgUpdate: updateImgDto,
-    price: priceNumber,
-  };
+    documentDto.forEach((document) => {
+      if (document.image) {
+        newImgList.push(document.image);
+      } else {
+        unModifiedImgList.push(document.awsS3Url as string);
+      }
+    });
+    const imgAdded = newImgList[0];
+    const updateImgDto = {
+      imgDeleted: !!imgDeleted,
+      imgAdded: !!imgAdded,
+      unModifiedImgList,
+      newImgList,
+    };
 
-  try {
-    const response = await updateTraining(Number(id), trainingObj);
+    const price = formData.get('price');
+    const priceNumber = price ? Number(price) : 0;
 
-    if (response && response.status === 200) {
-      return redirect('/');
+    // 필수 필드 유효성 검사
+    if (
+      content.replace(/ /g, '').length < 2 ||
+      content.replace(/ /g, '').length > 100
+    )
+      errors.title = '제목은 2글자 이상 100글자 이하로 입력해야 합니다.';
+    if (content.replace(/ /g, '').length === 0)
+      errors.content = '내용을 입력해야 합니다.';
+    if (!price) errors.price = '가격을 입력해야 합니다.';
+
+    if (Object.keys(errors).length > 0) {
+      return errors;
     }
-  } catch (err) {
-    const error = err as AxiosError<ErrorResponseDto>;
-    errorFunc(error);
-    return redirect('/trainer/new/create');
+    const trainingObj = {
+      title,
+      content,
+      trainingImgUpdate: updateImgDto,
+      price: priceNumber,
+    };
+
+    try {
+      const response = await updateTraining(Number(id), trainingObj);
+
+      if (response && response.status === 200) {
+        console.log('success');
+        return redirect('/');
+      }
+    } catch (err) {
+      const error = err as AxiosError<ErrorResponseDto>;
+      errorFunc(error);
+      return redirect('/trainer/new/create');
+    }
+  } else if (type === 'calendar') {
+    const startDate = formData.get('startDate') as string;
+    const endDate = formData.get('endDate') as string;
+    const unableDates = formData.getAll('unable_date') as string[];
+    const nonEmptyUnableDates =
+      unableDates.filter((date) => date).length === 0
+        ? undefined
+        : unableDates.filter((date) => date);
+    const requestData = {
+      startDate,
+      endDate,
+      unableDates: nonEmptyUnableDates,
+    };
+
+    if (Object.keys(errors).length > 0) {
+      return errors;
+    }
+    try {
+      const res = await updateTrainingCalendar(Number(id), requestData);
+      if (res.status === 200) {
+        console.log('success');
+        return redirect('/');
+      }
+      if (res.status === 201) {
+        return redirect('/login');
+      }
+      throw new Error(`server is trobule with${res.status}`);
+    } catch (err) {
+      const status = errorFunc(err);
+      if (status === 401) {
+        return redirect('/login');
+      }
+      return redirect('/trainer/home');
+    }
   }
   return null;
 };

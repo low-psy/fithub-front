@@ -8,18 +8,20 @@ import NavDropdown from './NavDropdown';
 
 const NavMenu = () => {
   const { isLogin, role } = useAppSelector((state) => state.user);
-  const { isOpen } = useAppSelector((state) => state.profileDropdown);
   let profileTo = '/user/profile';
 
   let isCreateTrainer = true;
   const location = useLocation();
-  if (location.pathname === '/newpost') {
+  if (location.pathname.startsWith('/newpost')) {
     isCreateTrainer = false;
   }
+  const to = role === 'trainer' ? '/trainer/home' : '/certify-trainer';
+  let menuArray = ['프로필', '로그아웃'];
   if (isLogin === false) {
     profileTo = '/login';
+  } else {
+    menuArray = [...menuArray, '저장한 게시물'];
   }
-  const to = role === 'trainer' ? '/trainer/home' : '/certify-trainer';
   return (
     <ul className="hidden items-center justify-end gap-5 md:flex  md:grow md:basis-1/3">
       <li key="trainer" className="grow text-center">
@@ -44,7 +46,7 @@ const NavMenu = () => {
       </li>
       <li key="user">
         <Link to={profileTo}>
-          <NavDropdown />
+          <NavDropdown menuArray={menuArray} />
         </Link>
       </li>
     </ul>

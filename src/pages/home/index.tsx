@@ -3,7 +3,6 @@ import {
   ActionFunctionArgs,
   LoaderFunction,
   useLoaderData,
-  useNavigate,
 } from 'react-router-dom';
 import { AxiosError, AxiosResponse } from 'axios';
 import { useDispatch } from 'react-redux';
@@ -20,14 +19,19 @@ import FilterIcon from '../../assets/icons/filterIcon';
 import useInfiniteScroll from '../../hooks/infiniteScroll';
 import { TrainingOutlineDto } from '../../types/swagger/model/trainingOutlineDto';
 import { PageTrainingOutlineDto } from '../../types/swagger/model/pageTrainingOutlineDto';
-import { checkAccessTokenExpiration, errorFunc } from '../../utils/util';
+import { checkAccessToken, errorFunc } from '../../utils/util';
 import UserTrainingItem from './UserTrainingItem';
 import { useAppSelector } from '../../hooks/reduxHooks';
 
 export const loader: LoaderFunction = async () => {
   try {
     const response = await getTraining();
-    return response; // AxiosResponse 객체 전체를 반환
+    if (response.status === 200) {
+      return response;
+    }
+    if (response.status === 201) {
+      console.log(response);
+    }
   } catch (err) {
     const error = err as unknown as AxiosError;
     throw error;
@@ -43,9 +47,9 @@ const Home: React.FC = () => {
   );
   const dispatch = useDispatch();
   const [usersTrainingLike, setUsersTrainingLike] = useState<boolean[]>([]);
-  const { isLogin } = useAppSelector((state) => state.user);
 
   useEffect(() => {
+    const isAcessToken = checkAccessToken();
     const fetchUsersTrainingLike = async () => {
       try {
         if (!idList) return;
@@ -59,10 +63,10 @@ const Home: React.FC = () => {
         errorFunc(err);
       }
     };
-    if (isLogin) {
+    if (isAcessToken) {
       fetchUsersTrainingLike();
     }
-  }, [idList, isLogin, dispatch]);
+  }, [idList, dispatch]);
   const fetchData = useCallback(
     async (page: number): Promise<TrainingOutlineDto[] | []> => {
       if (response.data.content && response.data.content.length < 9) {

@@ -15,7 +15,11 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "typeRoots": ["./typings", "node_modules/@types"],
+    "typeRoots": [
+      "src/types/swagger/model",
+      "node_modules/@types",
+      "src/types"
+    ],
     "types": ["googlemaps"]
   },
   "include": ["src"]

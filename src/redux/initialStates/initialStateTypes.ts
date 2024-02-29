@@ -10,9 +10,11 @@ export interface MapState {
 }
 
 export interface SelectedDates {
-  startDate: string | null;
-  endDate: string | null;
+  startDate: string | null | undefined;
+  endDate: string | null | undefined;
+  id?: number | undefined;
 }
+
 export interface PaymentState extends PaymentReqDto {
   selectedDate: SelectedDates;
   selectedTime: string;

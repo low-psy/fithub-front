@@ -5,6 +5,7 @@ import MyGrade from './MyGrade';
 import MyInfo from './MyInfo';
 import { IProfile } from '../../../types/profile';
 import MyAccount from './MyAccount';
+import withAuth from '../../../hocs/withAuth';
 
 interface IProfileOutletContext {
   profile: IProfile;
@@ -40,4 +41,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default withAuth(Profile, 'user');

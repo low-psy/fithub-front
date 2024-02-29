@@ -42,7 +42,7 @@ const TrainerUpdateForm: React.FC<{ trainingId: number }> = ({
   return (
     <Form
       method="PUT"
-      action="/trainer/home"
+      action="/trainer/home?type=content"
       className="space-y-16 pb-6 pt-4"
       encType="multipart/form-data"
     >

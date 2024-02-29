@@ -11,17 +11,17 @@ const RedirectModal: React.FC<RedirectModalProps> = ({ children }) => {
     navigate(-1); // 이전 페이지로 돌아가기
   };
   return (
-    <div className="fixed inset-0  bg-black bg-opacity-50 p-20">
+    <div className="fixed inset-0 bg-black p-20">
       <button
         type="button"
         onClick={handleClose}
         className="absolute right-10 top-10"
       >
-        <span className="material-symbols-outlined -mr-2 rounded-full bg-white">
+        <span className="material-symbols-outlined -mr-2  rounded-full bg-white">
           close
         </span>
       </button>
-      <div className="flex h-full items-center justify-center overflow-auto rounded-md ">
+      <div className="flex h-full overflow-y-auto rounded-md bg-white">
         {children}
       </div>
     </div>

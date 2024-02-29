@@ -26,8 +26,8 @@ const LikesSection: React.FC<{
           })}
           <div className="flex items-center gap-x-1">
             <p>Liked by</p>
-            <p>
-              {likes && likes?.length > 2
+            <p className="mt-[3px] text-sm">
+              {likes && likes?.length >= 2
                 ? `${likes[0].nickname} 그리고 여러명`
                 : likes?.[0].nickname}
             </p>
