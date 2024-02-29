@@ -13,6 +13,7 @@ import LinkBtnWithImg from '../../components/btn/LinkBtnWithImg';
 import ClickBtn from '../../components/btn/ClickBtn';
 import useModal from '../../hooks/useModal';
 import ConfirmationModal from '../../components/modal/ConfirmationModal';
+import TrainerCalendarUpdateForm from './TrainerCalendarUpdateForm';
 
 export interface TrainingItemProps {
   trainerInfoDto: TrainersTrainingOutlineDto;
@@ -106,16 +107,6 @@ const TrainingItem: React.FunctionComponent<TrainingItemProps> = ({
       >
         정말 해당 트레이닝을 마감 하시겠습니까?
       </ConfirmationModal>
-      <DefaultModal
-        isOpen={editContentModal.isOpen}
-        onClose={editContentModal.toggle}
-        modalMaxHeight="600px"
-        modalWidth="1000px"
-      >
-        <div className="w-full space-y-6">
-          <TrainerUpdateForm trainingId={trainingId} />
-        </div>
-      </DefaultModal>
       <ConfirmationModal
         isOpen={openModal.isOpen}
         onClose={openModal.toggle}
@@ -158,6 +149,26 @@ const TrainingItem: React.FunctionComponent<TrainingItemProps> = ({
       >
         정말 해당 트레이닝을 삭제 하시겠습니까?
       </ConfirmationModal>
+      <DefaultModal
+        isOpen={editContentModal.isOpen}
+        onClose={editContentModal.toggle}
+        modalMaxHeight="600px"
+        modalWidth="1000px"
+      >
+        <div className="w-full space-y-6">
+          <TrainerUpdateForm trainingId={trainingId} />
+        </div>
+      </DefaultModal>
+      <DefaultModal
+        isOpen={editCalendarModal.isOpen}
+        onClose={editCalendarModal.toggle}
+        modalMaxHeight="600px"
+        modalWidth="1000px"
+      >
+        <div className="w-full space-y-6">
+          <TrainerCalendarUpdateForm trainingId={trainingId} />
+        </div>
+      </DefaultModal>
     </>
   );
 };
