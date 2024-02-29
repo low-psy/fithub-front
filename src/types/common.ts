@@ -51,3 +51,10 @@ export interface FormErrors {
 
 export type LoaderData<TLoaderFn extends LoaderFunction> =
   Awaited<ReturnType<TLoaderFn>> extends Response | infer D ? D : never;
+
+export interface refreshResData {
+  accessToken: string;
+  code: number;
+  httpStatus: string;
+  message: string;
+}
