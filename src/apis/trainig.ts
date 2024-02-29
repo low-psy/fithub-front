@@ -11,6 +11,7 @@ import { TrainingLikesInfoDto } from '../types/swagger/model/trainingLikesInfoDt
 import { UsersReserveInfoDto } from '../types/swagger/model/usersReserveInfoDto';
 import { PageTrainersTrainingOutlineDto } from '../types/swagger/model/pageTrainersTrainingOutlineDto';
 import { TrainingImgUpdateDto } from '../types/swagger/model/trainingImgUpdateDto';
+import { TrainingDateReservationNumDto } from '../types/swagger/model/trainingDateReservationNumDto';
 
 /**
  * [GET] 회원 트레이닝 첫페이지 조회
@@ -141,11 +142,11 @@ export const deleteTrainingLike = async (trainingId: number) => {
  * @param
  * @returns AxiosResponse<PageTrainersReserveInfoDto>
  */
-export const getTrainersReserve = async (): Promise<
-  AxiosResponse<PageTrainersReserveInfoDto>
-> => {
+export const getTrainersReserve = async (
+  status: string | null,
+): Promise<AxiosResponse<PageTrainersReserveInfoDto>> => {
   return authAxios.get<PageTrainersReserveInfoDto>(
-    '/trainers/training/reservations/all',
+    `/trainers/training/reservations/all?${status ? `status=${status}` : ''}`,
   );
 };
 
@@ -159,6 +160,19 @@ export const getTrainersTraining = async (
 ): Promise<AxiosResponse<PageTrainersTrainingOutlineDto>> => {
   return authAxios.get<PageTrainersTrainingOutlineDto>(
     `/trainers/training?closed=${closed}`,
+  );
+};
+
+/**
+ * [GET] 예약된 트레이닝의 날짜 및 시간 조회
+ * @param trainingId 수정하고 싶은 트레이닝 id
+ * @returns AxiosResponse<TrainingDateReservationNumDto>
+ */
+export const getTrainersReserveCount = async (
+  trainingId: number,
+): Promise<AxiosResponse<TrainingDateReservationNumDto[]>> => {
+  return authAxios.get<TrainingDateReservationNumDto[]>(
+    `/trainers/training/reservations/count?trainingId=${trainingId}`,
   );
 };
 
@@ -220,4 +234,24 @@ export const updateTraining = async (
       'Content-Type': 'multipart/form-data',
     },
   });
+};
+
+/**
+ * [PUT] 트레이너가 트레이닝의 날짜 파트를 수정
+ * @param  trainingId 수정하고 싶은 트레이닝 id
+ * @param  data startDate, endDate, unabledDates를 포함한 객체
+ * @returns
+ */
+export const updateTrainingCalendar = async (
+  trainingId: number,
+  data: {
+    startDate: string;
+    endDate: string;
+    unableDates: string[] | undefined;
+  },
+) => {
+  return authAxios.put(
+    `/trainers/training/update/date?trainingId=${trainingId}`,
+    data,
+  );
 };

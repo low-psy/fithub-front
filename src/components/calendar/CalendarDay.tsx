@@ -9,7 +9,7 @@ interface CalendarDayProps {
   isRangeEnd: boolean;
   inRange: boolean;
   handleDateClick: (dateString: string, id: number | undefined) => void;
-  selectedDates: SelectedDates;
+  selectedDates: SelectedDates | undefined;
   id: number | undefined;
 }
 
@@ -30,16 +30,16 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
 
   if (isRangeStart) {
     // 범위의 시작 부분에 대한 스타일
-    if (isRangeEnd || !selectedDates.endDate) {
+    if (isRangeEnd || !selectedDates?.endDate) {
       // endDate가 없거나, startDate와 endDate가 같은 경우 (하나만 선택된 경우)
       dayClass += ' rounded-full';
     } else {
       // startDate와 다른 endDate가 있는 경우 (두 개 선택된 경우)
-      dayClass += ' rounded-r-none';
+      dayClass += ' rounded-r-none text-white';
     }
   } else if (isRangeEnd) {
     // 범위의 끝 부분에 대한 스타일
-    dayClass += ' rounded-l-none';
+    dayClass += ' rounded-l-none text-white';
   } else if (inRange) {
     // 선택 범위 내에 있지만 시작 또는 끝이 아닌 경우
     dayClass += ' bg-accent rounded-none opacity-30';

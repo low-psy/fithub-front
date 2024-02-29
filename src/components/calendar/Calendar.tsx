@@ -3,10 +3,10 @@ import { TrainingAvailableDateDto } from '../../types/swagger/model/trainingAvai
 import CalendarDay from './CalendarDay';
 import { getDateString } from '../../utils/util';
 
-interface SelectedDates {
-  startDate: string | null;
-  endDate: string | null;
-  id: number | undefined;
+export interface SelectedDates {
+  startDate: string | null | undefined;
+  endDate: string | null | undefined;
+  id?: number | undefined;
 }
 
 interface CalendarProps {
@@ -36,6 +36,15 @@ const Calendar: React.FC<CalendarProps> = ({
     endDate: defaultEndDate || null,
     id: undefined,
   });
+
+  useEffect(() => {
+    if (defaultEndDate && defaultStartDate) {
+      setSelectedDates({
+        startDate: defaultStartDate,
+        endDate: defaultEndDate,
+      });
+    }
+  }, [defaultStartDate, defaultEndDate]);
 
   useEffect(() => {
     if (onSelectedDates) {
