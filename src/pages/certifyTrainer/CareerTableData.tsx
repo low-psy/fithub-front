@@ -1,4 +1,5 @@
 import React from 'react';
+import { TrainerCareerRequestDto } from '../../types/swagger/model/trainerCareerRequestDto';
 
 interface ICareer {
   [key: string]: string | boolean | (() => void);
@@ -10,7 +11,7 @@ interface ICareer {
 }
 
 interface ICareerTableDataProps {
-  career: ICareer;
+  career: TrainerCareerRequestDto;
   handleDeleteCareer?: () => void;
 }
 
@@ -27,7 +28,7 @@ function CareerTableData({
         {startDate}
       </td>
       <td className="whitespace-nowrap border border-main px-4 py-1">
-        {working === 'true' ? '근무중' : endDate}
+        {working ? '근무중' : endDate}
       </td>
       <td
         className="cursor-pointer whitespace-nowrap border border-main font-semibold text-red-400"
