@@ -15,12 +15,14 @@ const NavMenu = () => {
   if (location.pathname.startsWith('/newpost')) {
     isCreateTrainer = false;
   }
+  let defaultProfileIcon = 'account_circle';
   const to = role === 'trainer' ? '/trainer/home' : '/certify-trainer';
   let menuArray = ['프로필', '로그아웃'];
   if (isLogin === false) {
     profileTo = '/login';
-  } else {
-    menuArray = [...menuArray, '저장한 게시물'];
+  } else if (location.pathname.startsWith('/post')) {
+    menuArray = [...menuArray, '저장한 게시물', '좋아요 누른 게시글'];
+    defaultProfileIcon = 'badge';
   }
   return (
     <ul className="hidden items-center justify-end gap-5 md:flex  md:grow md:basis-1/3">
@@ -44,9 +46,9 @@ const NavMenu = () => {
           <ChatIcon />
         </Link>
       </li>
-      <li key="user">
+      <li key="user" className="">
         <Link to={profileTo}>
-          <NavDropdown menuArray={menuArray} />
+          <NavDropdown menuArray={menuArray} iconString={defaultProfileIcon} />
         </Link>
       </li>
     </ul>

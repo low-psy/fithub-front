@@ -5,6 +5,7 @@ import commentReducer from './slices/commentSlice';
 import profileDropdownReducer from './slices/profileDropdownSlice';
 import userReducer from './slices/userSlice';
 import updateImageReducer from './slices/updateImageSlice';
+import userInfosReducer from './slices/userInfos';
 
 const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
     profileDropdown: profileDropdownReducer,
     user: userReducer,
     images: updateImageReducer,
+    userInfos: userInfosReducer,
   },
 });
 

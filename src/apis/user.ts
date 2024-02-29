@@ -1,7 +1,9 @@
+import { AxiosResponse } from 'axios';
 import { authAxios, defaultAxios } from './axios';
 
 import { Gender, ISignupProps } from '../types/user';
 import { handleLoginSuccess } from '../utils/util';
+import { ProfileDto } from '../types/swagger/model/profileDto';
 
 /**
  * [POST] 일반 로그인
@@ -199,5 +201,10 @@ export const logout = async () => {
 
   const response = await authAxios.delete('/auth/sign-out', { params });
 
+  return response;
+};
+
+export const getUserInfos = async (): Promise<AxiosResponse<ProfileDto>> => {
+  const response = await authAxios.get<ProfileDto>('/users/profile');
   return response;
 };

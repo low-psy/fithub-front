@@ -1,6 +1,7 @@
 import { AxiosError } from 'axios';
 import { TrainingAvailableDateDto } from '../types/swagger/model/trainingAvailableDateDto';
 import { ErrorResponseDto } from '../types/swagger/model/errorResponseDto';
+import { refreshResData } from '../types/common';
 
 // 'YYYY-MM-DD HH-MM-SS' 형식의 dateTime string
 export const createLocalDateTimeFunc = (
@@ -110,44 +111,15 @@ export const errorFunc = (err: unknown) => {
   return status;
 };
 
-// 앱 로드 시 또는 특정 시점에서 호출되는 함수
-export function checkAccessTokenExpiration() {
-  const expirationTime = localStorage.getItem('expirationTime');
-  if (!expirationTime) {
-    return;
-  }
-
-  const now = new Date();
-  const expirationDate = new Date(expirationTime);
-  let isTimeout = false;
-
-  if (now >= expirationDate) {
-    // 만료 시간이 현재 시간보다 이전이면 accessToken 삭제
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('expirationTime');
-    isTimeout = true;
-    // 로그아웃 처리 또는 로그인 페이지로 리다이렉트 등의 추가적인 조치를 취할 수 있음
-  }
-  return isTimeout;
-}
-
 // api 성공 이후 전달받은 accessToken을 만료시간과 함께 localStorage에 저장하는 함수
 export function handleLoginSuccess(accessToken: any) {
-  const now = new Date();
-  const expirationTime = new Date(now.getTime() + 20 * 60000); // 현재 시간으로부터 20분 추가
-
   localStorage.setItem('accessToken', accessToken);
-  localStorage.setItem('expirationTime', expirationTime.toISOString()); // ISO 문자열 형태로 저장
-  setTimeout(() => {
-    checkAccessTokenExpiration();
-  }, 20 * 60000);
 }
 
-export function checkAccessToken() {
-  const accessToken = localStorage.getItem('accessToken');
-  const expirationTime = localStorage.getItem('expirationTime');
-  if (accessToken && expirationTime) {
-    return true;
-  }
-  return false;
+export function setRefreshToken(accessToken: string) {
+  localStorage.setItem('accessToken', accessToken);
+}
+
+export function isRefreshResData(data: any): data is refreshResData {
+  return data.accessToken !== undefined && typeof data.accessToken === 'string';
 }

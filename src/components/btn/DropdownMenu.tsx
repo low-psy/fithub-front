@@ -38,8 +38,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   }, []);
 
   return (
-    <div className="relative flex items-center" ref={menuRef}>
-      <button type="button" className="" onClick={toggleMenu}>
+    <div className="relative" ref={menuRef}>
+      <button type="button" className="flex  " onClick={toggleMenu}>
         {children || (
           <span className="material-symbols-outlined text-zinc-500">
             more_vert

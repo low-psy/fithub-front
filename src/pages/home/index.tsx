@@ -2,9 +2,10 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActionFunctionArgs,
   LoaderFunction,
+  redirect,
   useLoaderData,
 } from 'react-router-dom';
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import { useDispatch } from 'react-redux';
 import {
   getTraining,
@@ -19,8 +20,9 @@ import FilterIcon from '../../assets/icons/filterIcon';
 import useInfiniteScroll from '../../hooks/infiniteScroll';
 import { TrainingOutlineDto } from '../../types/swagger/model/trainingOutlineDto';
 import { PageTrainingOutlineDto } from '../../types/swagger/model/pageTrainingOutlineDto';
-import { checkAccessToken, errorFunc } from '../../utils/util';
+import { errorFunc, isRefreshResData, setRefreshToken } from '../../utils/util';
 import UserTrainingItem from './UserTrainingItem';
+import { refreshResData } from '../../types/common';
 import { useAppSelector } from '../../hooks/reduxHooks';
 
 export const loader: LoaderFunction = async () => {
@@ -30,13 +32,18 @@ export const loader: LoaderFunction = async () => {
       return response;
     }
     if (response.status === 201) {
-      console.log(response);
+      const { accessToken } = response.data as refreshResData;
+      setRefreshToken(accessToken);
+      return redirect('');
     }
   } catch (err) {
-    const error = err as unknown as AxiosError;
-    throw error;
+    const status = errorFunc(err);
+    console.log(status);
+    redirect('/login');
   }
+  return null;
 };
+
 const Home: React.FC = () => {
   const response = useLoaderData() as AxiosResponse<PageTrainingOutlineDto>;
   const pageTrainersTraining = useMemo(() => response.data, [response.data]);
@@ -47,9 +54,9 @@ const Home: React.FC = () => {
   );
   const dispatch = useDispatch();
   const [usersTrainingLike, setUsersTrainingLike] = useState<boolean[]>([]);
+  const { isLogin } = useAppSelector((state) => state.user);
 
   useEffect(() => {
-    const isAcessToken = checkAccessToken();
     const fetchUsersTrainingLike = async () => {
       try {
         if (!idList) return;
@@ -58,28 +65,43 @@ const Home: React.FC = () => {
           setUsersTrainingLike(res.data);
           return null;
         }
+        if (res.status === 201) {
+          if (isRefreshResData(res.data)) {
+            const { accessToken } = res.data as refreshResData;
+            setRefreshToken(accessToken);
+          }
+        }
         throw new Error(`server is trouble with${res.status}`);
       } catch (err) {
         errorFunc(err);
       }
     };
-    if (isAcessToken) {
+    if (isLogin) {
       fetchUsersTrainingLike();
     }
-  }, [idList, dispatch]);
+  }, [idList, dispatch, isLogin]);
   const fetchData = useCallback(
     async (page: number): Promise<TrainingOutlineDto[] | []> => {
       if (response.data.content && response.data.content.length < 9) {
         return [];
       }
       console.log('next page data');
-      const nextPageData = await getNextPageData(page);
-      if (!nextPageData) {
+      try {
+        const nextPageData = await getNextPageData(page);
+        if (nextPageData.status === 200) {
+          return nextPageData.data.content || [];
+        }
+        if (nextPageData.status === 201) {
+          const { accessToken } = response.data as refreshResData;
+          setRefreshToken(accessToken);
+        }
+        return [];
+      } catch (err) {
+        errorFunc(err);
         return [];
       }
-      return nextPageData.data.content || [];
     },
-    [response.data.content],
+    [response.data],
   );
 
   const { data, loaderIndicator } = useInfiniteScroll<TrainingOutlineDto>({

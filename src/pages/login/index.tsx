@@ -3,7 +3,7 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { useAppDispatch } from '../../hooks/reduxHooks';
 
-import { defaultLogin } from '../../apis/user';
+import { defaultLogin, getUserInfos } from '../../apis/user';
 
 import FormLabel from '../../components/form/FormLabel';
 import FormInput from '../../components/form/FormInput';
@@ -23,7 +23,8 @@ import validateLoginForm from '../../validation/login/loginFormValidation';
 import FormLogo from '../../components/form/FormLogo';
 import Layout from '../../components/form/Layout';
 import BottomButtonLayout from '../../components/form/BottomButtonLayout';
-import { LOGIN } from '../../redux/slices/userSlice';
+import { LOGIN, SET_TRAINER } from '../../redux/slices/userSlice';
+import { SET_USER_INFOS } from '../../redux/slices/userInfos';
 
 function Login() {
   const [searchParams] = useSearchParams();
@@ -64,6 +65,17 @@ function Login() {
       const response = await defaultLogin(email, password);
       if (response && response.status === 200) {
         dispatch(LOGIN());
+        const res = await getUserInfos();
+        if (res.status === 200) {
+          // dispatch(SET_USER_INFOS({ userInfos: res.data }));
+          localStorage.setItem('email', res.data.email as string);
+          const isTrainer = res.data.trainer;
+          if (isTrainer) {
+            dispatch(SET_TRAINER());
+            const trainerNum = isTrainer ? '1' : '2';
+            localStorage.setItem('trainer', trainerNum);
+          }
+        }
         navigate('/');
       }
     } catch (err) {
