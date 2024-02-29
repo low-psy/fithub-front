@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../hooks/reduxHooks';
 import { ROLE } from '../types/user';
+import { checkAccessTokenExpiration } from '../utils/util';
 
 function withAuth(InnerComponent: React.ComponentType, option: ROLE) {
   /*
@@ -17,6 +18,13 @@ function withAuth(InnerComponent: React.ComponentType, option: ROLE) {
     const { isLogin, role } = useAppSelector((state) => state.user);
 
     useEffect(() => {
+      const isTimeout = checkAccessTokenExpiration();
+      console.log('isTimeout');
+      if (isTimeout) {
+        alert('로그인이 필요합니다');
+        navigate('/login');
+        return;
+      }
       if (option === 'user') {
         if (!isLogin) {
           alert('로그인이 필요합니다.');
