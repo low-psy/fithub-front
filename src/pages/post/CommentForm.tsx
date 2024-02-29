@@ -47,7 +47,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
       action={`/post/${postId}`}
       method="post"
     >
-      <div className="flex grow rounded-md p-2 pl-0">
+      <div className="flex grow rounded-md">
         <div
           className="shrink-0 cursor-pointer rounded-md bg-slate-400"
           style={{

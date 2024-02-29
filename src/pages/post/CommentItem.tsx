@@ -14,7 +14,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, onReplyClick }) => {
           <img
             src={comment.writerProfileUrl}
             alt="답글을 단 사람의 이미지"
-            className="max-h-full max-w-full"
+            className="h-full w-full object-cover"
           />
         </div>
       </div>

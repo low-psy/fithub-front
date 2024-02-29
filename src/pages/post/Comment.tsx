@@ -71,8 +71,8 @@ const Comment: React.FC<CommentsProps> = ({ comments, postId }) => {
                   className="pl-12 text-xs font-bold"
                 >
                   {replyVisibles.includes(childComment.commentId as number)
-                    ? '답글 숨기기'
-                    : '답글 보기'}
+                    ? '-----답글 숨기기'
+                    : '------답글 보기'}
                 </button>
               )}
             {replyVisibles.includes(childComment.commentId as number) &&
@@ -99,8 +99,8 @@ const Comment: React.FC<CommentsProps> = ({ comments, postId }) => {
               className="pl-12 text-xs font-bold"
             >
               {replyVisibles.includes(comment.commentId as number)
-                ? '답글 숨기기'
-                : '답글 보기'}
+                ? '-----답글 숨기기'
+                : '------답글 보기'}
             </button>
           )}
           {replyVisibles.includes(comment.commentId as number) &&

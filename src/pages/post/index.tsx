@@ -12,13 +12,14 @@ import PostItem from './PostItem';
 import { LoaderData } from '../../types/common';
 import { getLikeBook, getLikes, getPost } from '../../apis/post';
 import { LikesBookmarkStatusDto } from '../../types/swagger/model/likesBookmarkStatusDto';
-import RedirectModal from '../../components/modal/RedirectModal';
 import { LikedUsersInfoDto } from '../../types/swagger/model/likedUsersInfoDto';
 import { useAppSelector } from '../../hooks/reduxHooks';
 import UndefinedCover from '../../components/common/UndefinedCover';
 import FilterLayout from '../../components/filter/FilterLayout';
 
-export const loader = (async () => {
+export const loader = (async ({ request }) => {
+  const url = new URL(request.url);
+  const booked = url.searchParams.get('booked');
   try {
     const response = await getPost();
     if (response && response.status === 200) {
@@ -83,7 +84,7 @@ const Post = () => {
           <div>chat</div>
         </div>
       </FilterLayout>
-      <section className="relative mx-auto w-[728px] space-y-12 ">
+      <section className="relative mx-auto w-[728px] ">
         {!PostDto.data.content?.[0] && (
           <div className="relative h-[400px] bg-gray-100">
             <UndefinedCover>생성한 게시물이 없습니다</UndefinedCover>
@@ -102,11 +103,6 @@ const Post = () => {
           );
         })}
       </section>
-      {isModal && (
-        <RedirectModal>
-          <Outlet />
-        </RedirectModal>
-      )}
     </div>
   );
 };
