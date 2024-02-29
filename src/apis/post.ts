@@ -49,6 +49,12 @@ export const getPost = async (): Promise<AxiosResponse<PagePostInfoDto>> => {
   return defaultAxios.get<PagePostOutlineDto>('/posts?page=0&size=10');
 };
 
+export const getBookedPost = async (): Promise<
+  AxiosResponse<PagePostInfoDto>
+> => {
+  return defaultAxios.get<PagePostOutlineDto>('/posts?page=0&size=10');
+};
+
 export const getDetailPost = async (
   postId: number,
 ): Promise<AxiosResponse<PostInfoDto>> => {
