@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDatePicker from 'react-datepicker';
 import { ko } from 'date-fns/locale';
 import 'react-datepicker/dist/react-datepicker.css';
+import DaumPostcode from 'react-daum-postcode';
+import DefaultModal from '../../components/modal/DefaultModal';
+import { TrainerCareerRequestDto } from '../../types/swagger/model/trainerCareerRequestDto';
+
+const { kakao } = window;
+
+declare global {
+  interface Window {
+    kakao: any;
+  }
+}
 
 interface ICareer {
   [key: string]: string | boolean | (() => void);
@@ -13,12 +24,17 @@ interface ICareer {
 }
 
 interface ICareerInputProps {
-  career: ICareer;
+  career: TrainerCareerRequestDto;
   handleCareerInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleCareerDate: (date: Date, id: string) => void;
   handleCareerWorking: () => void;
   handleCareerReset: () => void;
   handleAddCareerList: () => void;
+  handleCareerAddress: (
+    address: string,
+    longitude: number,
+    latitude: number,
+  ) => void;
 }
 
 function CareerInput({
@@ -28,7 +44,29 @@ function CareerInput({
   handleCareerWorking,
   handleCareerReset,
   handleAddCareerList,
+  handleCareerAddress,
 }: ICareerInputProps) {
+  const [isAddressModalOpened, setIsAddressModalOpened] =
+    useState<boolean>(false);
+
+  const handleGetAddress = (data: { address: string }) => {
+    setIsAddressModalOpened(false);
+
+    const { address } = data;
+    let latitude;
+    let logitude;
+
+    // 위도 및 경도 구하기
+    const geocoder = new kakao.maps.services.Geocoder();
+    geocoder.addressSearch(address, (result: any, status: any) => {
+      if (status === kakao.maps.services.Status.OK) {
+        latitude = Number(result[0].y); // 위도
+        logitude = Number(result[0].x); // 경도
+        handleCareerAddress(address, latitude, logitude);
+      }
+    });
+  };
+
   return (
     <div className="flex flex-col gap-2 px-2">
       <label htmlFor="company" className="font-semibold text-main">
@@ -40,6 +78,23 @@ function CareerInput({
           onChange={handleCareerInput}
           value={career.company}
         />
+      </label>
+      <label htmlFor="address" className="font-semibold text-main">
+        위치
+        <input
+          id="address"
+          placeholder="트레이닝을 진행할 위치를 입력하세요"
+          className="h-10 w-full rounded border border-main bg-white p-2 text-black hover:outline-none focus:outline-none"
+          onClick={() => setIsAddressModalOpened(true)}
+          value={career.address}
+        />
+        <DefaultModal
+          isOpen={isAddressModalOpened}
+          onClose={() => setIsAddressModalOpened(false)}
+          modalWidth="500px"
+        >
+          <DaumPostcode onComplete={handleGetAddress} />
+        </DefaultModal>
       </label>
       {/* 날짜 */}
       <div className="flex flex-col gap-2 sm:flex-row">
@@ -74,9 +129,7 @@ function CareerInput({
           <div className="flex flex-row items-center">
             <p
               className={`font-semibold ${
-                career.working === 'true'
-                  ? 'text-gray-500 line-through'
-                  : 'text-main'
+                career.working ? 'text-gray-500 line-through' : 'text-main'
               }`}
             >
               퇴사
@@ -85,9 +138,9 @@ function CareerInput({
               role="presentation"
               onClick={handleCareerWorking}
               className={`m-1 h-4 w-4 rounded border  ${
-                career.working === 'false'
-                  ? 'border-gray-600 bg-white'
-                  : 'border-none bg-green-500'
+                career.working
+                  ? 'border-none bg-green-500'
+                  : 'border-gray-600 bg-white'
               } `}
             />
             <span className="text-sm">현재 재직중</span>
@@ -103,12 +156,12 @@ function CareerInput({
               <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
             </svg>
             <ReactDatePicker
-              disabled={career.working === 'true'}
+              disabled={career.working}
               locale={ko}
               className={`w-36  rounded border px-2 ${
-                career.working === 'false'
-                  ? 'cursor-pointer border-main text-black'
-                  : 'text-gray-500 '
+                career.working
+                  ? 'text-gray-500 '
+                  : 'cursor-pointer border-main text-black'
               }`}
               selected={career.endDate ? new Date(career.endDate) : new Date()}
               onChange={(date: Date) => handleCareerDate(date, 'endDate')}

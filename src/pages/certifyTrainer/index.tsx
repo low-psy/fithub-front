@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { AxiosError } from 'axios';
@@ -12,6 +12,7 @@ import certifyTrainer from '../../apis/trainer';
 import { SET_TRAINER } from '../../redux/slices/userSlice';
 import withAuth from '../../hocs/withAuth';
 import { ErrorResponseDto } from '../../types/swagger/model/errorResponseDto';
+import { TrainerCareerRequestDto } from '../../types/swagger/model/trainerCareerRequestDto';
 
 interface ICareer {
   [key: string]: string | boolean | (() => void);
@@ -39,14 +40,17 @@ function CertifyTrainer() {
   // 자격증 이름
   const [licenseNames, setLicenseNames] = useState<string[]>([]);
   // 경력 리스트
-  const [careerList, setCareerList] = useState<ICareer[]>([]);
+  const [careerList, setCareerList] = useState<TrainerCareerRequestDto[]>([]);
   // 경력 하나 입력용
-  const [career, setCareer] = useState<ICareer>({
+  const [career, setCareer] = useState<TrainerCareerRequestDto>({
     company: '',
     work: '',
     startDate: handleDateToString(new Date()),
     endDate: handleDateToString(new Date()),
-    working: 'false',
+    working: false,
+    address: '',
+    latitude: 0,
+    longitude: 0,
   });
 
   const handleAddCareerList = () => {
@@ -60,6 +64,11 @@ function CertifyTrainer() {
       alert('담당 업무를 입력해주세요');
       return;
     }
+
+    if (career.address.replace(/ /g, '').length === 0) {
+      alert('트레이닝을 진행할 위치를 입력해주세요');
+      return;
+    }
     const c = career;
     setCareerList([...careerList, c]);
     setCareer({
@@ -67,7 +76,10 @@ function CertifyTrainer() {
       work: '',
       startDate: '',
       endDate: '',
-      working: 'false',
+      working: false,
+      address: '',
+      latitude: 0,
+      longitude: 0,
     });
   };
 
@@ -160,7 +172,7 @@ function CertifyTrainer() {
 
   const handleCareerWorking = () => {
     const prevWorking = career.working;
-    const nextWorking = prevWorking === 'true' ? 'false' : 'true';
+    const nextWorking = prevWorking !== true;
     setCareer({
       ...career,
       working: nextWorking,
@@ -173,7 +185,10 @@ function CertifyTrainer() {
       work: '',
       startDate: '',
       endDate: '',
-      working: 'false',
+      working: false,
+      address: '',
+      latitude: 0,
+      longitude: 0,
     });
   };
 
@@ -191,6 +206,14 @@ function CertifyTrainer() {
 
   const handleDeleteCareer = (idx: number) => {
     setCareerList(careerList.filter((_, index) => index !== idx));
+  };
+
+  const handleCareerAddress = (
+    address: string,
+    latitude: number,
+    longitude: number,
+  ) => {
+    setCareer({ ...career, address, latitude, longitude });
   };
 
   return (
@@ -236,6 +259,7 @@ function CertifyTrainer() {
             handleCareerWorking={handleCareerWorking}
             handleCareerReset={handleCareerReset}
             handleAddCareerList={handleAddCareerList}
+            handleCareerAddress={handleCareerAddress}
           />
           {careerList.length > 0 && (
             <CareerListTable

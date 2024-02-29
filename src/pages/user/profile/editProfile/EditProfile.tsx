@@ -51,7 +51,7 @@ const EditProfile = () => {
     }
   };
 
-  // 이름(지금은안됨), 닉네임, 전화번호 변경
+  // 이름, 닉네임, 전화번호, 소개 변경
   const handleInfo = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProfile({ ...profile, [e.target.id]: e.target.value });
   };
