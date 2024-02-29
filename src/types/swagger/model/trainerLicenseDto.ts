@@ -9,13 +9,9 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { SortObject } from './sortObject';
 
-export interface PageableObject { 
-    offset?: number;
-    sort?: SortObject;
-    pageNumber?: number;
-    pageSize?: number;
-    unpaged?: boolean;
-    paged?: boolean;
+export interface TrainerLicenseDto { 
+    licenseId?: number;
+    url: string;
+    inputName: string;
 }

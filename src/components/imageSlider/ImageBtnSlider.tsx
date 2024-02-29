@@ -41,7 +41,7 @@ const ImageBtnSlider: React.FC<ImageSliderProps> = ({
   }
 
   return (
-    <div className="flex h-full items-center  justify-center ">
+    <div className="flex  items-center  justify-center bg-stone-100">
       <button type="button" onClick={handlePrevClick}>
         <span
           className={`material-symbols-outlined relative  z-10 -mr-14 rounded-full bg-white  ${bBtnOpacity}`}
@@ -49,9 +49,9 @@ const ImageBtnSlider: React.FC<ImageSliderProps> = ({
           navigate_before
         </span>
       </button>
-      <div className="flex h-full w-full overflow-hidden bg-black ">
+      <div className="overflow-hidden  ">
         <div
-          className="flex w-full items-center   transition-transform duration-1000 ease-in-out"
+          className="flex w-full  items-center transition-transform duration-1000 ease-in-out"
           style={{
             transform: `translateX(-${currentIndex * 100}%)`,
           }}
@@ -61,7 +61,7 @@ const ImageBtnSlider: React.FC<ImageSliderProps> = ({
               key={imageUrl as string}
               src={imageUrl as string}
               alt={`게시물 이미지 ${index + 1}`}
-              className="max-h-full w-full shrink-0 object-cover"
+              className="max-h-full max-w-full shrink-0 object-cover"
             />
           ))}
         </div>

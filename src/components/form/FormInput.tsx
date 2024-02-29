@@ -9,11 +9,9 @@ function FormInput({ error, isTextArea, className, ...rest }: IInputProps) {
       rest.onChange(rest.id, event.target.value);
     }
   };
-  console.log(error);
 
   const isError = !!error?.[rest.id];
   const textColor = rest.disabled ? 'text-gray-400' : 'text-gray-700';
-  console.log(rest.defaultValue);
 
   useEffect(() => {
     if (isError) {
@@ -38,17 +36,12 @@ function FormInput({ error, isTextArea, className, ...rest }: IInputProps) {
 
   return (
     <input
+      {...rest}
       ref={ref}
-      id={rest.id}
-      type={rest.type}
-      placeholder={rest.placeholder}
       className={`${className}  hover:outlined-none mt-2 h-10 rounded border bg-[#eaeaea] p-2 focus:outline-none  ${
         isError && 'border-2 border-accent'
       } ${textColor} w-full`}
       onChange={handleChange}
-      disabled={rest.disabled}
-      defaultValue={rest.defaultValue}
-      name={rest.name}
     />
   );
 }

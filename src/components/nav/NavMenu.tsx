@@ -42,10 +42,9 @@ const NavMenu = () => {
           <ChatIcon />
         </Link>
       </li>
-      <li key="user" className="relative">
+      <li key="user">
         <Link to={profileTo}>
-          <ProfileIcon />
-          {isOpen && <NavDropdown />}
+          <NavDropdown />
         </Link>
       </li>
     </ul>

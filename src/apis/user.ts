@@ -1,6 +1,7 @@
 import { authAxios, defaultAxios } from './axios';
 
 import { Gender, ISignupProps } from '../types/user';
+import { handleLoginSuccess } from '../utils/util';
 
 /**
  * [POST] 일반 로그인
@@ -17,7 +18,7 @@ export const defaultLogin = async (email: string, password: string) => {
   const response = await defaultAxios.post('/auth/sign-in', data);
 
   const accessToken = response.headers.authorization.split(' ')[1];
-  localStorage.setItem('accessToken', accessToken);
+  handleLoginSuccess(accessToken);
 
   return response;
 };
