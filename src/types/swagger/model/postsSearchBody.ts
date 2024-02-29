@@ -9,12 +9,10 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { Pageable } from './pageable';
+import { PostSearchFilterDto } from './postSearchFilterDto';
 
-export interface TrainingDateReservationNumDto { 
-    id?: number;
-    date?: string;
-    /**
-     * 해당 날에 잡혀있는 진행 전 예약
-     */
-    reservationNum?: number;
+export interface PostsSearchBody { 
+    filter?: PostSearchFilterDto;
+    pageable?: Pageable;
 }

@@ -12,11 +12,11 @@
 
 export interface TrainingDateUpdateDto { 
     /**
-     * 트레이닝 시작 날짜
+     * 트레이닝 시작 날짜, 달라지지 않았으면 기존의 날짜로
      */
     startDate: string;
     /**
-     * 트레이닝 마지막 날짜
+     * 트레이닝 마지막 날짜, 달라지지 않았으면 기존의 날짜로
      */
     endDate: string;
     /**
