@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import { Axios, AxiosResponse } from 'axios';
 import { authAxios, defaultAxios } from './axios';
 import { PagePostOutlineDto } from '../types/swagger/model/pagePostOutlineDto';
 import { LikesBookmarkStatusDto } from '../types/swagger/model/likesBookmarkStatusDto';
@@ -10,6 +10,7 @@ import { PageParentCommentInfoDto } from '../types/swagger/model/pageParentComme
 import { CommentInfoDto } from '../types/swagger/model/commentInfoDto';
 import { PostUpdateDto } from '../types/swagger/model/postUpdateDto';
 import { PostCreateDto } from '../types/swagger/model/postCreateDto';
+import { PostSearchFilterDto } from '../types/swagger/model/postSearchFilterDto';
 
 /**
  * [POST] 게시물 생성
@@ -133,5 +134,14 @@ export const getChildComments = async (
 ): Promise<AxiosResponse<CommentInfoDto>> => {
   return authAxios.get<CommentInfoDto>(
     `/posts/${postId}/comments/${commentId}`,
+  );
+};
+
+export const getPostSearch = async (
+  requestDto: PostSearchFilterDto,
+): Promise<AxiosResponse<PagePostInfoDto>> => {
+  return authAxios.post<PagePostInfoDto>(
+    '/posts/search?page=0&size=10&sort=id,desc',
+    requestDto,
   );
 };

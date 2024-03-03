@@ -7,6 +7,8 @@ import {
   useLocation,
   useParams,
   redirect,
+  useFetcher,
+  Form,
 } from 'react-router-dom';
 import PostItem from './PostItem';
 import { LoaderData, refreshResData } from '../../types/common';
@@ -16,6 +18,7 @@ import {
   getLikedPost,
   getLikes,
   getPost,
+  getPostSearch,
 } from '../../apis/post';
 import { LikesBookmarkStatusDto } from '../../types/swagger/model/likesBookmarkStatusDto';
 import { LikedUsersInfoDto } from '../../types/swagger/model/likedUsersInfoDto';
@@ -23,15 +26,21 @@ import { useAppSelector } from '../../hooks/reduxHooks';
 import UndefinedCover from '../../components/common/UndefinedCover';
 import FilterLayout from '../../components/filter/FilterLayout';
 import { errorFunc, setRefreshToken } from '../../utils/util';
+import useSearchModal from '../../hooks/useSearchModal';
+import SearchInput from '../../components/form/SearchInput';
 
 export const loader = (async ({ request }) => {
   const url = new URL(request.url);
   const booked = url.searchParams.get('booked');
-  console.log(booked);
   const liked = url.searchParams.get('liked');
+  const scope = url.searchParams.get('scope');
+  const searchInput = url.searchParams.get('searchInput');
+
   try {
     let res;
-    if (booked) {
+    if (scope && searchInput) {
+      res = await getPostSearch({ keyword: searchInput, scope });
+    } else if (booked) {
       res = await getBookedPost();
     } else if (liked) {
       res = await getLikedPost();
@@ -42,7 +51,6 @@ export const loader = (async ({ request }) => {
       return res;
     }
     if (res.status === 201) {
-      console.log(res.data);
       const { accessToken } = res.data as refreshResData;
       setRefreshToken(accessToken);
       return redirect('/post');
@@ -50,10 +58,7 @@ export const loader = (async ({ request }) => {
     return res;
   } catch (err) {
     const status = errorFunc(err);
-    if (status === 401) {
-      redirect('/login');
-    }
-    return redirect('/');
+    return redirect('');
   }
 }) satisfies LoaderFunction;
 
@@ -64,6 +69,8 @@ const Post = () => {
   const searchParams = new URLSearchParams(location.search);
   const booked = searchParams.get('booked');
   const liked = searchParams.get('liked');
+
+  const { enteredText, clickHandler, inputChangeHandler } = useSearchModal();
 
   const PostDto = useLoaderData() as LoaderData<typeof loader>;
   const [bookAndLikes, setBookAndLikes] = useState<LikesBookmarkStatusDto[]>([
@@ -138,7 +145,27 @@ const Post = () => {
           <div>chat</div>
         </div>
       </FilterLayout>
-      <section className="relative mx-auto w-[728px] ">
+      <section className="relative mx-auto w-[728px] space-y-4">
+        <Form method="GET">
+          <div className="flex h-14 bg-white px-2 shadow-sm drop-shadow-md">
+            <div className=" flex shrink-0 items-center">
+              <select name="scope">
+                <option value="content" selected>
+                  내용
+                </option>
+                <option value="writer">작성자</option>
+                <option value="hashTags">해시태그</option>
+              </select>
+            </div>
+            <SearchInput
+              onChange={(e) => inputChangeHandler(e.target.value)}
+              value={enteredText}
+              moduleOnclick={clickHandler}
+              placeholder="게시물의 내용, 작성자, 해시태그를 기준으로 검색해 보세요!"
+              iconClassName=" text-white rounded-full p-2 bg-accent"
+            />
+          </div>
+        </Form>
         {!PostDto.data.content?.[0] && (
           <div className="relative h-[400px] bg-gray-100">
             <UndefinedCover>생성한 게시물이 없습니다</UndefinedCover>
