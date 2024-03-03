@@ -21,6 +21,7 @@ const userRoutes = {
   posts: 'posts',
   reservations: 'reservations',
   cancellations: 'cancellations',
+  trainerInfo: 'trainerInfo',
 };
 
 const trainerRoutes = {

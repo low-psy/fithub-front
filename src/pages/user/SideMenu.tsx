@@ -15,6 +15,7 @@ const SideMenu = ({ profileImg }: ISideMenuProps) => {
   const postsUrl = '/user/posts';
   const reservationUrl = '/user/reservation';
   const cancellationUrl = '/user/cancellation';
+  const trainerInfoUrl = '/user/trainerInfo';
 
   return (
     <div className="hidden h-fit w-full max-w-[400px] rounded border shadow-slate-500 sm:block">
@@ -43,6 +44,11 @@ const SideMenu = ({ profileImg }: ISideMenuProps) => {
           text="취소 / 환불 내역"
           to={cancellationUrl}
           clicked={clicked === 'cancellation'}
+        />
+        <SideMenuButton
+          text="트레이너 정보"
+          to={trainerInfoUrl}
+          clicked={clicked === 'trainerInfo'}
         />
       </div>
     </div>

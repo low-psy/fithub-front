@@ -55,6 +55,7 @@ import SuccessPage, {
   loader as successPaymentLoader,
 } from './pages/detail/success';
 import { checkAccessTokenExpiration } from './utils/util';
+import TrainerInfo from './pages/user/trainerInfo';
 
 function App() {
   // 전역 로그인 상태 관리
@@ -139,6 +140,10 @@ function App() {
             {
               path: pageRoutes.user.cancellations,
               element: <Cancellation />,
+            },
+            {
+              path: pageRoutes.user.trainerInfo,
+              element: <TrainerInfo />,
             },
           ],
         },
