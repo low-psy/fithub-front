@@ -105,7 +105,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
           <div className="space-y-4">
             <h3 className="pl-1">{content}</h3>
             {documentUrls && (
-              <div className="max-h-[500px] overflow-auto">
+              <div className="max-h-[500px]">
                 <ImageSlider postImages={documentUrls} imageSize="468" />
               </div>
             )}
