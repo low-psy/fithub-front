@@ -9,6 +9,15 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   customProp?: string;
 }
 
+export interface SearchInputProps
+  extends InputHTMLAttributes<HTMLInputElement> {
+  children?: any;
+  moduleOnclick: (value: boolean) => void;
+  iconText?: string;
+  className?: string;
+  iconClassName?: string;
+}
+
 export interface TextAreaProps
   extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   customProp?: string;
