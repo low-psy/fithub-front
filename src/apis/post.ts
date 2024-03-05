@@ -46,22 +46,26 @@ export const deletePost = async (id: number) => {
   return response;
 };
 
-export const getPost = async (): Promise<AxiosResponse<PagePostInfoDto>> => {
-  return defaultAxios.get<PagePostOutlineDto>('/posts?page=0&size=10');
+export const getPost = async (
+  page: number,
+): Promise<AxiosResponse<PagePostInfoDto>> => {
+  return defaultAxios.get<PagePostInfoDto>(`/posts?page=${page}&size=2`);
 };
 
-export const getBookedPost = async (): Promise<
-  AxiosResponse<PagePostInfoDto>
-> => {
+export const getBookedPost = async (
+  page?: number,
+): Promise<AxiosResponse<PagePostInfoDto>> => {
   return authAxios.get<PagePostInfoDto>(
-    '/users/posts/bookmarks?page=0&size=10',
+    `/users/posts/bookmarks?page=${page}&size=10`,
   );
 };
 
-export const getLikedPost = async (): Promise<
-  AxiosResponse<PagePostInfoDto>
-> => {
-  return authAxios.get<PagePostInfoDto>('/users/posts/likes?page=0&size=10');
+export const getLikedPost = async (
+  page?: number,
+): Promise<AxiosResponse<PagePostInfoDto>> => {
+  return authAxios.get<PagePostInfoDto>(
+    `/users/posts/likes?page=${page}&size=10`,
+  );
 };
 
 export const getDetailPost = async (
@@ -139,9 +143,11 @@ export const getChildComments = async (
 
 export const getPostSearch = async (
   requestDto: PostSearchFilterDto,
+  align: string | null,
+  page?: number,
 ): Promise<AxiosResponse<PagePostInfoDto>> => {
   return authAxios.post<PagePostInfoDto>(
-    '/posts/search?page=0&size=10&sort=id,desc',
+    `/posts/search?page=${page}&size=10&sort=${align}&sort=asc`,
     requestDto,
   );
 };
