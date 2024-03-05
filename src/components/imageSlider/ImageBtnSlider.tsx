@@ -41,34 +41,40 @@ const ImageBtnSlider: React.FC<ImageSliderProps> = ({
   }
 
   return (
-    <div className="flex  items-center  justify-center bg-stone-100">
-      <button type="button" onClick={handlePrevClick}>
+    <div className="relative flex items-center overflow-hidden bg-gray-50">
+      <button
+        type="button"
+        onClick={handlePrevClick}
+        className="absolute left-4 top-1/2 z-20 -translate-y-1/2"
+      >
         <span
-          className={`material-symbols-outlined relative  z-10 -mr-14 rounded-full bg-white  ${bBtnOpacity}`}
+          className={`material-symbols-outlined relative  rounded-full bg-white  ${bBtnOpacity}`}
         >
           navigate_before
         </span>
       </button>
-      <div className="overflow-hidden  ">
+      {postImages.map((imageUrl, index) => (
         <div
-          className="flex w-full  items-center transition-transform duration-1000 ease-in-out"
+          className="flex w-full shrink-0 items-center justify-center transition-transform duration-1000 ease-in-out"
           style={{
             transform: `translateX(-${currentIndex * 100}%)`,
           }}
         >
-          {postImages.map((imageUrl, index) => (
-            <img
-              key={imageUrl as string}
-              src={imageUrl as string}
-              alt={`게시물 이미지 ${index + 1}`}
-              className="max-h-full max-w-full shrink-0 object-cover"
-            />
-          ))}
+          <img
+            key={imageUrl as string}
+            src={imageUrl as string}
+            alt={`게시물 이미지 ${index + 1}`}
+            className="max-h-full max-w-full object-cover"
+          />
         </div>
-      </div>
-      <button type="button" onClick={handleNextClick} className="z-20 ">
+      ))}
+      <button
+        type="button"
+        onClick={handleNextClick}
+        className="absolute right-4 top-1/2 z-20 -translate-y-1/2"
+      >
         <span
-          className={`material-symbols-outlined relative z-20 -ml-14 rounded-full bg-white p-0.5 ${nBtnOpacity}`}
+          className={`material-symbols-outlined relative rounded-full bg-white p-0.5 ${nBtnOpacity}`}
         >
           navigate_next
         </span>

@@ -12,6 +12,8 @@ import { UsersReserveInfoDto } from '../types/swagger/model/usersReserveInfoDto'
 import { PageTrainersTrainingOutlineDto } from '../types/swagger/model/pageTrainersTrainingOutlineDto';
 import { TrainingImgUpdateDto } from '../types/swagger/model/trainingImgUpdateDto';
 import { TrainingDateReservationNumDto } from '../types/swagger/model/trainingDateReservationNumDto';
+import { TrainingSearchConditionDto } from '../types/swagger/model/trainingSearchConditionDto';
+import { Pageable } from '../types/swagger/model/pageable';
 
 /**
  * [GET] 회원 트레이닝 첫페이지 조회
@@ -22,6 +24,23 @@ export const getTraining = async (): Promise<
 > => {
   return defaultAxios.get<PageTrainingOutlineDto>(
     '/training/all?page=0&size=10',
+  );
+};
+
+/**
+ * [GET] 회원 트레이닝 첫페이지 조회
+ * @returns AxiosResponse<PageTrainingOutlineDto>
+ */
+type searchRequestDto = {
+  conditions: TrainingSearchConditionDto;
+  pageable: Pageable;
+};
+export const postSearchTraining = async (
+  requestData: searchRequestDto,
+): Promise<AxiosResponse<PageTrainingOutlineDto>> => {
+  return defaultAxios.post<PageTrainingOutlineDto>(
+    '/training/search',
+    requestData,
   );
 };
 

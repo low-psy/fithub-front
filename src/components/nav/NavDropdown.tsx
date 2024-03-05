@@ -43,9 +43,9 @@ const NavDropdown: React.FC<{ menuArray: string[]; iconString?: string }> = ({
           navigate('/login');
         }
       }
-    } else if (value === '저장한 게시물') {
+    } else if (value === '북마크한 게시물') {
       navigate('/post?booked=true');
-    } else if (value === '좋아요 누른 게시글') {
+    } else if (value === '좋아요한 게시글') {
       navigate('/post?liked=true');
     }
   };

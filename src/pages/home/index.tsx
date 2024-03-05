@@ -4,6 +4,7 @@ import {
   LoaderFunction,
   redirect,
   useLoaderData,
+  useNavigation,
 } from 'react-router-dom';
 import { AxiosResponse } from 'axios';
 import { useDispatch } from 'react-redux';
@@ -11,6 +12,7 @@ import {
   getTraining,
   getNextPageData,
   getUsersTrainingLikes,
+  postSearchTraining,
 } from '../../apis/trainig';
 import FilterSection from '../../components/btn/LinkBtnWithUrl';
 import lookupFilter from '../../assets/lookupFilter.png';
@@ -25,8 +27,27 @@ import UserTrainingItem from './UserTrainingItem';
 import { refreshResData } from '../../types/common';
 import { useAppSelector } from '../../hooks/reduxHooks';
 
-export const loader: LoaderFunction = async () => {
+export const loader: LoaderFunction = async ({ request }) => {
+  const url = new URL(request.url);
+  const keyword = url.searchParams.get('searchInput');
+  const lowestPrice = url.searchParams.get('lowestPrice');
+  const highestPrice = url.searchParams.get('highestPrice');
+  const startDate = url.searchParams.get('startDate');
+  const endDate = url.searchParams.get('endDate');
   try {
+    let res;
+    if (keyword || lowestPrice || highestPrice || startDate || endDate) {
+      res = await postSearchTraining({
+        conditions: {
+          keyword,
+          lowestPrice: Number(lowestPrice),
+          highestPrice: Number(highestPrice),
+          startDate,
+          endDate,
+        },
+        pageable: {},
+      });
+    }
     const response = await getTraining();
     if (response.status === 200) {
       return response;
@@ -55,9 +76,13 @@ const Home: React.FC = () => {
   const dispatch = useDispatch();
   const [usersTrainingLike, setUsersTrainingLike] = useState<boolean[]>([]);
   const { isLogin } = useAppSelector((state) => state.user);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchUsersTrainingLike = async () => {
+      if (navigation.state === 'loading') {
+        return;
+      }
       try {
         if (!idList) return;
         const res = await getUsersTrainingLikes(idList);
@@ -79,21 +104,23 @@ const Home: React.FC = () => {
     if (isLogin) {
       fetchUsersTrainingLike();
     }
-  }, [idList, dispatch, isLogin]);
+  }, [idList, dispatch, isLogin, navigation.state]);
+
+  const [last, setLast] = useState<boolean>(
+    pageTrainersTraining.last as boolean,
+  );
+
   const fetchData = useCallback(
     async (page: number): Promise<TrainingOutlineDto[] | []> => {
-      if (response.data.content && response.data.content.length < 9) {
+      if (last) {
         return [];
       }
       console.log('next page data');
       try {
         const nextPageData = await getNextPageData(page);
         if (nextPageData.status === 200) {
+          setLast(nextPageData.data.last as boolean);
           return nextPageData.data.content || [];
-        }
-        if (nextPageData.status === 201) {
-          const { accessToken } = response.data as refreshResData;
-          setRefreshToken(accessToken);
         }
         return [];
       } catch (err) {
@@ -101,7 +128,7 @@ const Home: React.FC = () => {
         return [];
       }
     },
-    [response.data],
+    [last],
   );
 
   const { data, loaderIndicator } = useInfiniteScroll<TrainingOutlineDto>({

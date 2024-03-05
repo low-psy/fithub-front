@@ -23,6 +23,7 @@ interface PostItemProps extends PostInfoDto {
   bookAndLikes: LikesBookmarkStatusDto;
   likedUsers: LikesInfoDto[] | undefined;
   // 기타 필요한 추가 props
+  onClick?: () => void;
 }
 
 const PostItem: React.FunctionComponent<PostItemProps> = ({
@@ -35,6 +36,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
   postId,
   writerInfo,
   likedUsers,
+  onClick,
 }) => {
   const [modalsOpen, setModalsOpen] = useState<{ [key: string]: boolean }>({
     deleteModal: false,
@@ -58,6 +60,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
   const { isLiked, toggleLike } = useLike(
     bookAndLikes?.postId,
     bookAndLikes?.likesStatus,
+    onClick,
   );
   const { isBooked, toggleBook } = useBook(
     bookAndLikes?.postId,
@@ -105,7 +108,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
           <div className="space-y-4">
             <h3 className="pl-1">{content}</h3>
             {documentUrls && (
-              <div className="max-h-[500px] overflow-auto">
+              <div className="max-h-[500px]">
                 <ImageSlider postImages={documentUrls} imageSize="468" />
               </div>
             )}

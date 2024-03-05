@@ -6,6 +6,6 @@ export interface NavTitleProps {
 }
 
 export interface SearchModuleProps {
-  onClick: React.Dispatch<React.SetStateAction<string | null | undefined>>;
-  onFocusOut: React.Dispatch<React.SetStateAction<boolean>>;
+  onClick: (value) => void;
+  onFocusOut: (value) => void;
 }

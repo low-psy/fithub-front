@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import { Axios, AxiosResponse } from 'axios';
 import { authAxios, defaultAxios } from './axios';
 import { PagePostOutlineDto } from '../types/swagger/model/pagePostOutlineDto';
 import { LikesBookmarkStatusDto } from '../types/swagger/model/likesBookmarkStatusDto';
@@ -10,6 +10,7 @@ import { PageParentCommentInfoDto } from '../types/swagger/model/pageParentComme
 import { CommentInfoDto } from '../types/swagger/model/commentInfoDto';
 import { PostUpdateDto } from '../types/swagger/model/postUpdateDto';
 import { PostCreateDto } from '../types/swagger/model/postCreateDto';
+import { PostSearchFilterDto } from '../types/swagger/model/postSearchFilterDto';
 
 /**
  * [POST] 게시물 생성
@@ -45,22 +46,26 @@ export const deletePost = async (id: number) => {
   return response;
 };
 
-export const getPost = async (): Promise<AxiosResponse<PagePostInfoDto>> => {
-  return defaultAxios.get<PagePostOutlineDto>('/posts?page=0&size=10');
+export const getPost = async (
+  page: number,
+): Promise<AxiosResponse<PagePostInfoDto>> => {
+  return defaultAxios.get<PagePostInfoDto>(`/posts?page=${page}&size=2`);
 };
 
-export const getBookedPost = async (): Promise<
-  AxiosResponse<PagePostInfoDto>
-> => {
+export const getBookedPost = async (
+  page?: number,
+): Promise<AxiosResponse<PagePostInfoDto>> => {
   return authAxios.get<PagePostInfoDto>(
-    '/users/posts/bookmarks?page=0&size=10',
+    `/users/posts/bookmarks?page=${page}&size=10`,
   );
 };
 
-export const getLikedPost = async (): Promise<
-  AxiosResponse<PagePostInfoDto>
-> => {
-  return authAxios.get<PagePostInfoDto>('/users/posts/likes?page=0&size=10');
+export const getLikedPost = async (
+  page?: number,
+): Promise<AxiosResponse<PagePostInfoDto>> => {
+  return authAxios.get<PagePostInfoDto>(
+    `/users/posts/likes?page=${page}&size=10`,
+  );
 };
 
 export const getDetailPost = async (
@@ -133,5 +138,16 @@ export const getChildComments = async (
 ): Promise<AxiosResponse<CommentInfoDto>> => {
   return authAxios.get<CommentInfoDto>(
     `/posts/${postId}/comments/${commentId}`,
+  );
+};
+
+export const getPostSearch = async (
+  requestDto: PostSearchFilterDto,
+  align: string | null,
+  page?: number,
+): Promise<AxiosResponse<PagePostInfoDto>> => {
+  return authAxios.post<PagePostInfoDto>(
+    `/posts/search?page=${page}&size=10&sort=${align}&sort=asc`,
+    requestDto,
   );
 };
