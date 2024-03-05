@@ -182,17 +182,6 @@ const Post = () => {
   }, [data, isLogin]);
 
   useEffect(() => {
-    // const PostRequestDtos = data?.map((post) => {
-    //   return { postId: post.postId as number };
-    // });
-    // if (isLogin && PostRequestDtos) {
-    //   getLikeBook(PostRequestDtos).then((res) => {
-    //     setBookAndLikes(res.data);
-    //   });
-    // }
-    // getLikes(PostRequestDtos).then((res) => {
-    //   setLikedInfos(res.data);
-    // });
     getLikeAndBookInfo();
   }, [getLikeAndBookInfo]);
 
