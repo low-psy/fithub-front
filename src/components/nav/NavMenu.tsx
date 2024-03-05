@@ -21,7 +21,7 @@ const NavMenu = () => {
   if (isLogin === false) {
     profileTo = '/login';
   } else if (location.pathname.startsWith('/post')) {
-    menuArray = [...menuArray, '저장한 게시물', '좋아요 누른 게시글'];
+    menuArray = [...menuArray, '북마크한 게시물', '좋아요한 게시글'];
     defaultProfileIcon = 'badge';
   }
   return (
