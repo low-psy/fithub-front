@@ -13,7 +13,7 @@ const SideMenu = ({ profileImg }: ISideMenuProps) => {
 
   const profileUrl = '/user/profile';
   const postsUrl = '/user/posts';
-  const reservationUrl = '/user/reservation';
+  const reservationUrl = '/user/reservations';
   const cancellationUrl = '/user/cancellation';
   const trainerInfoUrl = '/user/trainerInfo';
 
@@ -38,7 +38,7 @@ const SideMenu = ({ profileImg }: ISideMenuProps) => {
         <SideMenuButton
           text="예약 / 종료 내역"
           to={reservationUrl}
-          clicked={clicked === 'reservation'}
+          clicked={clicked === 'reservations'}
         />
         <SideMenuButton
           text="취소 / 환불 내역"
