@@ -52,7 +52,15 @@ export const getPost = async (): Promise<AxiosResponse<PagePostInfoDto>> => {
 export const getBookedPost = async (): Promise<
   AxiosResponse<PagePostInfoDto>
 > => {
-  return defaultAxios.get<PagePostOutlineDto>('/posts?page=0&size=10');
+  return authAxios.get<PagePostInfoDto>(
+    '/users/posts/bookmarks?page=0&size=10',
+  );
+};
+
+export const getLikedPost = async (): Promise<
+  AxiosResponse<PagePostInfoDto>
+> => {
+  return authAxios.get<PagePostInfoDto>('/users/posts/likes?page=0&size=10');
 };
 
 export const getDetailPost = async (

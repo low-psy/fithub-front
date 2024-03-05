@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
-import { checkAccessToken, errorFunc } from '../utils/util';
+import { errorFunc } from '../utils/util';
 import { ErrorResponseDto } from '../types/swagger/model/errorResponseDto';
 
 const useBook = (
@@ -12,15 +12,14 @@ const useBook = (
 ) => {
   const navigate = useNavigate();
   const [isBooked, setIsBooked] = useState(booked);
+  const location = useLocation();
 
   useEffect(() => {
     setIsBooked(booked);
   }, [booked, id]);
 
   const toggleBook = async () => {
-    const isAccessToken = checkAccessToken();
-    console.log(isAccessToken);
-    if (!id || !isAccessToken) {
+    if (!id) {
       return navigate('/login');
     }
     const previousBookedState = isBooked;
@@ -37,7 +36,7 @@ const useBook = (
       if (response.status !== 200) {
         // 요청이 실패한 경우, 원래 상태로 되돌림
         setIsBooked(previousBookedState);
-      } else {
+      } else if (location.pathname.includes('book')) {
         navigate(0);
       }
     } catch (err) {

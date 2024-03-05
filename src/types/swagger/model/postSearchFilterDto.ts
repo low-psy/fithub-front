@@ -9,7 +9,6 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { PageableDto } from './pageableDto';
 
 /**
  * 게시글 검색 필터 dto
@@ -23,5 +22,4 @@ export interface PostSearchFilterDto {
      * 검색 범위 (내용, 작성자, 해시태그)
      */
     scope?: string;
-    pageable?: PageableDto;
 }

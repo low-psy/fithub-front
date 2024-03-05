@@ -1,4 +1,5 @@
 import { PostDocumentUpdateDto } from '../../types/swagger/model/postDocumentUpdateDto';
+import { ProfileDto } from '../../types/swagger/model/profileDto';
 import {
   CommentState,
   IDropdownState,
@@ -39,4 +40,16 @@ export const initialDropdownState: IDropdownState = {
 export const initialUserState: IUserState = {
   isLogin: false,
   role: 'guest',
+};
+
+export const initialUserInfos: ProfileDto = {
+  name: '',
+  nickname: '',
+  email: '',
+  phone: '',
+  gender: 'UNDEFINED',
+  bio: '',
+  profileImg: '',
+  grade: undefined,
+  trainer: undefined,
 };

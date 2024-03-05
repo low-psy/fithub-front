@@ -12,7 +12,10 @@ import DropdownMenu from '../btn/DropdownMenu';
 import { errorFunc } from '../../utils/util';
 import ProfileIcon from '../../assets/icons/ProfileIcon';
 
-const NavDropdown: React.FC<{ menuArray: string[] }> = ({ menuArray }) => {
+const NavDropdown: React.FC<{ menuArray: string[]; iconString?: string }> = ({
+  menuArray,
+  iconString,
+}) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -30,7 +33,8 @@ const NavDropdown: React.FC<{ menuArray: string[] }> = ({ menuArray }) => {
         const response = await logout();
         if (response && response.status === 200) {
           localStorage.removeItem('accessToken');
-          localStorage.removeItem('expirationTime');
+          localStorage.removeItem('trainer');
+          localStorage.removeItem('email');
           navigate(0);
         }
       } catch (error) {
@@ -41,6 +45,8 @@ const NavDropdown: React.FC<{ menuArray: string[] }> = ({ menuArray }) => {
       }
     } else if (value === '저장한 게시물') {
       navigate('/post?booked=true');
+    } else if (value === '좋아요 누른 게시글') {
+      navigate('/post?liked=true');
     }
   };
 
@@ -56,7 +62,9 @@ const NavDropdown: React.FC<{ menuArray: string[] }> = ({ menuArray }) => {
       onMenuItemClick={navMenuClickHandler}
       onToggleMenuClick={toggleMenuClickHandler}
     >
-      <ProfileIcon />
+      <span className="material-symbols-outlined nav  text-5xl">
+        {iconString}
+      </span>
     </DropdownMenu>
   );
 };

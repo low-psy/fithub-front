@@ -49,22 +49,25 @@ import pageRoutes from './pageRoutes';
 
 // hooks
 import useGoogleMapsApiLoader from './hooks/useGoogleMap';
-import { LOGIN } from './redux/slices/userSlice';
+import { LOGIN, SET_TRAINER } from './redux/slices/userSlice';
 import TrainingBook, { loader as TrainingBookLoader } from './pages/book';
 import SuccessPage, {
   loader as successPaymentLoader,
 } from './pages/detail/success';
-import { checkAccessTokenExpiration } from './utils/util';
+
 import TrainerInfo from './pages/user/trainerInfo';
 
 function App() {
   // 전역 로그인 상태 관리
   const dispatch = useDispatch();
   useEffect(() => {
-    checkAccessTokenExpiration();
     const accessToken = localStorage.getItem('accessToken');
+    const trainerNum = localStorage.getItem('trainer');
     if (accessToken) {
       dispatch(LOGIN());
+      if (trainerNum === '1') {
+        dispatch(SET_TRAINER());
+      }
     }
   }, [dispatch]);
 
