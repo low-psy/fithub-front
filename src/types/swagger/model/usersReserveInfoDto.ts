@@ -27,7 +27,7 @@ export interface UsersReserveInfoDto {
      * 예약한 트레이닝 날짜, 시간
      */
     reserveDateTime?: Date;
-    address?: string;
+    location?: string;
     price?: number;
     /**
      * 트레이닝 결제(주문) 번호

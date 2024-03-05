@@ -28,7 +28,7 @@ const handleDateToString = (date: Date) => {
   const month = date.getMonth() + 1;
   const day = date.getDate();
 
-  return `${year}-${month}-${day}`;
+  return `${year}-${month <= 9 ? 0 : ''}${month}-${day <= 9 ? 0 : ''}${day}`;
 };
 
 function CertifyTrainer() {
@@ -145,11 +145,26 @@ function CertifyTrainer() {
     formData.append('licenseNames', licenseNamesStr);
 
     // 경력 첨부
-    careerList.forEach((c) => {
-      const blob = new Blob([JSON.stringify(c)], {
-        type: 'application/json',
-      });
-      formData.append('careerList', blob);
+    careerList.forEach((career: TrainerCareerRequestDto, index) => {
+      const {
+        company,
+        work,
+        startDate,
+        endDate,
+        working,
+        address,
+        latitude,
+        longitude,
+      } = career;
+
+      formData.append(`careerList[${index}].company`, company);
+      formData.append(`careerList[${index}].work`, work);
+      formData.append(`careerList[${index}].startDate`, startDate);
+      formData.append(`careerList[${index}].endDate`, endDate || '');
+      formData.append(`careerList[${index}].working`, String(working));
+      formData.append(`careerList[${index}].address`, address);
+      formData.append(`careerList[${index}].latitude`, String(latitude));
+      formData.append(`careerList[${index}].longitude`, String(longitude));
     });
 
     try {

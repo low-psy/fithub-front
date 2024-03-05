@@ -204,6 +204,13 @@ export const logout = async () => {
   return response;
 };
 
+/**
+ * [GET] 예약리스트
+ */
+export const fetchTrainingReservation = async () => {
+  const response = await authAxios.get('/users/training/reservation/all');
+  return response.data.content;
+  
 export const getUserInfos = async (): Promise<AxiosResponse<ProfileDto>> => {
   const response = await authAxios.get<ProfileDto>('/users/profile');
   return response;

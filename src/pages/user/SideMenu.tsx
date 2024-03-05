@@ -13,8 +13,9 @@ const SideMenu = ({ profileImg }: ISideMenuProps) => {
 
   const profileUrl = '/user/profile';
   const postsUrl = '/user/posts';
-  const reservationUrl = '/user/reservation';
+  const reservationUrl = '/user/reservations';
   const cancellationUrl = '/user/cancellation';
+  const trainerInfoUrl = '/user/trainerInfo';
 
   return (
     <div className="hidden h-fit w-full max-w-[400px] rounded border shadow-slate-500 sm:block">
@@ -37,12 +38,17 @@ const SideMenu = ({ profileImg }: ISideMenuProps) => {
         <SideMenuButton
           text="예약 / 종료 내역"
           to={reservationUrl}
-          clicked={clicked === 'reservation'}
+          clicked={clicked === 'reservations'}
         />
         <SideMenuButton
           text="취소 / 환불 내역"
           to={cancellationUrl}
           clicked={clicked === 'cancellation'}
+        />
+        <SideMenuButton
+          text="트레이너 정보"
+          to={trainerInfoUrl}
+          clicked={clicked === 'trainerInfo'}
         />
       </div>
     </div>
