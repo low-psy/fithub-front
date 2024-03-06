@@ -44,9 +44,9 @@ const NavDropdown: React.FC<{ menuArray: string[]; iconString?: string }> = ({
         }
       }
     } else if (value === '북마크한 게시물') {
-      navigate('/post?booked=true');
+      navigate('/post/book?booked=true');
     } else if (value === '좋아요한 게시글') {
-      navigate('/post?liked=true');
+      navigate('/post/favorite?liked=true');
     }
   };
 

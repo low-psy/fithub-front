@@ -56,6 +56,10 @@ import SuccessPage, {
 } from './pages/detail/success';
 
 import TrainerInfo from './pages/user/trainerInfo';
+import PostFavorite from './pages/post/favorite';
+import PostBook from './pages/post/book';
+import PostExplore from './pages/post/explore';
+import PostHome from './pages/post/home';
 
 function App() {
   // 전역 로그인 상태 관리
@@ -103,13 +107,54 @@ function App() {
           path: pageRoutes.userPost.base,
           element: <Post />,
           loader: postLoader,
-          // 게시글 상세 조회
           children: [
             {
-              path: pageRoutes.userPost.detail,
-              element: <DetailPost />,
-              loader: detailPostLoader,
-              action: detailPostAction,
+              path: 'home',
+              element: <PostHome />,
+              children: [
+                {
+                  path: pageRoutes.userPost.detail,
+                  element: <DetailPost />,
+                  loader: detailPostLoader,
+                  action: detailPostAction,
+                },
+              ],
+            },
+            {
+              path: 'favorite',
+              element: <PostFavorite />,
+              children: [
+                {
+                  path: pageRoutes.userPost.detail,
+                  element: <DetailPost />,
+                  loader: detailPostLoader,
+                  action: detailPostAction,
+                },
+              ],
+            },
+            {
+              path: 'book',
+              element: <PostBook />,
+              children: [
+                {
+                  path: pageRoutes.userPost.detail,
+                  element: <DetailPost />,
+                  loader: detailPostLoader,
+                  action: detailPostAction,
+                },
+              ],
+            },
+            {
+              path: 'explore',
+              element: <PostExplore />,
+              children: [
+                {
+                  path: pageRoutes.userPost.detail,
+                  element: <DetailPost />,
+                  loader: detailPostLoader,
+                  action: detailPostAction,
+                },
+              ],
             },
           ],
         },

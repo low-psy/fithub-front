@@ -17,6 +17,8 @@ const useInfiniteScroll = <T>({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const loaderIndicator = useRef<HTMLDivElement | null>(null);
 
+  console.log(page);
+
   const loadMoreData = useCallback(async () => {
     if (isLoading && last) return;
     setIsLoading(true);

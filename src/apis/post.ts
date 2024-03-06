@@ -146,8 +146,9 @@ export const getPostSearch = async (
   align: string | null,
   page?: number,
 ): Promise<AxiosResponse<PagePostInfoDto>> => {
+  console.log(requestDto);
   return authAxios.post<PagePostInfoDto>(
-    `/posts/search?page=${page}&size=10&sort=${align}&sort=asc`,
+    `/posts/search?page=${page}&size=10&sort=${align},desc`,
     requestDto,
   );
 };
