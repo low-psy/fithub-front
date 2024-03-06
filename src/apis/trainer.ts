@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { authAxios } from './axios';
-import { TrainerInfoRes } from '../pages/user/trainerInfo/trainerInfo';
+import { TrainerInfoRes } from '../pages/user/trainerInfo/type';
 
 const certifyTrainer = (formData: FormData) => {
   const response = authAxios.post('/auth/trainer/certificate', formData, {

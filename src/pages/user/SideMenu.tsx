@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import ProfileImage from './ProfileImage';
 import SideMenuButton from './SideMenuButton';
+import { useAppSelector } from '../../hooks/reduxHooks';
 
 interface ISideMenuProps {
   profileImg: string;
@@ -16,6 +17,7 @@ const SideMenu = ({ profileImg }: ISideMenuProps) => {
   const reservationUrl = '/user/reservations';
   const cancellationUrl = '/user/cancellation';
   const trainerInfoUrl = '/user/trainerInfo';
+  const { role } = useAppSelector((state) => state.user);
 
   return (
     <div className="hidden h-fit w-full max-w-[400px] rounded border shadow-slate-500 sm:block">
@@ -45,11 +47,13 @@ const SideMenu = ({ profileImg }: ISideMenuProps) => {
           to={cancellationUrl}
           clicked={clicked === 'cancellation'}
         />
-        <SideMenuButton
-          text="트레이너 정보"
-          to={trainerInfoUrl}
-          clicked={clicked === 'trainerInfo'}
-        />
+        {role === 'trainer' && (
+          <SideMenuButton
+            text="트레이너 정보"
+            to={trainerInfoUrl}
+            clicked={clicked === 'trainerInfo'}
+          />
+        )}
       </div>
     </div>
   );
