@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Form, FormMethod, useActionData } from 'react-router-dom';
+import { Form, useActionData } from 'react-router-dom';
 import SubmitButton from '../../components/form/FormSubmitButton';
 import LocationSearchInput from '../../components/common/LocationSearchInput';
 import DetailLocationInput from '../../components/common/DetailLocation';

@@ -38,10 +38,10 @@ const RoundedIcon: React.FC<IconComponentProps> = ({
     <button
       onClick={handleIconClick}
       type="button"
-      className=" block align-top"
+      className="  flex align-top"
     >
       <span
-        className={`material-symbols-rounded  ${isIconFilled ? 'filled' : 'unfilled'}  font-main text-5xl ${iconColor || 'text-main'} transition-transform duration-150 ${isClicked ? 'scale-125' : 'scale-100'}  opacity-75`}
+        className={`material-symbols-rounded  ${isIconFilled ? 'filled' : 'unfilled'}  font-main text-5xl ${iconColor} transition-transform duration-150 ${isClicked ? 'scale-125' : 'scale-100'}  opacity-75`}
       >
         {children}
       </span>
