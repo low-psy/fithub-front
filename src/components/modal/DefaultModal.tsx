@@ -19,12 +19,12 @@ const DefaultModal: React.FC<ModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0  z-50 flex items-center justify-center bg-black bg-opacity-50"
+      className="fixed inset-0  z-50 flex items-center justify-center bg-black bg-opacity-50 py-12"
       onClick={(e) => e.preventDefault}
       role="presentation"
     >
       <div
-        className="overflow-auto rounded-md bg-white p-4"
+        className="h-full overflow-auto rounded-md bg-white p-4"
         style={{ width: modalWidth, maxHeight: modalMaxHeight }}
       >
         <div className="text-end">

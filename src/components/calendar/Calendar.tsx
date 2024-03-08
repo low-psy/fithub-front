@@ -16,6 +16,8 @@ interface CalendarProps {
   singleDateSelect?: boolean;
   defaultStartDate?: string;
   defaultEndDate?: string;
+  calendarClassName?: string;
+  titleClassName?: string;
 }
 
 const Calendar: React.FC<CalendarProps> = ({
@@ -25,6 +27,8 @@ const Calendar: React.FC<CalendarProps> = ({
   defaultStartDate,
   defaultEndDate,
   onSelectedId,
+  calendarClassName,
+  titleClassName,
 }) => {
   const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -122,9 +126,11 @@ const Calendar: React.FC<CalendarProps> = ({
   };
 
   return (
-    <div className="space-y-8 rounded-md  bg-white p-6 drop-shadow-md ">
+    <div className={`space-y-8 rounded-md  bg-white  ${calendarClassName}`}>
       <div className="flex justify-between">
-        <h1 className="text-xl font-bold">날짜 선택</h1>
+        <h1 className={`${titleClassName || 'text-xl font-bold '}`}>
+          날짜 선택
+        </h1>
         <div className="flex items-center ">
           <button
             className="inline-block"
@@ -177,7 +183,7 @@ const Calendar: React.FC<CalendarProps> = ({
 
           return (
             <CalendarDay
-              key={day}
+              key={dateString}
               date={date}
               isActive={isActive}
               isSelected={isSelected}

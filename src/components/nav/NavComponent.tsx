@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Form, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Form, useFetcher, useLocation, useNavigation } from 'react-router-dom';
 import NavTitle from './NavTitle';
 import NavMenu from './NavMenu';
 import SearchModule from '../modal/SearchModule';
@@ -26,12 +26,21 @@ const NavComponent = () => {
   const { isClick, enteredText, clickHandler, inputChangeHandler } =
     useSearchModal();
 
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (navigation.state === 'loading') {
+      clickHandler(false);
+      inputChangeHandler('');
+    }
+  }, [navigation.state, clickHandler, inputChangeHandler]);
+
   return (
     <nav className="flex h-14 justify-between">
       <NavTitle title={title} />
       <div className="relative  flex h-full w-full justify-center  lg:basis-1/3">
         {isNavSearch ? (
-          <Form method="GET" action="/" className="w-full">
+          <Form method="GET" action="/explore" className="w-full">
             <SearchInput
               onChange={(e) => inputChangeHandler(e.target.value)}
               value={enteredText}

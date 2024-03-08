@@ -4,6 +4,10 @@ import {
   TextareaHTMLAttributes,
 } from 'react';
 import { LoaderFunction } from 'react-router-dom';
+import { LikesBookmarkStatusDto } from './swagger/model/likesBookmarkStatusDto';
+import { LikedUsersInfoDto } from './swagger/model/likedUsersInfoDto';
+import { PostInfoDto } from './swagger/model/postInfoDto';
+import { TrainingOutlineDto } from './swagger/model/trainingOutlineDto';
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   customProp?: string;
@@ -16,6 +20,7 @@ export interface SearchInputProps
   iconText?: string;
   className?: string;
   iconClassName?: string;
+  onClose?: () => void;
 }
 
 export interface TextAreaProps
@@ -66,4 +71,20 @@ export interface refreshResData {
   code: number;
   httpStatus: string;
   message: string;
+}
+
+export interface UserTrainingOutletProps {
+  usersTrainingLike: boolean[];
+  trainingInfo: TrainingOutlineDto[];
+  fetchData: (page: number) => Promise<TrainingOutlineDto[] | []>;
+  last: boolean | undefined;
+}
+
+export interface PostOutletProps {
+  bookAndLikes: LikesBookmarkStatusDto[];
+  likedInfos: LikedUsersInfoDto[];
+  getLikeAndBookInfo: (data: PostInfoDto[]) => void;
+  postInfo: PostInfoDto[];
+  fetchData: (page: number) => Promise<PostInfoDto[] | []>;
+  last: boolean | undefined;
 }
