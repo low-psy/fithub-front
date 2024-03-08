@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { CareerType } from './type';
+import CareerInput from './CareerInput';
 
 interface Prop {
   list: CareerType[] | undefined;
@@ -16,26 +17,16 @@ const Career: FC<Prop> = ({ list }) => {
         <div className="flex flex-1 flex-col">
           {list?.map((li: CareerType) => (
             <div className="flex flex-col" key={li.careerId}>
-              <div className="flex justify-around">
-                <div className="align-center flex w-full items-center justify-start">
-                  <span>
-                    {`${li.company} (${li.work}) ${li.startDate}~${li.endDate || '현재'}`}
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  // onClick={() => handleEdit(id)}
-                  className="h-[40px] w-[110px] rounded bg-gray-300"
-                >
-                  변경
-                </button>
-                {/* <div className=" align-center flex w-full items-center  justify-center"></div> */}
-              </div>
+              <CareerInput careerId={li.careerId} />
             </div>
           ))}
 
           <div className="flex justify-start">
-            <button type="button" className="mt-[1rem] text-gray-400">
+            <button
+              type="button"
+              className="mt-[1rem] text-gray-400"
+              // onClick={addCareer}
+            >
               추가하기
             </button>
           </div>

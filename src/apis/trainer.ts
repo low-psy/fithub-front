@@ -34,3 +34,33 @@ export const addTrainerLicense = async (file: FormData) => {
 export const deleteTrainerLicense = async (licenseId: number) => {
   await authAxios.delete(`/trainers/licenses?licenseId=${licenseId}`);
 };
+
+export const fetchCareerInfo = async (careerId: number) => {
+  const res = await authAxios.get(`/trainers/careers?careerId=${careerId}`);
+  return res.data;
+};
+
+// 트레이너정보 경력 수정
+export const editTrainerCareer = async (
+  careerId: number,
+  company: string,
+  work: string,
+  address: string,
+  longitude: number,
+  latitude: number,
+  startDate: string,
+  endDate: string,
+  working: boolean,
+) => {
+  await authAxios.put(`/trainers/careers?careerId=${careerId}`, {
+    careerId,
+    company,
+    work,
+    address,
+    longitude,
+    latitude,
+    startDate,
+    endDate,
+    working,
+  });
+};

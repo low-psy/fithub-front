@@ -30,13 +30,8 @@ export interface CareerType {
   working: boolean;
 }
 
-export interface LocationType {
-  id: number;
-  value: string;
-}
-
 export interface TrainerInfoRes {
   trainerLicenseList: LicenceType[];
   trainerCareerList: CareerType[];
-  trainerAddress: LocationType[];
+  address: string;
 }

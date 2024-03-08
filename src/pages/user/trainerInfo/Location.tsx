@@ -1,11 +1,10 @@
 import React, { FC } from 'react';
 
 interface Props {
-  id: number;
-  value: string;
+  value?: string;
 }
 
-const Location: FC<Props> = ({ id, value }) => {
+const Location: FC<Props> = ({ value }) => {
   return (
     <section className="flex flex-col">
       <div className="flex flex-row">
@@ -14,7 +13,7 @@ const Location: FC<Props> = ({ id, value }) => {
         </div>
 
         <div className="flex flex-1 flex-col">
-          <div className="flex flex-col" key={id}>
+          <div className="flex flex-col">
             <div className="flex justify-around">
               <div className="align-center flex w-full items-center justify-start">
                 {value}
