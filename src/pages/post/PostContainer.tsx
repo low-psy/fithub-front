@@ -2,8 +2,8 @@ import React from 'react';
 import { useOutletContext } from 'react-router-dom';
 import PostItem from './PostItem';
 import UndefinedCover from '../../components/common/UndefinedCover';
-import { PostOutletProps } from '../../types/post';
 import { PostInfoDto } from '../../types/swagger/model/postInfoDto';
+import { PostOutletProps } from '../../types/common';
 
 interface PostContainerProps {
   data: PostInfoDto[];

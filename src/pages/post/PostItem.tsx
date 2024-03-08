@@ -115,7 +115,11 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
           </div>
           <div className="flex  justify-between">
             <div className="relative flex items-center gap-2">
-              <RoundedIcon defaultState={isLiked} onClick={toggleLike}>
+              <RoundedIcon
+                defaultState={isLiked}
+                onClick={toggleLike}
+                iconColor="text-main"
+              >
                 favorite
               </RoundedIcon>
               <RoundedIcon

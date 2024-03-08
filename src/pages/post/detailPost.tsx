@@ -23,7 +23,6 @@ import DefaultModal from '../../components/modal/DefaultModal';
 import useModal from '../../hooks/useModal';
 import { LikesInfoDto } from '../../types/swagger/model/likesInfoDto';
 import RoundedIcon from '../../components/icon/Rounded';
-import Hashtags from '../../components/common/HashTags';
 
 interface Context {
   likedUsers: LikesInfoDto[] | undefined;
@@ -110,7 +109,11 @@ const DetailPost = () => {
           </div>
           <div className="flex  justify-between">
             <div className="relative flex items-center gap-2 p-3">
-              <RoundedIcon defaultState={isLiked} onClick={toggleLike}>
+              <RoundedIcon
+                defaultState={isLiked}
+                onClick={toggleLike}
+                iconColor="text-main"
+              >
                 favorite
               </RoundedIcon>
               <RoundedIcon

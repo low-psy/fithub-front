@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { PostOutletProps } from '../../types/post';
 import useInfiniteScroll from '../../hooks/infiniteScroll';
 import { PostInfoDto } from '../../types/swagger/model/postInfoDto';
 import PostContainer from './PostContainer';
+import { PostOutletProps } from '../../types/common';
 
 const PostHome = () => {
   const { getLikeAndBookInfo, fetchData, last, postInfo } =
