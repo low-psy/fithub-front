@@ -60,6 +60,8 @@ import PostFavorite from './pages/post/favorite';
 import PostBook from './pages/post/book';
 import PostExplore from './pages/post/explore';
 import PostHome from './pages/post/home';
+import TrainingExplore from './pages/home/explore';
+import UserHome from './pages/home/home';
 
 function App() {
   // 전역 로그인 상태 관리
@@ -84,10 +86,20 @@ function App() {
       children: [
         // 홈
         {
-          index: true,
+          path: '/',
           element: <Home />,
           loader: homeLoader,
           action: homeAction,
+          children: [
+            {
+              index: true,
+              element: <UserHome />,
+            },
+            {
+              path: 'explore',
+              element: <TrainingExplore />,
+            },
+          ],
         },
         // 트레이닝 예약
         {
