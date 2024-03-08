@@ -20,3 +20,17 @@ export const fetchTrainerInfo = async (): Promise<
 };
 
 export default certifyTrainer;
+
+// 트레이너정보 자격증 1개 추가
+export const addTrainerLicense = async (file: FormData) => {
+  await authAxios.post('/trainers/licenses', file, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
+// 트레이너정보 자격증 1개 삭제
+export const deleteTrainerLicense = async (licenseId: number) => {
+  await authAxios.delete(`/trainers/licenses?licenseId=${licenseId}`);
+};
