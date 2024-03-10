@@ -37,7 +37,7 @@ const ImageUpload: FC<Prop> = ({
             <button
               type="button"
               onClick={() => setIdToDelete(licenseId)}
-              className="absolute left-[-10px] top-[-20px] mt-2 h-8 w-[30px] rounded-full border border-main bg-white font-semibold text-main hover:bg-main hover:text-white"
+              className="absolute right-0 top-[-10px]  z-[1] h-7 w-7 rounded-full border bg-accent font-semibold text-white hover:bg-rose-400"
             >
               X
             </button>

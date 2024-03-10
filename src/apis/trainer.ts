@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { authAxios } from './axios';
-import { TrainerInfoRes } from '../pages/user/trainerInfo/type';
+import { CareerType, TrainerInfoRes } from '../pages/user/trainerInfo/type';
 
 const certifyTrainer = (formData: FormData) => {
   const response = authAxios.post('/auth/trainer/certificate', formData, {
@@ -41,26 +41,6 @@ export const fetchCareerInfo = async (careerId: number) => {
 };
 
 // 트레이너정보 경력 수정
-export const editTrainerCareer = async (
-  careerId: number,
-  company: string,
-  work: string,
-  address: string,
-  longitude: number,
-  latitude: number,
-  startDate: string,
-  endDate: string,
-  working: boolean,
-) => {
-  await authAxios.put(`/trainers/careers?careerId=${careerId}`, {
-    careerId,
-    company,
-    work,
-    address,
-    longitude,
-    latitude,
-    startDate,
-    endDate,
-    working,
-  });
+export const editTrainerCareer = async (careerId: number, data: CareerType) => {
+  await authAxios.put(`/trainers/careers?careerId=${careerId}`, { ...data });
 };
