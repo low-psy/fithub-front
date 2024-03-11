@@ -1,39 +1,23 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { AxiosResponse } from 'axios';
-// import withAuth from '../../../hocs/withAuth';
-import {
-  Career,
-  License,
-  TrainerInfoRes,
-  TrainerInfoType,
-} from './trainerInfo';
-import { authAxios } from '../../../apis/axios';
+import withAuth from '../../../hocs/withAuth';
+import { TrainerInfoRes } from './type';
 import { fetchTrainerInfo } from '../../../apis/trainer';
-import Info from './Info';
+import Location from './Location';
+import License from './License';
+import Career from './Career';
 
 const TrainerInfo: FC = () => {
-  const [licenseList, setLicenseList] = useState<License[]>();
-  const [careerList, setCareerList] = useState<Career[]>();
+  const [resData, setResData] = useState<TrainerInfoRes>();
 
   const getTrainerInfo = useCallback(async () => {
-    const { data }: AxiosResponse<TrainerInfoRes> = await fetchTrainerInfo();
-    setLicenseList(data.trainerLicenseList);
-    setCareerList(data.trainerCareerList);
+    const res: AxiosResponse<TrainerInfoRes> = await fetchTrainerInfo();
+    setResData(res?.data);
   }, []);
 
   useEffect(() => {
     getTrainerInfo();
   }, [getTrainerInfo]);
-
-  const editCertification = (id: number) => {
-    // console.log('edit certi', id);
-  };
-  const editCareer = (id: number) => {
-    // console.log('edit career', id);
-  };
-  const editLocation = (id: number) => {
-    // console.log('edit location', id);
-  };
 
   return (
     <div className="flex flex-col">
@@ -41,26 +25,13 @@ const TrainerInfo: FC = () => {
       <div className="mb-4 mt-4 w-full border shadow-slate-500" />
 
       {/* 자격증 */}
-      <Info
-        type={TrainerInfoType.License}
-        list={licenseList}
-        handleEdit={editCertification}
-      />
+      <License list={resData?.trainerLicenseList} />
       {/* 경력 */}
-      <Info
-        type={TrainerInfoType.Career}
-        list={careerList}
-        handleEdit={editCareer}
-      />
+      <Career list={resData?.trainerCareerList} />
       {/* 위치 */}
-      <Info
-        type={TrainerInfoType.Location}
-        list={[{ id: 1, value: '마포구 어울림로 152-88' }]} // TODO
-        handleEdit={editLocation}
-      />
+      <Location value={resData?.address} />
     </div>
   );
 };
 
-export default TrainerInfo;
-// export default withAuth(TrainerInfo, 'trainer');
+export default withAuth(TrainerInfo, 'trainer');
