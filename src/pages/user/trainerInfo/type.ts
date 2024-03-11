@@ -30,6 +30,14 @@ export interface CareerType {
   working: boolean;
 }
 
+export interface NewCareerType {
+  careerId: null;
+  company: string;
+  work: string;
+  startDate: string;
+  endDate: string;
+}
+
 export interface TrainerInfoRes {
   trainerLicenseList: LicenceType[];
   trainerCareerList: CareerType[];
