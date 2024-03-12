@@ -274,3 +274,16 @@ export const updateTrainingCalendar = async (
     data,
   );
 };
+
+/**
+ * [POST] 유저가 트레이닝 예약 취소
+ */
+export const cancelReservation = async (
+  reservationId: number,
+  impUid: string,
+) => {
+  await authAxios.post('/payment/cancel', {
+    reservationId,
+    impUid,
+  });
+};

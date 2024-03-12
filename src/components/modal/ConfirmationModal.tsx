@@ -6,6 +6,7 @@ interface ConfirmationModalProps {
   onClose: () => void;
   onConfirm: () => void;
   confirmText: string;
+  cancelText?: string;
   children: React.ReactNode;
 }
 
@@ -14,6 +15,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   onClose,
   onConfirm,
   confirmText,
+  cancelText,
   children,
 }) => {
   return (
@@ -21,6 +23,15 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
       <div className="w-[400px] space-y-6">
         <div>{children}</div>
         <div className="flex justify-end">
+          {cancelText && (
+            <button
+              type="button"
+              className="mr-3 rounded-full bg-sub px-6 py-1"
+              onClick={onClose}
+            >
+              {cancelText}
+            </button>
+          )}
           <button
             type="button"
             className="rounded-full bg-slate-200 px-6 py-1"

@@ -13,23 +13,7 @@ import { SET_TRAINER } from '../../redux/slices/userSlice';
 import withAuth from '../../hocs/withAuth';
 import { ErrorResponseDto } from '../../types/swagger/model/errorResponseDto';
 import { TrainerCareerRequestDto } from '../../types/swagger/model/trainerCareerRequestDto';
-
-interface ICareer {
-  [key: string]: string | boolean | (() => void);
-  company: string;
-  work: string;
-  startDate: string;
-  endDate: string;
-  working: 'true' | 'false';
-}
-
-const handleDateToString = (date: Date) => {
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-
-  return `${year}-${month <= 9 ? 0 : ''}${month}-${day <= 9 ? 0 : ''}${day}`;
-};
+import { handleDateToString } from '../../utils/util';
 
 function CertifyTrainer() {
   const navigate = useNavigate();

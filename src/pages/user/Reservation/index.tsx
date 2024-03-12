@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Reservation from './Reservation';
 import { UsersReserveInfoDto } from '../../../types/swagger/model/usersReserveInfoDto';
-import { fetchTrainingReservation } from '../../../apis/user';
+import {
+  fetchCompletedReservation,
+  fetchTrainingReservation,
+} from '../../../apis/user';
 
 export interface ReservationType {
   reservationId: number;
@@ -18,9 +21,14 @@ const Reservations = () => {
   const [reservationList, setReservationList] = useState<UsersReserveInfoDto[]>(
     [],
   );
+  const [completedReservationList, setCompletedReservationList] =
+    useState<UsersReserveInfoDto[]>();
+
   const getReservations = async () => {
     const res: UsersReserveInfoDto[] = await fetchTrainingReservation();
     setReservationList(res);
+    const completedRes = await fetchCompletedReservation();
+    setCompletedReservationList(completedRes);
   };
 
   useEffect(() => {
@@ -30,15 +38,24 @@ const Reservations = () => {
   return (
     <div>
       <p className="mb-4 text-lg font-semibold">예약 내역</p>
-      <div className="flex flex-row gap-4">
+      <div className="grid grid-cols-2 gap-4">
         {reservationList?.map((reservation: UsersReserveInfoDto) => (
-          <Reservation info={reservation} />
+          <Reservation
+            info={reservation}
+            setReservationList={setReservationList}
+          />
         ))}
       </div>
       <div className="mb-4 mt-8 w-full border shadow-slate-500" />
-      <p className="text-lg font-semibold">종료 내역</p>
-      <div className="flex flex-row flex-wrap gap-4">
-        {/* <Reservation closed /> */}
+      <p className="mb-[1rem] text-lg font-semibold">종료 내역</p>
+      <div className="grid grid-cols-2 gap-4">
+        {completedReservationList?.map((reservation: UsersReserveInfoDto) => (
+          <Reservation
+            closed
+            info={reservation}
+            setReservationList={setReservationList}
+          />
+        ))}
       </div>
     </div>
   );
