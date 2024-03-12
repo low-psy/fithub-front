@@ -87,7 +87,7 @@ const TrainerForm: React.FC = () => {
         <FormLabel htmlFor="location">
           <h2 className="text-3xl text-zinc-800">트레이너 위치</h2>
           <LocationSearchInput onLocationSelect={handleLocationSelect} />
-          <input name="finalLocation" value={finalAddress} hidden />
+          <input name="finalLocation" value="강남" hidden />
           {errors?.location && <FormError>{errors?.location}</FormError>}
         </FormLabel>
         {showDetailInput && (

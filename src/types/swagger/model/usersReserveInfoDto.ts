@@ -28,6 +28,7 @@ export interface UsersReserveInfoDto {
      */
     reserveDateTime?: Date;
     location?: string;
+    address?: string;
     price?: number;
     /**
      * 트레이닝 결제(주문) 번호
@@ -45,6 +46,7 @@ export interface UsersReserveInfoDto {
      * 트레이닝 결제 변경 날짜, 시간 (취소, 노쇼 처리 시 이걸 참고)
      */
     modifiedDateTime?: Date;
+    reviewWritten?: boolean;
 }
 export namespace UsersReserveInfoDto {
     export type StatusEnum = 'BEFORE' | 'START' | 'COMPLETE' | 'CANCEL' | 'NOSHOW';

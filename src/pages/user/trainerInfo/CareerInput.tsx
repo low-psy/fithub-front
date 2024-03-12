@@ -15,6 +15,7 @@ import {
   fetchCareerInfo,
   fetchTrainerInfo,
 } from '../../../apis/trainer';
+import { handleDateToString } from '../../../utils/util';
 
 export enum InputTypes {
   company = 'company',
@@ -24,14 +25,6 @@ interface Prop {
   careerId: number;
   setCareerList: (data: any) => void;
 }
-
-const handleDateToString = (date: Date) => {
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-
-  return `${year}-${month <= 9 ? 0 : ''}${month}-${day <= 9 ? 0 : ''}${day}`;
-};
 
 const CareerInput: FC<Prop> = ({ careerId, setCareerList }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);

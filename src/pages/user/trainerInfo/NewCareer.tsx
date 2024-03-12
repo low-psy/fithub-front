@@ -2,6 +2,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import ReactDatePicker from 'react-datepicker';
 import { ko } from 'date-fns/locale';
 import { InputTypes } from './CareerInput';
+import { handleDateToString } from '../../../utils/util';
 
 interface DataType {
   company: string;
@@ -9,14 +10,6 @@ interface DataType {
   startDate: string;
   endDate: string;
 }
-
-const handleDateToString = (date: Date) => {
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-
-  return `${year}-${month <= 9 ? 0 : ''}${month}-${day <= 9 ? 0 : ''}${day}`;
-};
 
 const NewCareer = ({
   data,
