@@ -45,7 +45,7 @@ export const socialLogin = async (platform: string, code: string) => {
  * @returns
  */
 export const signup = async (props: ISignupProps, profileImg = '') => {
-  const signupDto = { ...props, bio: 'dummyBio' };
+  const signupDto = { ...props, bio: '' };
   const blob = new Blob([JSON.stringify(signupDto)], {
     type: 'application/json',
   });
@@ -111,7 +111,7 @@ export const socialSignup = async (
     email,
     name,
     phone,
-    bio: 'dummyBio',
+    bio: '',
     gender,
     providerId,
   };
