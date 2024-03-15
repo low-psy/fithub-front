@@ -221,7 +221,25 @@ export const fetchCompletedReservation = async () => {
   return response.data.content;
 };
 
+/**
+ * [GET] 프로필 조회
+ */
 export const getUserInfos = async (): Promise<AxiosResponse<ProfileDto>> => {
   const response = await authAxios.get<ProfileDto>('/users/profile');
   return response;
+};
+
+/**
+ * [POST] 리뷰작성
+ */
+export const writeReview = async (
+  reservationId: number,
+  content: string,
+  star: number,
+) => {
+  await authAxios.post('/users/training/reservation/review', {
+    reservationId,
+    content,
+    star,
+  });
 };
