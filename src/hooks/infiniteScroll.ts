@@ -4,6 +4,7 @@ interface UseInfiniteScrollProps<T> {
   initialData: T[];
   fetchData: (page: number) => Promise<T[] | []>;
   last?: boolean;
+  page: number;
 }
 
 // 무한 스크롤 훅
@@ -11,20 +12,17 @@ const useInfiniteScroll = <T>({
   initialData,
   fetchData,
   last,
+  page,
 }: UseInfiniteScrollProps<T>) => {
   const [data, setData] = useState<T[]>(initialData);
-  const [page, setPage] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const loaderIndicator = useRef<HTMLDivElement | null>(null);
 
-  console.log(page);
-
   const loadMoreData = useCallback(async () => {
-    if (isLoading && last) return;
+    if (isLoading || last) return;
     setIsLoading(true);
     const newData = await fetchData(page + 1);
     setData((prevData) => [...prevData, ...newData]);
-    setPage((prevPage) => prevPage + 1);
     setIsLoading(false);
   }, [page, fetchData, isLoading, last]);
 
@@ -35,7 +33,7 @@ const useInfiniteScroll = <T>({
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !isLoading) {
+        if (entries[0].isIntersecting && !isLoading && !last) {
           loadMoreData();
         }
       },
@@ -43,9 +41,10 @@ const useInfiniteScroll = <T>({
     );
 
     const currentLoader = loaderIndicator.current;
-
     if (loaderIndicator.current && !last) {
       observer.observe(loaderIndicator.current);
+    } else if (currentLoader) {
+      observer.unobserve(currentLoader);
     }
 
     return () => {
