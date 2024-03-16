@@ -14,13 +14,13 @@ export const TrainerInfoObj: TrainerInfoObjType = {
   [TrainerInfoType.Location]: '위치',
 };
 
-export interface License {
+export interface LicenceType {
   inputName: string;
   licenseId: number;
   url: string;
 }
 
-export interface Career {
+export interface CareerType {
   address: string;
   careerId: number;
   company: string;
@@ -30,13 +30,16 @@ export interface Career {
   working: boolean;
 }
 
-export interface Location {
-  id: number;
-  value: string;
+export interface NewCareerType {
+  careerId: null;
+  company: string;
+  work: string;
+  startDate: string;
+  endDate: string;
 }
 
 export interface TrainerInfoRes {
-  trainerLicenseList: License[];
-  trainerCareerList: Career[];
-  trainerAddress: Location[];
+  trainerLicenseList: LicenceType[];
+  trainerCareerList: CareerType[];
+  address: string;
 }
