@@ -15,8 +15,12 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "typeRoots": ["node_modules/@types", "src/types"],
+    "typeRoots": [
+      "node_modules/@types",
+      "src/types",
+      "src/types/swagger/model"
+    ],
     "types": ["kakao.maps.d.ts"]
   },
-  "include": ["src/**/*"]
+  "include": ["src"]
 }
