@@ -32,13 +32,14 @@
     "no-shadow": "off",
     "react/prop-types": "off",
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+    "import/no-unresolved": "warn",
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "react/jsx-filename-extension": [
       2,
       { "extensions": [".js", ".jsx", ".ts", ".tsx"] }
     ],
     "import/extensions": [
-      "error",
+      "warn",
       "ignorePackages",
       {
         "js": "never",
