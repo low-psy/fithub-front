@@ -27,27 +27,16 @@ interface IReservationProps {
   setReservationList: (newList: UsersReserveInfoDto[]) => void;
 }
 
-<<<<<<< HEAD
-const Reservation = ({ closed, info }: IReservationProps) => {
-  const { title, paymentDateTime, reserveDateTime, status } = info;
-=======
 const Reservation = ({
   closed,
   info,
   setReservationList,
 }: IReservationProps) => {
-  const {
-    title,
-    paymentDateTime,
-    location,
-    reserveDateTime,
-    status,
-    reservationId,
-  } = info;
+  const { title, paymentDateTime, reserveDateTime, status, reservationId } =
+    info;
   const [cancelingInfo, setCancelingInfo] = useState<
     UsersReserveInfoDto | undefined
   >(undefined);
->>>>>>> 2ce28b9d5e2bc92f19f1e8a750a2f975badef154
 
   const openCancelModal = async () => {
     if (reservationId) {
@@ -114,35 +103,6 @@ const Reservation = ({
             closed ? 'bg-gray-200' : 'bg-sub'
           }`}
         >
-<<<<<<< HEAD
-          취소
-        </button>
-      </div>
-      {/* 내용 */}
-      <div className=" flex flex-row px-4 py-10">
-        <img src={testImg} alt="training_img" className="mr-4 w-32" />
-        <div className="flex flex-col gap-2">
-          <p className=" text-sm">
-            <span className="text-gray-600">예약일: </span>
-            {paymentDateTime && convertDate(paymentDateTime)}
-          </p>
-          {/* <p className=" text-sm">
-            <span className="text-gray-600">장소: </span>
-            {location}
-          </p> */}
-          <p className=" text-sm">
-            <span className="text-gray-600">수업일시: </span>
-            {reserveDateTime && convertDate(reserveDateTime)}
-          </p>
-          <p className=" text-sm">
-            <span className="text-gray-600">취소가능일시: </span>
-            {reserveDateTime && convertDate(reserveDateTime)}
-          </p>
-          <p className=" text-sm">
-            <span className="text-gray-600">상태: </span>
-            {status && ReservationStatusObj[status]}
-          </p>
-=======
           <p>{title}</p>
           <button
             type="button"
@@ -162,10 +122,6 @@ const Reservation = ({
               {paymentDateTime && convertDateWithDay(paymentDateTime)}
             </p>
             <p className=" text-sm">
-              <span className="text-gray-600">장소: </span>
-              {location}
-            </p>
-            <p className=" text-sm">
               <span className="text-gray-600">수업일시: </span>
               {reserveDateTime && convertDateWithDay(reserveDateTime)}
             </p>
@@ -178,7 +134,6 @@ const Reservation = ({
               {status && ReservationStatusObj[status]}
             </p>
           </div>
->>>>>>> 2ce28b9d5e2bc92f19f1e8a750a2f975badef154
         </div>
       </div>
       <ConfirmationModal

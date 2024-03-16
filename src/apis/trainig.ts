@@ -305,7 +305,6 @@ export const updateTrainingCalendar = async (
 };
 
 /**
-<<<<<<< HEAD
  * [GET] 트레이너가 생성한 트레이닝 조회
  * @param closed 진행중 | 모집중을 구분하는 boolean 값
  * @returns AxiosResponse<PageTrainersTrainingOutlineDto>
@@ -314,8 +313,12 @@ export const getTrainersDateList = async (): Promise<
   AxiosResponse<string[]>
 > => {
   return authAxios.get<string[]>(`/trainers/training/date-list/impossible`);
-=======
+};
+
+/**
  * [POST] 유저가 트레이닝 예약 취소
+ * @param closed 진행중 | 모집중을 구분하는 boolean 값
+ * @returns AxiosResponse<PageTrainersTrainingOutlineDto>
  */
 export const cancelReservation = async (
   reservationId: number,
@@ -325,5 +328,4 @@ export const cancelReservation = async (
     reservationId,
     impUid,
   });
->>>>>>> 2ce28b9d5e2bc92f19f1e8a750a2f975badef154
 };

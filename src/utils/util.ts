@@ -184,3 +184,30 @@ export const postFetchFunc = async (
   }
   return res;
 };
+
+// new Date => YYYY-MM-DD 문자열로 변환
+export const handleDateToString = (date: Date) => {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  return `${year}-${month <= 9 ? 0 : ''}${month}-${day <= 9 ? 0 : ''}${day}`;
+};
+
+// 하루전날 날짜 구하기
+export const getYesterday = (date: Date) => {
+  // 하루를 밀리초 단위로 변환하여 빼기
+  const oneDayMilliseconds = 1000 * 60 * 60 * 24;
+  const yesterday = new Date(date.getTime() - oneDayMilliseconds);
+  return handleDateToString(yesterday);
+};
+
+// 2024-03-05 03:11:29 => 2024.03.05(화)
+export const convertDateWithDay = (date: Date) => {
+  const dateObj = new Date(date);
+  const isoStr = dateObj.toISOString();
+  const newDate = isoStr.split('T')[0].split('-').join('.');
+  const day = dateObj.getDay();
+  const days = ['일', '월', '화', '수', '목', '금', '토'];
+  return `${newDate}(${days[day]})`;
+};
