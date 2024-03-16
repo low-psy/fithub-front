@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Form, useFetcher, useLocation, useNavigation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Form, useLocation, useNavigation } from 'react-router-dom';
 import NavTitle from './NavTitle';
 import NavMenu from './NavMenu';
-import SearchModule from '../modal/SearchModule';
 import SearchInput from '../form/SearchInput';
 import useSearchModal from '../../hooks/useSearchModal';
 
@@ -23,8 +22,7 @@ const NavComponent = () => {
   } else {
     title = '핏헙';
   }
-  const { isClick, enteredText, clickHandler, inputChangeHandler } =
-    useSearchModal();
+  const { enteredText, clickHandler, inputChangeHandler } = useSearchModal();
 
   const navigation = useNavigation();
 
@@ -48,14 +46,7 @@ const NavComponent = () => {
               placeholder="트레이닝을 검색해 보세요!"
               className="rounded-full bg-sub"
               iconClassName="bg-main text-white rounded-full p-2"
-            >
-              {enteredText && isClick ? (
-                <SearchModule
-                  onFocusOut={clickHandler}
-                  onClick={inputChangeHandler}
-                />
-              ) : null}
-            </SearchInput>
+            />
           </Form>
         ) : null}
       </div>

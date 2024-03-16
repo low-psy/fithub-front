@@ -18,6 +18,7 @@ interface CalendarProps {
   defaultEndDate?: string;
   calendarClassName?: string;
   titleClassName?: string;
+  unavailabeDates?: string[];
 }
 
 const Calendar: React.FC<CalendarProps> = ({
@@ -29,6 +30,7 @@ const Calendar: React.FC<CalendarProps> = ({
   onSelectedId,
   calendarClassName,
   titleClassName,
+  unavailabeDates,
 }) => {
   const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -102,6 +104,9 @@ const Calendar: React.FC<CalendarProps> = ({
     if (!availableDates) {
       const date = new Date();
       return new Date(dateString) >= date;
+    }
+    if (unavailabeDates) {
+      return unavailabeDates?.some((d) => d !== dateString);
     }
     return availableDates?.some((d) => d.date === dateString && d.enabled);
   };

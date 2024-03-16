@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export interface RedirectModalProps {
-  children: React.ReactElement | string;
+  children: any;
 }
 
 const RedirectModal: React.FC<RedirectModalProps> = ({ children }) => {
