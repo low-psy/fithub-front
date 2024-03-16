@@ -6,12 +6,13 @@ import { TrainingOutlineDto } from '../../types/swagger/model/trainingOutlineDto
 import TrainingContainer from './TrainingContainer';
 
 const UserExplore = () => {
-  const { trainingInfo, fetchData, last, usersTrainingLike } =
+  const { trainingInfo, fetchData, last, usersTrainingLike, page } =
     useOutletContext<UserTrainingOutletProps>();
   const { data, loaderIndicator } = useInfiniteScroll<TrainingOutlineDto>({
     initialData: trainingInfo || [],
     fetchData,
     last,
+    page,
   });
   return (
     <TrainingContainer

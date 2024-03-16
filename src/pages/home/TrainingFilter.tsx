@@ -44,8 +44,7 @@ const TrainingFilter: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                         placeholder={`${obj.title}을 입력하세요!`}
                         name={obj.name}
                         type="number"
-                        min={1000}
-                        step={1000}
+                        step={100}
                       />
                     </div>
                   </div>

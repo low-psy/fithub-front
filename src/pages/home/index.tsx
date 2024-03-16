@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActionFunctionArgs,
+  Link,
   LoaderFunction,
   Outlet,
   redirect,
@@ -20,7 +21,6 @@ import lookupFilter from '../../assets/lookupFilter.png';
 import mapFilter from '../../assets/mapFilter.png';
 import newpostFilter from '../../assets/newpostFilter.png';
 import FilterIcon from '../../assets/icons/filterIcon';
-import useInfiniteScroll from '../../hooks/infiniteScroll';
 import { TrainingOutlineDto } from '../../types/swagger/model/trainingOutlineDto';
 import { PageTrainingOutlineDto } from '../../types/swagger/model/pageTrainingOutlineDto';
 import { errorFunc, isRefreshResData, setRefreshToken } from '../../utils/util';
@@ -32,19 +32,20 @@ import TrainingFilter from './TrainingFilter';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
-  const keyword = url.searchParams.get('searchInput');
-  const lowestPrice = url.searchParams.get('lowestPrice');
-  const highestPrice = url.searchParams.get('highestPrice');
-  const startDate = url.searchParams.get('startDate');
-  const endDate = url.searchParams.get('endDate');
+  const keyword = url.searchParams.get('searchInput') || undefined;
+  const lowestPrice = Number(url.searchParams.get('lowestPrice')) || undefined;
+  const highestPrice =
+    Number(url.searchParams.get('highestPrice')) || undefined;
+  const startDate = url.searchParams.get('startDate') || undefined;
+  const endDate = url.searchParams.get('endDate') || undefined;
   try {
     let response;
     if (keyword || lowestPrice || highestPrice || startDate || endDate) {
       response = await postSearchTraining({
         conditions: {
           keyword,
-          lowestPrice: Number(10),
-          highestPrice: Number(20),
+          lowestPrice,
+          highestPrice,
           startDate,
           endDate,
         },
@@ -69,6 +70,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   return null;
 };
 
+const categoryArray = ['전체', 'PT', '요가', '필라테스', '크로스핏'];
+
 const Home: React.FC = () => {
   const response = useLoaderData() as AxiosResponse<PageTrainingOutlineDto>;
   const pageTrainersTraining = useMemo(() => response.data, [response.data]);
@@ -82,6 +85,7 @@ const Home: React.FC = () => {
   const { isLogin } = useAppSelector((state) => state.user);
   const navigation = useNavigation();
   const filterModal = useModal();
+  const [selectCategory, setSelectCategory] = useState<string>('전체');
 
   useEffect(() => {
     const fetchUsersTrainingLike = async () => {
@@ -105,6 +109,7 @@ const Home: React.FC = () => {
         errorFunc(err);
       }
     };
+    console.log(isLogin);
     if (isLogin) {
       fetchUsersTrainingLike();
     }
@@ -156,9 +161,26 @@ const Home: React.FC = () => {
         </section>
         <section className="space-y-4">
           <article className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">
-              이런 <span className="text-main">트레이닝</span>은 어떠세요?
-            </h2>
+            <div className="items-center gap-x-4 space-y-6 md:flex md:space-y-0">
+              <p className="shrink-0  text-2xl font-bold">
+                이런 <span className="text-main">트레이닝</span>은 어떠세요?
+              </p>
+              <div className="flex gap-x-3 text-2xl font-extrabold text-stone-400">
+                {categoryArray.map((category) => {
+                  const isSelected = selectCategory === category;
+                  return (
+                    <button
+                      type="button"
+                      key={category}
+                      className={`hover:text-black ${isSelected && 'text-black'}`}
+                      onClick={() => setSelectCategory(category)}
+                    >
+                      {category}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
             <button
               type="button"
               className="hidden gap-4 rounded-xl bg-slate-200 px-6 py-4 drop-shadow-sm md:flex"
@@ -173,9 +195,20 @@ const Home: React.FC = () => {
           />
         </section>
       </div>
-      <DefaultModal isOpen={filterModal.isOpen} onClose={filterModal.toggle}>
+      <DefaultModal
+        isOpen={filterModal.isOpen}
+        onClose={filterModal.toggle}
+        className="my-4 h-full"
+      >
         <TrainingFilter onClose={filterModal.toggle} />
       </DefaultModal>
+      <Link
+        to="/map"
+        className="fixed bottom-14 left-1/2 flex -translate-x-1/2 gap-x-1 rounded-full bg-purple-300 px-4 py-4 font-bold text-white drop-shadow-md"
+      >
+        <span className="material-symbols-rounded">location_on</span>
+        현재 위치 주변 검색하기
+      </Link>
     </>
   );
 };
