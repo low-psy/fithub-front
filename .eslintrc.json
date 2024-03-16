@@ -82,7 +82,10 @@
       "@typescript-eslint/parser": [".ts", ".tsx"]
     },
     "import/resolver": {
-      "typescript": {}
+      "typescript": {},
+      "node": {
+        "paths": ["src"]
+      }
     }
   },
   "globals": {
