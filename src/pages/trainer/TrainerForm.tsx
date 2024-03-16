@@ -1,8 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { ChangeEvent, useCallback, useState } from 'react';
 import { Form, useActionData } from 'react-router-dom';
 import SubmitButton from '../../components/form/FormSubmitButton';
-import LocationSearchInput from '../../components/common/LocationSearchInput';
-import DetailLocationInput from '../../components/common/DetailLocation';
 import MultipleDateInput from '../../components/calendar/MultipleDate';
 import { FormErrors } from '../../types/common';
 import FormMultipleImage from '../../components/form/FormMultipleImage';
@@ -12,21 +10,10 @@ import TimeSelector from '../../components/calendar/TimeSelector';
 import FormLabel from '../../components/form/FormLabel';
 import FormInput from '../../components/form/FormInput';
 import FormError from '../../components/form/FormError';
+import CheckBoxInput from '../../components/form/CheckboxInput';
 
-const TrainerForm: React.FC = () => {
+const TrainerForm: React.FC<{ dateList?: string[] }> = ({ dateList }) => {
   const errors = useActionData() as FormErrors;
-  const [showDetailInput, setShowDetailInput] = useState(false);
-  const [formattedAddress, setformattedAddress] = useState('');
-  const [finalAddress, setFinalAddress] = useState('');
-
-  const handleLocationSelect = (address: string) => {
-    setformattedAddress(address);
-    setShowDetailInput(true);
-  };
-  const handleDetailLocationInput = (detail: string) => {
-    const fullAddress = `${formattedAddress}, ${detail}`;
-    setFinalAddress(fullAddress);
-  };
   const [selectedDates, setSelectedDates] = useState<SelectedDates>({
     startDate: '',
     endDate: '',
@@ -45,6 +32,12 @@ const TrainerForm: React.FC = () => {
 
   const className =
     'w-full rounded-xl bg-input_bg px-4 py-6 text-xl text-slate-700 outline-none focus:outline-none focus:ring-2 focus:ring-gray-200 md:w-2/3 ';
+  const options = [
+    { value: 'PILATES', text: '필라테스' },
+    { value: 'PT', text: '피티' },
+    { value: 'CROSSFIT', text: '크로스핏' },
+    { value: 'YOGA', text: '요가' },
+  ];
 
   return (
     <Form
@@ -62,8 +55,9 @@ const TrainerForm: React.FC = () => {
             name="title"
             error={errors}
             className={className}
+            type="text"
           />
-          {errors?.content && <FormError>{errors?.content}</FormError>}
+          {errors?.title && <FormError>{errors?.title}</FormError>}
         </FormLabel>
       </div>
       <div>
@@ -75,6 +69,7 @@ const TrainerForm: React.FC = () => {
             name="content"
             error={errors}
             className={className}
+            isTextArea
           />
           {errors?.content && <FormError>{errors?.content}</FormError>}
         </FormLabel>
@@ -83,18 +78,12 @@ const TrainerForm: React.FC = () => {
         <h2 className="text-3xl font-semibold text-zinc-800">이미지</h2>
         <FormMultipleImage multiple />
       </div>
-      <div className="space-y-4">
-        <FormLabel htmlFor="location">
-          <h2 className="text-3xl text-zinc-800">트레이너 위치</h2>
-          <LocationSearchInput onLocationSelect={handleLocationSelect} />
-          <input name="finalLocation" value={finalAddress} hidden />
-          {errors?.location && <FormError>{errors?.location}</FormError>}
+      <div>
+        <FormLabel htmlFor="categories">
+          <h2 className="mb-4 text-3xl text-zinc-800">카테고리</h2>
+          <CheckBoxInput options={options} />
+          {errors?.title && <FormError>{errors?.title}</FormError>}
         </FormLabel>
-        {showDetailInput && (
-          <DetailLocationInput
-            onDetailLocationInput={handleDetailLocationInput}
-          />
-        )}
       </div>
       <div>
         <FormLabel htmlFor="price">
@@ -114,9 +103,12 @@ const TrainerForm: React.FC = () => {
       </div>
       <div>
         <FormLabel htmlFor="date">
-          <h2 className="text-3xl text-zinc-800">트레이닝 기간</h2>
-          <div className="w-full md:w-[500px]">
-            <Calendar onSelectedDates={onSelectDateHandler} />
+          <h2 className="mb-4 text-3xl text-zinc-800">트레이닝 기간</h2>
+          <div className="w-full rounded-md border-2 border-neutral-500 p-4 md:w-[500px]">
+            <Calendar
+              onSelectedDates={onSelectDateHandler}
+              unavailabeDates={dateList}
+            />
             <input
               name="startDate"
               value={startDate as string}

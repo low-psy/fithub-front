@@ -127,6 +127,7 @@ const TrainingItem: React.FunctionComponent<TrainingItemProps> = ({
                 editModal.toggle();
                 editContentModal.toggle();
               }}
+              className="h-full w-full rounded-full bg-slate-200 p-4"
             >
               내용수정
             </ClickBtn>
@@ -135,6 +136,7 @@ const TrainingItem: React.FunctionComponent<TrainingItemProps> = ({
                 editModal.toggle();
                 editCalendarModal.toggle();
               }}
+              className="h-full w-full rounded-full bg-slate-200 p-4"
             >
               날짜 수정
             </ClickBtn>
