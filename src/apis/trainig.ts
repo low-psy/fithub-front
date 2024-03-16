@@ -14,6 +14,9 @@ import { TrainingImgUpdateDto } from '../types/swagger/model/trainingImgUpdateDt
 import { TrainingDateReservationNumDto } from '../types/swagger/model/trainingDateReservationNumDto';
 import { TrainingSearchConditionDto } from '../types/swagger/model/trainingSearchConditionDto';
 import { Pageable } from '../types/swagger/model/pageable';
+import { TrainingOutlineDto } from '../types/swagger/model/trainingOutlineDto';
+import { Location } from '../types/swagger/model/location';
+import { TrainingReviewDto } from '../types/swagger/model/trainingReviewDto';
 
 /**
  * [GET] 회원 트레이닝 첫페이지 조회
@@ -38,8 +41,21 @@ type searchRequestDto = {
 export const postSearchTraining = async (
   requestData: searchRequestDto,
 ): Promise<AxiosResponse<PageTrainingOutlineDto>> => {
-  return defaultAxios.post<PageTrainingOutlineDto>(
-    '/training/search',
+  console.log(requestData);
+  const queryString = qs.stringify(requestData.conditions);
+  const url = `/training/search?${queryString}`;
+  return defaultAxios.post<PageTrainingOutlineDto>(url, requestData.pageable);
+};
+
+/**
+ * [GET] 회원 트레이닝 첫페이지 조회
+ * @returns AxiosResponse<PageTrainingOutlineDto>
+ */
+export const postSearchLocationTraining = async (
+  requestData: Location,
+): Promise<AxiosResponse<TrainingOutlineDto[]>> => {
+  return defaultAxios.post<TrainingOutlineDto[]>(
+    '/training/search/location',
     requestData,
   );
 };
@@ -66,6 +82,19 @@ export const getDetailTraining = async (
   trainingId: number,
 ): Promise<AxiosResponse<TrainingInfoDto>> => {
   return authAxios.get<TrainingInfoDto>(`/training?trainingId=${trainingId}`);
+};
+
+/**
+ * [GET] 회원 트레이닝 상제조회
+ * @param trainingId 트레이닝 id
+ * @returns AxiosResponse<TrainingInfoDto>
+ */
+export const getTrainingReviews = async (
+  trainingId: number,
+): Promise<AxiosResponse<TrainingReviewDto[]>> => {
+  return authAxios.get<TrainingReviewDto[]>(
+    `/training/reviews?trainingId=${trainingId}`,
+  );
 };
 
 /**
@@ -273,4 +302,15 @@ export const updateTrainingCalendar = async (
     `/trainers/training/update/date?trainingId=${trainingId}`,
     data,
   );
+};
+
+/**
+ * [GET] 트레이너가 생성한 트레이닝 조회
+ * @param closed 진행중 | 모집중을 구분하는 boolean 값
+ * @returns AxiosResponse<PageTrainersTrainingOutlineDto>
+ */
+export const getTrainersDateList = async (): Promise<
+  AxiosResponse<string[]>
+> => {
+  return authAxios.get<string[]>(`/trainers/training/date-list/impossible`);
 };
