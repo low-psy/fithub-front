@@ -14,9 +14,9 @@ export interface Location {
     /**
      * 위도
      */
-    latitude?: number;
+    latitude: number;
     /**
      * 경도
      */
-    longitude?: number;
+    longitude: number;
 }

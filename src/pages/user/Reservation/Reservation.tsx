@@ -32,14 +32,8 @@ const Reservation = ({
   info,
   setReservationList,
 }: IReservationProps) => {
-  const {
-    title,
-    paymentDateTime,
-    location,
-    reserveDateTime,
-    status,
-    reservationId,
-  } = info;
+  const { title, paymentDateTime, reserveDateTime, status, reservationId } =
+    info;
   const [cancelingInfo, setCancelingInfo] = useState<
     UsersReserveInfoDto | undefined
   >(undefined);
@@ -126,10 +120,6 @@ const Reservation = ({
             <p className=" text-sm">
               <span className="text-gray-600">예약일: </span>
               {paymentDateTime && convertDateWithDay(paymentDateTime)}
-            </p>
-            <p className=" text-sm">
-              <span className="text-gray-600">장소: </span>
-              {location}
             </p>
             <p className=" text-sm">
               <span className="text-gray-600">수업일시: </span>

@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { Form, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Form, useLocation, useNavigation } from 'react-router-dom';
 import NavTitle from './NavTitle';
 import NavMenu from './NavMenu';
-import SearchModule from '../modal/SearchModule';
 import SearchInput from '../form/SearchInput';
 import useSearchModal from '../../hooks/useSearchModal';
 
@@ -23,15 +22,23 @@ const NavComponent = () => {
   } else {
     title = '핏헙';
   }
-  const { isClick, enteredText, clickHandler, inputChangeHandler } =
-    useSearchModal();
+  const { enteredText, clickHandler, inputChangeHandler } = useSearchModal();
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (navigation.state === 'loading') {
+      clickHandler(false);
+      inputChangeHandler('');
+    }
+  }, [navigation.state, clickHandler, inputChangeHandler]);
 
   return (
     <nav className="flex h-14 justify-between">
       <NavTitle title={title} />
       <div className="relative  flex h-full w-full justify-center  lg:basis-1/3">
         {isNavSearch ? (
-          <Form method="GET" action="/" className="w-full">
+          <Form method="GET" action="/explore" className="w-full">
             <SearchInput
               onChange={(e) => inputChangeHandler(e.target.value)}
               value={enteredText}
@@ -39,14 +46,7 @@ const NavComponent = () => {
               placeholder="트레이닝을 검색해 보세요!"
               className="rounded-full bg-sub"
               iconClassName="bg-main text-white rounded-full p-2"
-            >
-              {enteredText && isClick ? (
-                <SearchModule
-                  onFocusOut={clickHandler}
-                  onClick={inputChangeHandler}
-                />
-              ) : null}
-            </SearchInput>
+            />
           </Form>
         ) : null}
       </div>

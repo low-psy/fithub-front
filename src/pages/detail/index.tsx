@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   LoaderFunction,
   LoaderFunctionArgs,
@@ -7,20 +7,28 @@ import {
 } from 'react-router-dom';
 import { AxiosError, AxiosResponse } from 'axios';
 import ProfileSection from '../../components/common/ProfileSection';
-import MapDisplay from '../../components/common/MapsDisplay';
-import useMapDisplay from '../../hooks/mapDisplayHook';
 import {
   getDetailTraining,
+  getTrainingReviews,
   postPaymentOrder,
   postPaymentValidation,
 } from '../../apis/trainig';
 import { TrainingInfoDto } from '../../types/swagger/model/trainingInfoDto';
-import { RequestPayParams, RequestPayResponse } from '../../types/PortOne';
-import { errorFunc, formatDate, generateRandomString } from '../../utils/util';
+import {
+  addressToPositions,
+  errorFunc,
+  formatDate,
+  generateRandomString,
+} from '../../utils/util';
 import ReservationSection from './TrainingReservation';
 import Line from '../../components/common/Line';
 import ImageXScroll from '../../components/imageSlider/ImageXScroll';
 import withAuth from '../../hocs/withAuth';
+import { RequestPayParams, RequestPayResponse } from '../../types/portone';
+import SingleMap from '../../components/map/SingleMap';
+import { TrainingReviewDto } from '../../types/swagger/model/trainingReviewDto';
+import { LoaderData } from '../../types/common';
+import ClickBtn from '../../components/btn/ClickBtn';
 
 export interface DateObject {
   year: number;
@@ -30,14 +38,17 @@ export interface DateObject {
   minutes: number;
 }
 
+const { kakao } = window;
+
 export const loader = (async ({ params }: LoaderFunctionArgs) => {
   const { trainingId } = params;
   try {
-    const response = await getDetailTraining(Number(trainingId));
-    if (response && response.status === 200) {
-      return response;
+    const detailTraining = await getDetailTraining(Number(trainingId));
+    const reviews = await getTrainingReviews(Number(trainingId));
+    if (detailTraining.status === 200 && reviews.status === 200) {
+      return { detailTraining, reviews };
     }
-    return response;
+    throw new Error('Server is Trouble');
   } catch (err) {
     const error = err as unknown as AxiosError;
     throw error;
@@ -45,9 +56,10 @@ export const loader = (async ({ params }: LoaderFunctionArgs) => {
 }) satisfies LoaderFunction;
 
 const Detail = () => {
-  const response = useLoaderData() as AxiosResponse<TrainingInfoDto>;
+  const response = useLoaderData() as LoaderData<typeof loader>;
   const navigate = useNavigate();
-  const trainingInfo = response.data;
+  const trainingInfo = response.detailTraining.data;
+  const trainingReviews = response.reviews.data;
   const {
     images,
     startDate,
@@ -60,7 +72,18 @@ const Detail = () => {
     trainerInfoDto,
     content,
   } = trainingInfo;
-  console.log(address);
+  const [location, setLocation] = useState<{ lat: number; lng: number }>();
+  const [plusReviews, setPlusReviews] = useState<number[]>([]);
+  useEffect(() => {
+    const func = async () => {
+      if (address) {
+        const position = await addressToPositions(address);
+        setLocation(position);
+      }
+    };
+    func();
+  }, [address]);
+
   const imageUrls =
     images?.map((value) => {
       return value.url;
@@ -73,9 +96,7 @@ const Detail = () => {
   } else {
     date = `${formatStartDate}~${formatEndDate}`;
   }
-  const { finalLocation, finalAddress } = useMapDisplay({
-    initialAddress: address,
-  });
+
   const [selectedDateId, setSelectedDateId] = useState<number | undefined>();
   const [selectedTimeId, setSelectedTimeId] = useState<
     number | undefined | null
@@ -152,7 +173,14 @@ const Detail = () => {
       navigate(`/detail/${id}`);
     }
   };
-
+  const plusBtnHandler = (id: number) => {
+    setPlusReviews((prev: number[]) => {
+      if (prev.includes(id)) {
+        return prev.filter((review) => review !== id);
+      }
+      return [...prev, id];
+    });
+  };
   return (
     <div className="mb-8 space-y-4">
       <h1 className=" break-keep  text-3xl font-bold">{trainingInfo.title}</h1>
@@ -164,6 +192,61 @@ const Detail = () => {
             profileName={trainerInfoDto?.name}
             location={trainerInfoDto?.address}
           />
+          <Line />
+          <div className="space-y-8">
+            <h3 className="text-xl font-bold">트레이닝 리뷰</h3>
+            <ul className="space-y-6">
+              {trainingReviews.map((review, index) => {
+                const {
+                  userInfo,
+                  createdDate,
+                  content,
+                  reviewId,
+                  star,
+                  reserveDateTime,
+                } = review;
+                const isPlusReview = plusReviews.includes(reviewId as number);
+                return (
+                  reserveDateTime && (
+                    <li
+                      key={reviewId}
+                      className="relative w-full  bg-gray-50 p-4 shadow-md drop-shadow-md  lg:w-[500px]"
+                    >
+                      <div className="flex justify-between">
+                        <ProfileSection
+                          profileImage={userInfo?.profileUrl}
+                          profileName={userInfo?.nickname}
+                          date={createdDate?.toString()}
+                        />
+                        <div className="flex items-center text-2xl font-bold">
+                          <span className="material-symbols-rounded filled text-3xl text-main">
+                            star
+                          </span>
+                          {star?.toFixed(1)}
+                        </div>
+                      </div>
+                      <div
+                        className={` ${!isPlusReview && 'line-clamp-3'}  whitespace-pre-wrap p-2 text-base leading-relaxed text-gray-800 transition-transform `}
+                      >
+                        {content}
+                      </div>
+                      <div className="absolute -bottom-4 left-1/2 -translate-x-1/2">
+                        <ClickBtn
+                          onClick={() => plusBtnHandler(reviewId as number)}
+                        >
+                          <div className="flex rounded-full bg-main px-[6px] py-1 text-white">
+                            <span className="material-symbols-rounded text-4xl font-extrabold">
+                              expand_more
+                            </span>
+                          </div>
+                        </ClickBtn>
+                      </div>
+                    </li>
+                  )
+                );
+              })}
+            </ul>
+          </div>
           <Line />
           <div className="space-y-8">
             <h3 className="text-xl font-bold">트레이닝 내용</h3>
@@ -186,9 +269,8 @@ const Detail = () => {
           <Line />
           <div className="space-y-8">
             <h3 className="text-xl font-bold">트레이닝 위치</h3>
-            <div className="space-y-4">
-              <h3 className=" text-slate-700">{finalAddress}</h3>
-              <MapDisplay location={finalLocation} draggable={false} />
+            <div className="aspect-square w-[450px] space-y-4">
+              <SingleMap isMarker location={location} level={5} />
             </div>
           </div>
         </div>

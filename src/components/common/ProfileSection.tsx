@@ -16,7 +16,7 @@ const ProfileSection: React.FC<{
         <img
           src={profileImage}
           alt="프로필 이미지"
-          className="h-full w-full object-cover "
+          className="h-full w-full object-cover"
         />
       </div>
       <div className="space-y-1">

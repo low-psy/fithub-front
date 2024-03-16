@@ -7,7 +7,7 @@ import LicenseImageInput from './LicenseImageInput';
 import LicenseNameInput from './LicenseNameInput';
 import CareerInput from './CareerInput';
 import CareerListTable from './CareerListTable';
-import Layout from '../post/Layout';
+import Layout from './Layout';
 import certifyTrainer from '../../apis/trainer';
 import { SET_TRAINER } from '../../redux/slices/userSlice';
 import withAuth from '../../hocs/withAuth';

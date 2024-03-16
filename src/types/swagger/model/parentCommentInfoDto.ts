@@ -19,6 +19,10 @@ export interface ParentCommentInfoDto {
      */
     commentId?: number;
     /**
+     * 댓글 작성자의 id
+     */
+    writerId?: number;
+    /**
      * 댓글 작성자의 닉네임
      */
     writerNickName?: string;

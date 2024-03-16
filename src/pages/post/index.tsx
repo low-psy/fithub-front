@@ -5,67 +5,34 @@ import {
   useLoaderData,
   Outlet,
   useLocation,
-  useParams,
-  redirect,
-  Form,
   useSearchParams,
   useNavigate,
+  redirect,
 } from 'react-router-dom';
-import PostItem from './PostItem';
-import { LoaderData, refreshResData } from '../../types/common';
-import {
-  getBookedPost,
-  getLikeBook,
-  getLikedPost,
-  getLikes,
-  getPost,
-  getPostSearch,
-} from '../../apis/post';
+import { LoaderData } from '../../types/common';
+import { getLikeBook, getLikes } from '../../apis/post';
 import { LikesBookmarkStatusDto } from '../../types/swagger/model/likesBookmarkStatusDto';
 import { LikedUsersInfoDto } from '../../types/swagger/model/likedUsersInfoDto';
 import { useAppSelector } from '../../hooks/reduxHooks';
-import UndefinedCover from '../../components/common/UndefinedCover';
 import FilterLayout from '../../components/filter/FilterLayout';
-import { errorFunc, setRefreshToken } from '../../utils/util';
+import { errorFunc, postFetchFunc } from '../../utils/util';
 import useSearchModal from '../../hooks/useSearchModal';
-import SearchInput from '../../components/form/SearchInput';
-import useInfiniteScroll from '../../hooks/infiniteScroll';
 import { PostInfoDto } from '../../types/swagger/model/postInfoDto';
+import PostSearch from './PostSearch';
+import PostAlign from './PostAlign';
 
 export const loader = (async ({ request }) => {
   const url = new URL(request.url);
-  const booked = url.searchParams.get('booked');
-  const liked = url.searchParams.get('liked');
-  const scope = url.searchParams.get('scope');
-  const searchInput = url.searchParams.get('searchInput');
-  const alignString = url.searchParams.get('align');
+  const { searchParams } = url;
   try {
-    let res;
-    if (scope && searchInput) {
-      res = await getPostSearch(
-        { keyword: searchInput, scope },
-        alignString,
-        0,
-      );
-    } else if (booked) {
-      res = await getBookedPost(0);
-    } else if (liked) {
-      res = await getLikedPost(0);
-    } else {
-      res = await getPost(0);
-    }
-    if (res && res.status === 200) {
+    const res = await postFetchFunc(searchParams, 0);
+    if (res.status === 200) {
       return res;
     }
-    if (res.status === 201) {
-      const { accessToken } = res.data as refreshResData;
-      setRefreshToken(accessToken);
-      return redirect('/post');
-    }
-    return res;
+    throw new Error('server is trouble');
   } catch (err) {
-    const status = errorFunc(err);
-    return redirect('');
+    errorFunc(err);
+    return redirect('/');
   }
 }) satisfies LoaderFunction;
 
@@ -77,20 +44,25 @@ const alignBtnArray = [
 ];
 
 const Post = () => {
-  const defaultRes = useLoaderData() as LoaderData<typeof loader>;
-  const postPage = defaultRes.data;
+  const res = useLoaderData() as LoaderData<typeof loader>;
+  const postPage = res.data;
   const postInfo = postPage.content;
-
-  const { postId } = useParams<{ postId?: string }>();
   const location = useLocation();
   const navigate = useNavigate();
-  const isModal = location.state?.isModal;
   const [searchParams, setSearchParams] = useSearchParams();
   const booked = searchParams.get('booked');
   const liked = searchParams.get('liked');
 
   const { enteredText, clickHandler, inputChangeHandler } = useSearchModal();
   const [last, setLast] = useState<boolean>(postPage.last as boolean);
+
+  const [page, setPage] = useState<number>(postPage.number as number);
+
+  useEffect(() => {
+    setLast(postPage.last as boolean);
+    setPage(postPage.number as number);
+  }, [postPage]);
+
   const [bookAndLikes, setBookAndLikes] = useState<LikesBookmarkStatusDto[]>([
     { bookmarkStatus: false, likesStatus: false, postId: undefined },
   ]);
@@ -103,7 +75,7 @@ const Post = () => {
   const alignBtnHandler = (i: number) => {
     switch (i) {
       case 0:
-        return navigate('/post');
+        return navigate('/post/home');
       case 1:
         searchParams.set('align', 'id');
         break;
@@ -118,195 +90,102 @@ const Post = () => {
     }
     setSearchParams(searchParams);
   };
-
   const fetchData = useCallback(
     async (page: number): Promise<PostInfoDto[] | []> => {
-      const booked = searchParams.get('booked');
-      const liked = searchParams.get('liked');
-      const scope = searchParams.get('scope');
-      const searchInput = searchParams.get('searchInput');
-      const alignString = searchParams.get('align');
-      try {
-        let res;
-        if (scope && searchInput) {
-          res = await getPostSearch(
-            { keyword: searchInput, scope },
-            alignString,
-            page,
-          );
-        } else if (booked) {
-          res = await getBookedPost(page);
-        } else if (liked) {
-          res = await getLikedPost(page);
-        } else {
-          res = await getPost(page);
-        }
-        if (res && res.status === 200) {
-          setLast(res.data.last as boolean);
-          return res.data.content || [];
-        }
-        if (res.status === 201) {
-          const { accessToken } = res.data as refreshResData;
-          setRefreshToken(accessToken);
-          navigate('/post');
-          return [];
-        }
-        return [];
-      } catch (err) {
-        errorFunc(err);
-        return [];
+      const res = await postFetchFunc(searchParams, page);
+      if (res.data.content && res.data.content.length > 1) {
+        setPage((prev) => prev + 1);
+      } else {
+        setLast(true);
       }
+      return res.data.content || [];
     },
-    [navigate, searchParams],
+    [searchParams],
   );
 
-  const { data, loaderIndicator } = useInfiniteScroll<PostInfoDto>({
-    initialData: postInfo || [],
+  const getLikeAndBookInfo = useCallback(
+    (data: PostInfoDto[]) => {
+      const PostRequestDtos = data?.map((post) => {
+        return { postId: post.postId as number };
+      });
+      if (isLogin && PostRequestDtos) {
+        getLikeBook(PostRequestDtos).then((res) => {
+          setBookAndLikes(res.data);
+        });
+      }
+      getLikes(PostRequestDtos).then((res) => {
+        setLikedInfos(res.data);
+      });
+    },
+    [isLogin],
+  );
+  const outletContext = {
+    inputChangeHandler,
+    alignBtnArray,
+    alignBtnHandler,
+    bookAndLikes,
+    clickHandler,
+    enteredText,
+    getLikeAndBookInfo,
+    likedInfos,
+    postInfo,
     fetchData,
     last,
-  });
-
-  const getLikeAndBookInfo = useCallback(() => {
-    const PostRequestDtos = data?.map((post) => {
-      return { postId: post.postId as number };
-    });
-    console.log('getLikeAndBook');
-    if (isLogin && PostRequestDtos) {
-      getLikeBook(PostRequestDtos).then((res) => {
-        setBookAndLikes(res.data);
-      });
+    page,
+  };
+  const isNotSearch =
+    location.pathname.includes('favorite') ||
+    location.pathname.includes('book');
+  const isNotFilterLayout = !location.pathname.includes('home');
+  let title;
+  if (liked) {
+    title = '좋아요한 게시물';
+  } else if (booked) {
+    title = '북마크한 게시글';
+  } else if (location.pathname.includes('explore')) {
+    const scope = searchParams.get('scope');
+    const keyword = searchParams.get('searchInput');
+    if (scope === 'content') {
+      title = `내용: ${keyword} 검색결과`;
+    } else if (scope === 'writer') {
+      title = `작성자: ${keyword} 검색결과`;
+    } else if (scope === 'hashTags') {
+      title = `해시태그: ${keyword} 검색결과`;
     }
-    getLikes(PostRequestDtos).then((res) => {
-      setLikedInfos(res.data);
-    });
-  }, [data, isLogin]);
-
-  useEffect(() => {
-    getLikeAndBookInfo();
-  }, [getLikeAndBookInfo]);
-
-  if (!isModal && postId) {
-    return (
-      <main className="mx-auto w-full border-[1px] border-zinc-300 lg:w-2/3">
-        <Outlet />
-      </main>
-    );
   }
-  if (booked || liked) {
-    const text = booked ? '북마크한 게시물' : '좋아요 누른 게시글';
-    return (
-      <section className="relative mx-auto w-[728px] space-y-4 ">
-        <h2 className="text-4xl font-extrabold ">{text}</h2>
-        {!data?.[0] && (
-          <div className="relative h-[400px] bg-gray-100">
-            <UndefinedCover>{text}이 없습니다</UndefinedCover>
-          </div>
-        )}
-        <ul className="flex gap-x-4">
-          {alignBtnArray.map((v, i) => {
-            return (
-              <li className="shrink-0 rounded-full bg-white px-4 py-2">
-                <button
-                  type="button"
-                  className="flex items-center gap-x-2"
-                  onClick={() => alignBtnHandler(i)}
-                >
-                  <div className={`aspect-square w-3 rounded-full ${v.bg}`} />
-                  {v.value}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-        {data.map((post, index) => {
-          const likeAndBook = bookAndLikes[index];
-          const likedInfo = likedInfos[index];
-          return (
-            <PostItem
-              key={post.postId}
-              {...post}
-              bookAndLikes={likeAndBook}
-              likedUsers={likedInfo?.likedUsers}
-              onClick={getLikeAndBookInfo}
-            />
-          );
-        })}
-        <div ref={loaderIndicator} />
-      </section>
-    );
-  }
-
   return (
     <div className="flex gap-8 space-y-4 md:space-y-0">
-      <FilterLayout>
-        <div className="space-y-12">
-          <div>
-            <Link
-              to="/newpost"
-              className=" block break-keep bg-accent_sub p-4 text-center text-3xl font-extrabold text-accent"
-            >
-              게시물 작성하기
-            </Link>
-          </div>
-          <div>chat</div>
-        </div>
-      </FilterLayout>
-      <section className="relative mx-auto w-[728px] space-y-4">
-        <Form method="GET">
-          <div className="flex h-14 bg-white px-2 shadow-sm drop-shadow-sm">
-            <div className=" flex shrink-0 items-center">
-              <select name="scope">
-                <option value="content" selected>
-                  내용
-                </option>
-                <option value="writer">작성자</option>
-                <option value="hashTags">해시태그</option>
-              </select>
+      {!isNotFilterLayout && (
+        <FilterLayout>
+          <div className="space-y-12">
+            <div>
+              <Link
+                to="/newpost"
+                className=" block break-keep bg-accent_sub p-4 text-center text-3xl font-extrabold text-accent"
+              >
+                게시물 작성하기
+              </Link>
             </div>
-            <SearchInput
-              onChange={(e) => inputChangeHandler(e.target.value)}
-              value={enteredText}
-              moduleOnclick={clickHandler}
-              placeholder="게시물의 내용, 작성자, 해시태그를 기준으로 검색해 보세요!"
-              iconClassName=" text-white rounded-full p-2 bg-accent"
-            />
+            <div>chat</div>
           </div>
-        </Form>
-        <ul className="flex">
-          {alignBtnArray.map((v, i) => {
-            return (
-              <li className="shrink-0 rounded-full bg-white px-4 py-2">
-                <button
-                  type="button"
-                  className="flex items-center gap-x-2"
-                  onClick={() => alignBtnHandler(i)}
-                >
-                  <div className={`aspect-square w-3 rounded-full ${v.bg}`} />
-                  {v.value}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-        {!data[0] && (
-          <div className="relative h-[400px] bg-gray-100">
-            <UndefinedCover>생성한 게시물이 없습니다</UndefinedCover>
-          </div>
+        </FilterLayout>
+      )}
+      <section className="relative mx-auto w-[728px] space-y-4">
+        {isNotFilterLayout && (
+          <h1 className="text-3xl font-extrabold">{title}</h1>
         )}
-        {data?.map((post, index) => {
-          const likeAndBook = bookAndLikes[index];
-          const likedInfo = likedInfos[index];
-          return (
-            <PostItem
-              key={post.postId}
-              {...post}
-              bookAndLikes={likeAndBook}
-              likedUsers={likedInfo?.likedUsers}
-              onClick={getLikeAndBookInfo}
-            />
-          );
-        })}
-        <div ref={loaderIndicator} />
+        {!isNotSearch && (
+          <PostSearch
+            clickHandler={clickHandler}
+            enteredText={enteredText}
+            inputChangeHandler={inputChangeHandler}
+          />
+        )}
+        <PostAlign
+          alignBtnArray={alignBtnArray}
+          alignBtnHandler={alignBtnHandler}
+        />
+        <Outlet context={outletContext} />
       </section>
     </div>
   );

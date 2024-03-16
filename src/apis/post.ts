@@ -1,6 +1,6 @@
-import { Axios, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
+import qs from 'qs';
 import { authAxios, defaultAxios } from './axios';
-import { PagePostOutlineDto } from '../types/swagger/model/pagePostOutlineDto';
 import { LikesBookmarkStatusDto } from '../types/swagger/model/likesBookmarkStatusDto';
 import { PagePostInfoDto } from '../types/swagger/model/pagePostInfoDto';
 import { PostRequestDto } from '../types/swagger/model/postRequestDto';
@@ -142,12 +142,12 @@ export const getChildComments = async (
 };
 
 export const getPostSearch = async (
-  requestDto: PostSearchFilterDto,
-  align: string | null,
+  requestDto?: PostSearchFilterDto,
+  align?: string | null,
   page?: number,
 ): Promise<AxiosResponse<PagePostInfoDto>> => {
-  return authAxios.post<PagePostInfoDto>(
-    `/posts/search?page=${page}&size=10&sort=${align}&sort=asc`,
-    requestDto,
-  );
+  const queryString = qs.stringify(requestDto);
+  const url = `/posts/search?${queryString}`;
+  const pageable = { page, size: 2, sort: [align, 'desc'] };
+  return authAxios.post<PagePostInfoDto>(url, pageable);
 };

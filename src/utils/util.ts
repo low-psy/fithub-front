@@ -1,7 +1,16 @@
 import { AxiosError } from 'axios';
+import { add } from 'date-fns';
+import { redirect } from 'react-router-dom';
 import { TrainingAvailableDateDto } from '../types/swagger/model/trainingAvailableDateDto';
 import { ErrorResponseDto } from '../types/swagger/model/errorResponseDto';
-import { refreshResData } from '../types/common';
+import { GeolocationPosition, refreshResData } from '../types/common';
+import { Location } from '../types/swagger/model/location';
+import {
+  getBookedPost,
+  getLikedPost,
+  getPost,
+  getPostSearch,
+} from '../apis/post';
 
 // 'YYYY-MM-DD HH-MM-SS' 형식의 dateTime string
 export const createLocalDateTimeFunc = (
@@ -123,6 +132,58 @@ export function setRefreshToken(accessToken: string) {
 export function isRefreshResData(data: any): data is refreshResData {
   return data.accessToken !== undefined && typeof data.accessToken === 'string';
 }
+const { kakao } = window;
+export function addressToPositions(address: string) {
+  const geocoder = new kakao.maps.services.Geocoder();
+  return new Promise<{ lat: number; lng: number }>((resolve) => {
+    geocoder.addressSearch(address, (result: any, status: any) => {
+      if (status === kakao.maps.services.Status.OK) {
+        resolve({
+          lat: Number(result[0].y),
+          lng: Number(result[0].x),
+        });
+      }
+    });
+  });
+}
+
+export const fetchLocation = (): Promise<GeolocationPosition> => {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(
+        new Error('현재 브라우저에서 Geolocation api를 지원하지 않습니다'),
+      );
+    } else {
+      navigator.geolocation.getCurrentPosition(resolve, reject);
+    }
+  });
+};
+
+export const postFetchFunc = async (
+  searchParams: URLSearchParams,
+  page: number,
+) => {
+  const booked = searchParams.get('booked') || undefined;
+  const liked = searchParams.get('liked') || undefined;
+  const scope = searchParams.get('scope') || undefined;
+  const searchInput = searchParams.get('searchInput') || undefined;
+  const alignString = searchParams.get('align') || undefined;
+  let res;
+  if (scope || searchInput || alignString) {
+    res = await getPostSearch(
+      { keyword: searchInput, scope },
+      alignString,
+      page,
+    );
+  } else if (booked) {
+    res = await getBookedPost(page);
+  } else if (liked) {
+    res = await getLikedPost(page);
+  } else {
+    res = await getPost(page);
+  }
+  return res;
+};
 
 // new Date => YYYY-MM-DD 문자열로 변환
 export const handleDateToString = (date: Date) => {
