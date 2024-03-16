@@ -6,12 +6,13 @@ import PostContainer from './PostContainer';
 import { PostOutletProps } from '../../types/common';
 
 const PostHome = () => {
-  const { getLikeAndBookInfo, fetchData, last, postInfo } =
+  const { getLikeAndBookInfo, fetchData, last, postInfo, page } =
     useOutletContext<PostOutletProps>();
   const { data, loaderIndicator } = useInfiniteScroll<PostInfoDto>({
     initialData: postInfo || [],
     fetchData,
     last,
+    page,
   });
   useEffect(() => {
     getLikeAndBookInfo(data);

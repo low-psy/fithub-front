@@ -5,24 +5,17 @@ import {
   useLoaderData,
   Outlet,
   useLocation,
-  redirect,
   useSearchParams,
   useNavigate,
+  redirect,
 } from 'react-router-dom';
-import { LoaderData, refreshResData } from '../../types/common';
-import {
-  getBookedPost,
-  getLikeBook,
-  getLikedPost,
-  getLikes,
-  getPost,
-  getPostSearch,
-} from '../../apis/post';
+import { LoaderData } from '../../types/common';
+import { getLikeBook, getLikes } from '../../apis/post';
 import { LikesBookmarkStatusDto } from '../../types/swagger/model/likesBookmarkStatusDto';
 import { LikedUsersInfoDto } from '../../types/swagger/model/likedUsersInfoDto';
 import { useAppSelector } from '../../hooks/reduxHooks';
 import FilterLayout from '../../components/filter/FilterLayout';
-import { errorFunc, setRefreshToken } from '../../utils/util';
+import { errorFunc, postFetchFunc } from '../../utils/util';
 import useSearchModal from '../../hooks/useSearchModal';
 import { PostInfoDto } from '../../types/swagger/model/postInfoDto';
 import PostSearch from './PostSearch';
@@ -30,38 +23,16 @@ import PostAlign from './PostAlign';
 
 export const loader = (async ({ request }) => {
   const url = new URL(request.url);
-  const booked = url.searchParams.get('booked');
-  const liked = url.searchParams.get('liked');
-  const scope = url.searchParams.get('scope');
-  const searchInput = url.searchParams.get('searchInput');
-  const alignString = url.searchParams.get('align');
+  const { searchParams } = url;
   try {
-    let res;
-    if (scope && searchInput) {
-      res = await getPostSearch(
-        { keyword: searchInput, scope },
-        alignString,
-        0,
-      );
-    } else if (booked) {
-      res = await getBookedPost(0);
-    } else if (liked) {
-      res = await getLikedPost(0);
-    } else {
-      res = await getPost(0);
-    }
-    if (res && res.status === 200) {
+    const res = await postFetchFunc(searchParams, 0);
+    if (res.status === 200) {
       return res;
     }
-    if (res.status === 201) {
-      const { accessToken } = res.data as refreshResData;
-      setRefreshToken(accessToken);
-      return redirect('/post');
-    }
-    return res;
+    throw new Error('server is trouble');
   } catch (err) {
-    const status = errorFunc(err);
-    return redirect('');
+    errorFunc(err);
+    return redirect('/');
   }
 }) satisfies LoaderFunction;
 
@@ -73,10 +44,9 @@ const alignBtnArray = [
 ];
 
 const Post = () => {
-  const defaultRes = useLoaderData() as LoaderData<typeof loader>;
-  const postPage = defaultRes.data;
+  const res = useLoaderData() as LoaderData<typeof loader>;
+  const postPage = res.data;
   const postInfo = postPage.content;
-
   const location = useLocation();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -85,9 +55,14 @@ const Post = () => {
 
   const { enteredText, clickHandler, inputChangeHandler } = useSearchModal();
   const [last, setLast] = useState<boolean>(postPage.last as boolean);
+
+  const [page, setPage] = useState<number>(postPage.number as number);
+
   useEffect(() => {
     setLast(postPage.last as boolean);
+    setPage(postPage.number as number);
   }, [postPage]);
+
   const [bookAndLikes, setBookAndLikes] = useState<LikesBookmarkStatusDto[]>([
     { bookmarkStatus: false, likesStatus: false, postId: undefined },
   ]);
@@ -115,46 +90,17 @@ const Post = () => {
     }
     setSearchParams(searchParams);
   };
-
   const fetchData = useCallback(
     async (page: number): Promise<PostInfoDto[] | []> => {
-      const booked = searchParams.get('booked');
-      const liked = searchParams.get('liked');
-      const scope = searchParams.get('scope');
-      const searchInput = searchParams.get('searchInput');
-      const alignString = searchParams.get('align');
-      try {
-        let res;
-        if (scope && searchInput) {
-          res = await getPostSearch(
-            { keyword: searchInput, scope },
-            alignString,
-            page,
-          );
-        } else if (booked) {
-          res = await getBookedPost(page);
-        } else if (liked) {
-          res = await getLikedPost(page);
-        } else {
-          res = await getPost(page);
-        }
-        if (res && res.status === 200) {
-          setLast(res.data.last as boolean);
-          return res.data.content || [];
-        }
-        if (res.status === 201) {
-          const { accessToken } = res.data as refreshResData;
-          setRefreshToken(accessToken);
-          navigate('/post');
-          return [];
-        }
-        return [];
-      } catch (err) {
-        errorFunc(err);
-        return [];
+      const res = await postFetchFunc(searchParams, page);
+      if (res.data.content && res.data.content.length > 1) {
+        setPage((prev) => prev + 1);
+      } else {
+        setLast(true);
       }
+      return res.data.content || [];
     },
-    [navigate, searchParams],
+    [searchParams],
   );
 
   const getLikeAndBookInfo = useCallback(
@@ -185,6 +131,7 @@ const Post = () => {
     postInfo,
     fetchData,
     last,
+    page,
   };
   const isNotSearch =
     location.pathname.includes('favorite') ||
@@ -199,11 +146,11 @@ const Post = () => {
     const scope = searchParams.get('scope');
     const keyword = searchParams.get('searchInput');
     if (scope === 'content') {
-      title = `내용:${keyword} 검색결과`;
+      title = `내용: ${keyword} 검색결과`;
     } else if (scope === 'writer') {
-      title = `작성자:${keyword} 검색결과`;
+      title = `작성자: ${keyword} 검색결과`;
     } else if (scope === 'hashTags') {
-      title = `해시태그:${keyword} 검색결과`;
+      title = `해시태그: ${keyword} 검색결과`;
     }
   }
   return (
