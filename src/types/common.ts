@@ -78,6 +78,7 @@ export interface UserTrainingOutletProps {
   trainingInfo: TrainingOutlineDto[];
   fetchData: (page: number) => Promise<TrainingOutlineDto[] | []>;
   last: boolean | undefined;
+  page: number;
 }
 
 export interface PostOutletProps {
@@ -87,4 +88,30 @@ export interface PostOutletProps {
   postInfo: PostInfoDto[];
   fetchData: (page: number) => Promise<PostInfoDto[] | []>;
   last: boolean | undefined;
+  page: number;
+}
+
+interface GeolocationCoordinates {
+  /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/GeolocationCoordinates/accuracy) */
+  readonly accuracy: number;
+  /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/GeolocationCoordinates/altitude) */
+  readonly altitude: number | null;
+  /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/GeolocationCoordinates/altitudeAccuracy) */
+  readonly altitudeAccuracy: number | null;
+  /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/GeolocationCoordinates/heading) */
+  readonly heading: number | null;
+  /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/GeolocationCoordinates/latitude) */
+  readonly latitude: number;
+  /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/GeolocationCoordinates/longitude) */
+  readonly longitude: number;
+  /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/GeolocationCoordinates/speed) */
+  readonly speed: number | null;
+}
+type EpochTimeStamp = number;
+
+export interface GeolocationPosition {
+  /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/GeolocationPosition/coords) */
+  readonly coords: GeolocationCoordinates;
+  /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/GeolocationPosition/timestamp) */
+  readonly timestamp: EpochTimeStamp;
 }

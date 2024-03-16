@@ -43,12 +43,12 @@ import Help from './pages/help';
 import NewTrainer from './pages/trainer/new';
 import CreateTrainer, {
   action as createTrainerAction,
+  loader as createTrainerLoader,
 } from './pages/trainer/create';
 import Detail, { loader as detailedTrainingLoader } from './pages/detail';
 import pageRoutes from './pageRoutes';
 
 // hooks
-import useGoogleMapsApiLoader from './hooks/useGoogleMap';
 import { LOGIN, SET_TRAINER } from './redux/slices/userSlice';
 import TrainingBook, { loader as TrainingBookLoader } from './pages/book';
 import SuccessPage, {
@@ -56,12 +56,10 @@ import SuccessPage, {
 } from './pages/detail/success';
 
 import TrainerInfo from './pages/user/trainerInfo';
-import PostFavorite from './pages/post/favorite';
-import PostBook from './pages/post/book';
-import PostExplore from './pages/post/explore';
 import PostHome from './pages/post/home';
 import TrainingExplore from './pages/home/explore';
 import UserHome from './pages/home/home';
+import UserMap, { loader as TrainingMapLoader } from './pages/map';
 
 function App() {
   // 전역 로그인 상태 관리
@@ -76,8 +74,6 @@ function App() {
       }
     }
   }, [dispatch]);
-
-  useGoogleMapsApiLoader();
 
   const router = createBrowserRouter([
     {
@@ -107,6 +103,12 @@ function App() {
           element: <TrainingBook />,
           loader: TrainingBookLoader,
         },
+        // 트레이닝 지도
+        {
+          path: '/map',
+          element: <UserMap />,
+          loader: TrainingMapLoader,
+        },
         // 게시글 작성
         {
           path: pageRoutes.main.userNewPost,
@@ -120,53 +122,15 @@ function App() {
           element: <Post />,
           loader: postLoader,
           children: [
+            { path: 'home', element: <PostHome /> },
+            { path: 'favorite', element: <PostHome /> },
+            { path: 'book', element: <PostHome /> },
+            { path: 'explore', element: <PostHome /> },
             {
-              path: 'home',
-              element: <PostHome />,
-              children: [
-                {
-                  path: pageRoutes.userPost.detail,
-                  element: <DetailPost />,
-                  loader: detailPostLoader,
-                  action: detailPostAction,
-                },
-              ],
-            },
-            {
-              path: 'favorite',
-              element: <PostFavorite />,
-              children: [
-                {
-                  path: pageRoutes.userPost.detail,
-                  element: <DetailPost />,
-                  loader: detailPostLoader,
-                  action: detailPostAction,
-                },
-              ],
-            },
-            {
-              path: 'book',
-              element: <PostBook />,
-              children: [
-                {
-                  path: pageRoutes.userPost.detail,
-                  element: <DetailPost />,
-                  loader: detailPostLoader,
-                  action: detailPostAction,
-                },
-              ],
-            },
-            {
-              path: 'explore',
-              element: <PostExplore />,
-              children: [
-                {
-                  path: pageRoutes.userPost.detail,
-                  element: <DetailPost />,
-                  loader: detailPostLoader,
-                  action: detailPostAction,
-                },
-              ],
+              path: '/post/:category/:postId',
+              element: <DetailPost />,
+              loader: detailPostLoader,
+              action: detailPostAction,
             },
           ],
         },
@@ -273,6 +237,7 @@ function App() {
               path: pageRoutes.trainer.create,
               element: <CreateTrainer />,
               action: createTrainerAction,
+              loader: createTrainerLoader,
             },
           ],
         },
