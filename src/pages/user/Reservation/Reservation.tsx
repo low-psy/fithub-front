@@ -26,7 +26,7 @@ interface IReservationProps {
 }
 
 const Reservation = ({ closed, info }: IReservationProps) => {
-  const { title, paymentDateTime, location, reserveDateTime, status } = info;
+  const { title, paymentDateTime, reserveDateTime, status } = info;
 
   const handleCancle = () => {
     //
@@ -57,10 +57,10 @@ const Reservation = ({ closed, info }: IReservationProps) => {
             <span className="text-gray-600">예약일: </span>
             {paymentDateTime && convertDate(paymentDateTime)}
           </p>
-          <p className=" text-sm">
+          {/* <p className=" text-sm">
             <span className="text-gray-600">장소: </span>
             {location}
-          </p>
+          </p> */}
           <p className=" text-sm">
             <span className="text-gray-600">수업일시: </span>
             {reserveDateTime && convertDate(reserveDateTime)}
