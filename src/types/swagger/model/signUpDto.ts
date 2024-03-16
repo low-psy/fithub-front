@@ -18,6 +18,10 @@ export interface SignUpDto {
     phone: string;
     bio?: string;
     gender: SignUpDto.GenderEnum;
+    /**
+     * 관심사 입력은 선택입니다. 여러 개 선택 가능합니다. ex) PILATES, HEALTH, PT, CROSSFIT, YOGA
+     */
+    categories?: Array<SignUpDto.CategoriesEnum>;
 }
 export namespace SignUpDto {
     export type GenderEnum = 'F' | 'M' | 'UNDEFINED';
@@ -25,5 +29,13 @@ export namespace SignUpDto {
         F: 'F' as GenderEnum,
         M: 'M' as GenderEnum,
         UNDEFINED: 'UNDEFINED' as GenderEnum
+    };
+    export type CategoriesEnum = 'PILATES' | 'HEALTH' | 'PT' | 'CROSSFIT' | 'YOGA';
+    export const CategoriesEnum = {
+        PILATES: 'PILATES' as CategoriesEnum,
+        HEALTH: 'HEALTH' as CategoriesEnum,
+        PT: 'PT' as CategoriesEnum,
+        CROSSFIT: 'CROSSFIT' as CategoriesEnum,
+        YOGA: 'YOGA' as CategoriesEnum
     };
 }

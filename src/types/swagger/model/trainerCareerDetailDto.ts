@@ -10,22 +10,20 @@
  * Do not edit the class manually.
  */
 
-/**
- * 트레이닝 검색 조건
- */
-export interface TrainingSearchConditionDto { 
+export interface TrainerCareerDetailDto { 
+    careerId: number;
+    company: string;
+    address: string;
     /**
-     * 검색 키워드, 해당 검색 키워드가 포함되는 제목으로 검색
+     * 경도
      */
-    keyword?: string;
+    longitude: number;
     /**
-     * 최저가
+     * 위도
      */
-    lowestPrice?: number;
-    /**
-     * 최고가
-     */
-    highestPrice?: number;
-    startDate?: string;
+    latitude: number;
+    work: string;
+    startDate: string;
     endDate?: string;
+    working: boolean;
 }

@@ -11,23 +11,9 @@
  */
 
 /**
- * 게시글 작성자 정보 dto
+ * 인증 요성 시 넣은 자격증 리스트
  */
-export interface PostWriterInfoDto { 
-    /**
-     * 작성자 id
-     */
-    id?: number;
-    /**
-     * 작성자 닉네임
-     */
-    nickname?: string;
-    /**
-     * 작성자 이메일
-     */
-    email?: string;
-    /**
-     * 게시글 작성자 프로필 url
-     */
-    profileUrl?: string;
+export interface TrainerLicenseTempImgDto { 
+    url?: string;
+    inputName?: string;
 }

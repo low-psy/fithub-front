@@ -10,22 +10,17 @@
  * Do not edit the class manually.
  */
 
-/**
- * 트레이닝 검색 조건
- */
-export interface TrainingSearchConditionDto { 
+export interface ChatRoomResponseDto { 
     /**
-     * 검색 키워드, 해당 검색 키워드가 포함되는 제목으로 검색
+     * 채팅방 id
      */
-    keyword?: string;
+    roomId?: number;
     /**
-     * 최저가
+     * 채팅상대 이름
      */
-    lowestPrice?: number;
+    roomName?: string;
     /**
-     * 최고가
+     * 채팅방 수정일
      */
-    highestPrice?: number;
-    startDate?: string;
-    endDate?: string;
+    modifiedDate?: Date;
 }

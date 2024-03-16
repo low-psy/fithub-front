@@ -11,21 +11,13 @@
  */
 
 /**
- * 트레이닝 검색 조건
+ * 인증 요청 시 넣은 경력 리스트
  */
-export interface TrainingSearchConditionDto { 
-    /**
-     * 검색 키워드, 해당 검색 키워드가 포함되는 제목으로 검색
-     */
-    keyword?: string;
-    /**
-     * 최저가
-     */
-    lowestPrice?: number;
-    /**
-     * 최고가
-     */
-    highestPrice?: number;
+export interface TrainerCareerTempDto { 
+    company?: string;
+    address?: string;
+    work?: string;
     startDate?: string;
     endDate?: string;
+    working?: boolean;
 }

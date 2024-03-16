@@ -11,23 +11,11 @@
  */
 
 /**
- * 게시글 작성자 정보 dto
+ * 관리자 - 트레이너 인증 요청 전체 조회 시 사용하는 요약 정보
  */
-export interface PostWriterInfoDto { 
-    /**
-     * 작성자 id
-     */
-    id?: number;
-    /**
-     * 작성자 닉네임
-     */
-    nickname?: string;
-    /**
-     * 작성자 이메일
-     */
-    email?: string;
-    /**
-     * 게시글 작성자 프로필 url
-     */
-    profileUrl?: string;
+export interface CertRequestOutlineDto { 
+    requestId?: number;
+    userName?: string;
+    userEmail?: string;
+    requestDateTime?: Date;
 }

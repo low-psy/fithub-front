@@ -19,6 +19,7 @@ export interface ProfileDto {
     bio?: string;
     profileImg?: string;
     grade?: ProfileDto.GradeEnum;
+    interests?: Array<ProfileDto.InterestsEnum>;
     trainer?: boolean;
 }
 export namespace ProfileDto {
@@ -34,5 +35,13 @@ export namespace ProfileDto {
         BEGINNER: 'BEGINNER' as GradeEnum,
         INTERMEDIATE: 'INTERMEDIATE' as GradeEnum,
         ADVANCED: 'ADVANCED' as GradeEnum
+    };
+    export type InterestsEnum = 'PILATES' | 'HEALTH' | 'PT' | 'CROSSFIT' | 'YOGA';
+    export const InterestsEnum = {
+        PILATES: 'PILATES' as InterestsEnum,
+        HEALTH: 'HEALTH' as InterestsEnum,
+        PT: 'PT' as InterestsEnum,
+        CROSSFIT: 'CROSSFIT' as InterestsEnum,
+        YOGA: 'YOGA' as InterestsEnum
     };
 }
