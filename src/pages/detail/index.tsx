@@ -24,11 +24,11 @@ import ReservationSection from './TrainingReservation';
 import Line from '../../components/common/Line';
 import ImageXScroll from '../../components/imageSlider/ImageXScroll';
 import withAuth from '../../hocs/withAuth';
-import { RequestPayParams, RequestPayResponse } from '../../types/portone';
 import SingleMap from '../../components/map/SingleMap';
 import { TrainingReviewDto } from '../../types/swagger/model/trainingReviewDto';
 import { LoaderData } from '../../types/common';
 import ClickBtn from '../../components/btn/ClickBtn';
+import { RequestPayParams, RequestPayResponse } from '../../types/portone';
 
 export interface DateObject {
   year: number;

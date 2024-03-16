@@ -32,14 +32,13 @@
     "no-shadow": "off",
     "react/prop-types": "off",
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
-    "import/no-unresolved": "warn",
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "react/jsx-filename-extension": [
       2,
       { "extensions": [".js", ".jsx", ".ts", ".tsx"] }
     ],
     "import/extensions": [
-      "warn",
+      "error",
       "ignorePackages",
       {
         "js": "never",
@@ -83,13 +82,7 @@
       "@typescript-eslint/parser": [".ts", ".tsx"]
     },
     "import/resolver": {
-      "typescript": {},
-      "node": {
-        "paths": ["src"]
-      }
+      "typescript": {}
     }
-  },
-  "globals": {
-    "google": "readonly"
   }
 }
