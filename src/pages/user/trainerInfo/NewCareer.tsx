@@ -34,8 +34,20 @@ const NewCareer = ({
   const handleCareerDate = (date: Date, type: 'startDate' | 'endDate') => {
     const newData: any = { ...data };
     const strDate = handleDateToString(date);
-    if (type === 'startDate') newData.startDate = strDate;
-    if (type === 'endDate') newData.endDate = strDate;
+    if (type === 'startDate') {
+      if (newData.endDate && date > new Date(newData.endDate)) {
+        alert('올바른 입사날짜를 입력해주세요');
+        return;
+      }
+      newData.startDate = strDate;
+    }
+    if (type === 'endDate') {
+      if (newData.startDate && new Date(newData.startDate) > date) {
+        alert('올바른 퇴사날짜를 입력해주세요');
+        return;
+      }
+      newData.endDate = strDate;
+    }
     setData(newData);
   };
 
@@ -48,7 +60,6 @@ const NewCareer = ({
         ref={inputRef}
         onChange={(e) => handleChange(e, InputTypes.company)}
         style={{
-          width: '160px',
           marginRight: '1rem',
           paddingBottom: '3px',
           outline: 'none',
@@ -61,7 +72,6 @@ const NewCareer = ({
         placeholder="업무"
         onChange={(e) => handleChange(e, InputTypes.work)}
         style={{
-          width: '100px',
           marginRight: '1rem',
           paddingBottom: '3px',
           outline: 'none',
