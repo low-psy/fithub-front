@@ -6,17 +6,8 @@ interface Props {
 }
 
 const Star: FC<Props> = ({ isFull = false, handleClick }) => {
-  const onClickHandler = () => {
-    handleClick();
-  };
-
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-    <div
-      onClick={handleClick}
-      onKeyDown={onClickHandler}
-      style={{ cursor: 'pointer' }}
-    >
+    <button type="button" onClick={handleClick}>
       {isFull ? (
         <svg
           width={30}
@@ -50,7 +41,7 @@ const Star: FC<Props> = ({ isFull = false, handleClick }) => {
           </g>
         </svg>
       )}
-    </div>
+    </button>
   );
 };
 

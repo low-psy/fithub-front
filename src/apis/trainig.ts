@@ -287,3 +287,21 @@ export const cancelReservation = async (
     impUid,
   });
 };
+
+/**
+ * [GET] 트레이닝 리뷰 조회
+ */
+export const fetchTrainingReview = async (trainingId: number) => {
+  const res = await authAxios.get(`/training/reviews?trainingId=${trainingId}`);
+  return res.data;
+};
+
+/**
+ * [DELETE] 트레이닝 리뷰 삭제
+ */
+
+export const deleteTrainingReview = async (reviewId: number) => {
+  await authAxios.delete(
+    `/users/training/reservation/review?reviewId=${reviewId}`,
+  );
+};

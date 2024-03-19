@@ -34,7 +34,7 @@ const Career: FC<Prop> = ({ list }) => {
 
   const addCareer = async () => {
     const newCareerId = await addTrainerCareer({
-      address: '서울특별시 마포구 등교동 205-17',
+      address: '서울특별시 마포구 동교동 205-17',
       working: true,
       longitude: 126.919286,
       latitude: 37.557453126,

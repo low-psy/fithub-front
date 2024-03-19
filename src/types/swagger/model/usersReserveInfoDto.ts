@@ -20,6 +20,10 @@ export interface UsersReserveInfoDto {
      */
     trainingId?: number;
     /**
+     * 트레이너 프로필 이미지
+     */
+    trainerProfileImgUrl?: string;
+    /**
      * 트레이닝 제목
      */
     title?: string;

@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import testImg from '../../../assets/newpostFilter.png';
 import { UsersReserveInfoDto } from '../../../types/swagger/model/usersReserveInfoDto';
 import {
   cancelReservation,
+  deleteTrainingReview,
+  fetchTrainingReview,
   getTrainingReservation,
 } from '../../../apis/trainig';
-import { fetchTrainingReservation, writeReview } from '../../../apis/user';
-import ConfirmationModal from '../../../components/modal/ConfirmationModal';
 import {
-  convertDateWithDay,
-  getYesterday,
-  handleDateToString,
-} from '../../../utils/util';
+  fetchCompletedReservation,
+  fetchTrainingReservation,
+  writeReview,
+} from '../../../apis/user';
+import ConfirmationModal from '../../../components/modal/ConfirmationModal';
+import { convertDateWithDay, getYesterday } from '../../../utils/util';
 import ReviewModal from '../../../components/modal/ReviewModal';
 import StarRating from '../../../components/StarRating';
+import { TrainingReviewDto } from '../../../types/swagger/model/trainingReviewDto';
 
 const ReservationStatusObj = {
   BEFORE: '예약완료',
@@ -26,14 +30,10 @@ const ReservationStatusObj = {
 interface IReservationProps {
   closed?: boolean;
   info: UsersReserveInfoDto;
-  setReservationList: (newList: UsersReserveInfoDto[]) => void;
+  setList: (newList: UsersReserveInfoDto[]) => void;
 }
 
-const Reservation = ({
-  closed,
-  info,
-  setReservationList,
-}: IReservationProps) => {
+const Reservation = ({ closed, info, setList }: IReservationProps) => {
   const {
     title,
     paymentDateTime,
@@ -41,6 +41,7 @@ const Reservation = ({
     reserveDateTime,
     status,
     reservationId,
+    reviewWritten,
   } = info;
   const [cancelingInfo, setCancelingInfo] = useState<
     UsersReserveInfoDto | undefined
@@ -49,13 +50,26 @@ const Reservation = ({
     UsersReserveInfoDto | undefined
   >();
   const [currRate, setCurrRate] = useState<number>(0);
-  const [reviewText, setReviewText] = useState<string>('');
+  const [reviewInput, setReviewInput] = useState<string>('');
+  const [reviewList, setReviewList] = useState<TrainingReviewDto[]>([]);
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   deleteTrainingReview(13);
+  // }, []);
 
   const openModal = async (type: 'cancel' | 'review') => {
     if (reservationId) {
       const { data } = await getTrainingReservation(reservationId);
       if (type === 'cancel') setCancelingInfo(data);
-      if (type === 'review') setReviewingInfo(data);
+      if (type === 'review') {
+        setReviewingInfo(data);
+        // 리뷰가 이미 작성된 경우 리뷰리스트 조회
+        if (reviewWritten && data?.trainingId) {
+          const reviews = await fetchTrainingReview(data?.trainingId);
+          setReviewList(reviews);
+        }
+      }
     }
   };
 
@@ -64,21 +78,25 @@ const Reservation = ({
       await cancelReservation(reservationId, cancelingInfo.impUid);
       const newReservationList: UsersReserveInfoDto[] =
         await fetchTrainingReservation();
-      setReservationList(newReservationList);
+      setList(newReservationList);
     }
     setCancelingInfo(undefined);
   };
 
   const closeReviewModal = () => {
+    // if (!reviewWritten) {
     setReviewingInfo(undefined);
-    setReviewText('');
+    setReviewInput('');
     setCurrRate(0);
+    // }
   };
 
-  const handleReview = async () => {
+  const handleWriteReview = async () => {
     if (!reservationId) return;
-    await writeReview(reservationId, reviewText, currRate);
+    await writeReview(reservationId, reviewInput, currRate);
     closeReviewModal();
+    const newList = await fetchCompletedReservation();
+    setList(newList);
   };
 
   const cancelModalContent = (
@@ -115,18 +133,33 @@ const Reservation = ({
   );
 
   const handleTextarea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setReviewText(e.target.value);
+    setReviewInput(e.target.value);
   };
 
-  const reviewModalContent = (
+  // 트레이닝 페이지로 이동
+  const goToTraining = () => {
+    navigate(`/detail/${reviewingInfo?.trainingId}`);
+  };
+
+  // 리뷰작성
+  const writingReviewContent = (
     <>
       <section className="mb-5 w-[100%] bg-white">
-        <div className="mb-2 bg-sub p-2 font-semibold">
-          <p>{reviewingInfo?.title}</p>
+        <div className="mb-4 bg-sub p-2 font-semibold">
+          <button type="button" onClick={goToTraining}>
+            {reviewingInfo?.title}
+          </button>
         </div>
         <div className="flex items-end justify-between">
           <div className="flex">
-            <img src="" alt="트레이너 이미지" />
+            <button type="button" onClick={goToTraining}>
+              <div className=" h-[170px] w-[130px] ">
+                <img
+                  src={reviewingInfo?.trainerProfileImgUrl}
+                  alt="트레이너 이미지"
+                />
+              </div>
+            </button>
             <div className="ml-5">
               <p>
                 예약일: &nbsp;
@@ -135,7 +168,7 @@ const Reservation = ({
                   convertDateWithDay(reviewingInfo?.paymentDateTime)}
               </p>
               <p>
-                장소: &nbsp; {reviewingInfo?.address || reviewingInfo?.location}
+                장소: &nbsp;{reviewingInfo?.address || reviewingInfo?.location}
               </p>
               <p>
                 수업일시: &nbsp;
@@ -152,15 +185,60 @@ const Reservation = ({
       </section>
       <textarea
         name="textarea"
-        value={reviewText}
+        value={reviewInput}
         onChange={handleTextarea}
         cols={30}
         rows={10}
-        className="w-[100%] bg-input_bg p-[1rem] outline-none"
+        className="w-[100%] resize-none bg-input_bg p-[1rem] outline-none"
         placeholder="후기를 입력해주세요"
       />
     </>
   );
+
+  const editReview = () => {
+    console.log(reviewingInfo);
+  };
+
+  // 리뷰조회
+  const checkReviewContent = () => {
+    return (
+      <section className="mb-5 w-[100%] bg-white">
+        {reviewList.map((item: TrainingReviewDto) => {
+          return (
+            <div className="mb-4 flex justify-between border border-solid border-input_bg p-4">
+              <div className="flex">
+                <div className="item-start border-gray h-10 w-10 overflow-hidden rounded-full border border-solid">
+                  <img src={item.userInfo?.profileUrl} alt="" />
+                </div>
+                <div className="ml-6 flex flex-col">
+                  <div className="flex items-center">
+                    <p className="mr-4  font-bold">{item.userInfo?.nickname}</p>
+                    {item.createdDate && (
+                      <p className="text-sm text-gray-500">
+                        {convertDateWithDay(item.createdDate)}
+                      </p>
+                    )}
+                  </div>
+
+                  <p className="mt-7">{item.content}</p>
+                </div>
+              </div>
+              <div className="flex flex-col items-end justify-between">
+                <button
+                  onClick={editReview}
+                  type="button"
+                  className="flex h-[30px] w-fit items-center rounded-full bg-sub p-4"
+                >
+                  수정하기
+                </button>
+                {item?.star && <StarRating currRate={item?.star} />}
+              </div>
+            </div>
+          );
+        })}
+      </section>
+    );
+  };
 
   return (
     <>
@@ -175,12 +253,12 @@ const Reservation = ({
           <button
             type="button"
             onClick={
-              closed ? () => openModal('review') : () => openModal('cancel')
+              !closed ? () => openModal('cancel') : () => openModal('review')
             }
             className="flex h-[30px] items-center rounded-full p-[10px]"
             style={{ background: closed ? '#E0D1FF' : '#fcaaaa' }}
           >
-            {closed ? '리뷰 작성' : '취소'}
+            {!closed ? '예약 취소' : reviewWritten ? '리뷰 조회' : '리뷰 작성'}
           </button>
         </div>
         {/* 내용 */}
@@ -201,7 +279,11 @@ const Reservation = ({
             </p>
             <p className=" text-sm">
               <span className="text-gray-600">취소가능일시: </span>
-              {reserveDateTime && convertDateWithDay(reserveDateTime)}까지
+              {reserveDateTime &&
+                convertDateWithDay(
+                  new Date(getYesterday(new Date(reserveDateTime))),
+                )}
+              까지
             </p>
             <p className=" text-sm">
               <span className="text-gray-600">상태: </span>
@@ -219,13 +301,13 @@ const Reservation = ({
         children={cancelModalContent}
       />
       <ReviewModal
-        title="후기 작성"
+        title={`${reviewWritten ? reviewingInfo?.title : ''} 후기 ${reviewWritten ? '조회' : '작성'}`}
         isOpen={reviewingInfo !== undefined}
         onClose={closeReviewModal}
-        onConfirm={handleReview}
+        onConfirm={!reviewWritten ? handleWriteReview : undefined}
         confirmText="네"
         cancelText="아니요"
-        children={reviewModalContent}
+        children={reviewWritten ? checkReviewContent() : writingReviewContent}
       />
     </>
   );

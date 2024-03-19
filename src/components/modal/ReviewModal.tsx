@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { deleteTrainingReview } from '../../apis/trainig';
 
 interface ReviewModalProps {
   title: string;
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm?: () => void;
   confirmText: string;
   cancelText?: string;
   children: React.ReactNode;
@@ -41,22 +42,24 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
         </header>
         <div className="flex flex-col items-center px-8 py-5">
           {children}
-          <div className="mt-5">
-            <button
-              type="button"
-              onClick={onClose}
-              className=" mr-3 rounded bg-slate-200 px-6 py-2"
-            >
-              {cancelText}
-            </button>
-            <button
-              type="button"
-              onClick={onConfirm}
-              className="rounded bg-sub px-6 py-2"
-            >
-              {confirmText}
-            </button>
-          </div>
+          {onConfirm && (
+            <div className="mt-5">
+              <button
+                type="button"
+                onClick={onClose}
+                className=" mr-3 rounded bg-slate-200 px-6 py-2"
+              >
+                {cancelText}
+              </button>
+              <button
+                type="button"
+                onClick={onConfirm}
+                className="rounded bg-sub px-6 py-2"
+              >
+                {confirmText}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
