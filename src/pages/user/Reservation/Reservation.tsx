@@ -30,10 +30,14 @@ const ReservationStatusObj = {
 interface IReservationProps {
   closed?: boolean;
   info: UsersReserveInfoDto;
-  setList: (newList: UsersReserveInfoDto[]) => void;
+  setReservationList: (newList: UsersReserveInfoDto[]) => void;
 }
 
-const Reservation = ({ closed, info, setList }: IReservationProps) => {
+const Reservation = ({
+  closed,
+  info,
+  setReservationList,
+}: IReservationProps) => {
   const {
     title,
     paymentDateTime,
@@ -78,7 +82,7 @@ const Reservation = ({ closed, info, setList }: IReservationProps) => {
       await cancelReservation(reservationId, cancelingInfo.impUid);
       const newReservationList: UsersReserveInfoDto[] =
         await fetchTrainingReservation();
-      setList(newReservationList);
+      setReservationList(newReservationList);
     }
     setCancelingInfo(undefined);
   };
@@ -96,7 +100,7 @@ const Reservation = ({ closed, info, setList }: IReservationProps) => {
     await writeReview(reservationId, reviewInput, currRate);
     closeReviewModal();
     const newList = await fetchCompletedReservation();
-    setList(newList);
+    setReservationList(newList);
   };
 
   const cancelModalContent = (

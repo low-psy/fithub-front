@@ -23,7 +23,7 @@ import DefaultModal from '../../components/modal/DefaultModal';
 import useModal from '../../hooks/useModal';
 import { LikesInfoDto } from '../../types/swagger/model/likesInfoDto';
 import RoundedIcon from '../../components/icon/Rounded';
-import Hashtags from '../../components/common/HashTags';
+import RedirectModal from '../../components/modal/RedirectModal';
 
 interface Context {
   likedUsers: LikesInfoDto[] | undefined;
@@ -88,7 +88,7 @@ const DetailPost = () => {
   }, [postId, cmt]);
 
   return (
-    <>
+    <RedirectModal>
       <section className="flex h-full flex-col bg-white md:flex-row">
         <article className="md:basis-1/2">
           <div className="flex h-full items-center">
@@ -110,7 +110,11 @@ const DetailPost = () => {
           </div>
           <div className="flex  justify-between">
             <div className="relative flex items-center gap-2 p-3">
-              <RoundedIcon defaultState={isLiked} onClick={toggleLike}>
+              <RoundedIcon
+                defaultState={isLiked}
+                onClick={toggleLike}
+                iconColor="text-main"
+              >
                 favorite
               </RoundedIcon>
               <RoundedIcon
@@ -155,7 +159,7 @@ const DetailPost = () => {
           })}
         </ul>
       </DefaultModal>
-    </>
+    </RedirectModal>
   );
 };
 

@@ -9,6 +9,7 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { TrainingCategoryUpdateDto } from './trainingCategoryUpdateDto';
 import { TrainingImgUpdateDto } from './trainingImgUpdateDto';
 
 /**
@@ -19,4 +20,5 @@ export interface TrainingContentUpdateDto {
     content: string;
     price: number;
     trainingImgUpdateDto?: TrainingImgUpdateDto;
+    trainingCategoryUpdateDto?: TrainingCategoryUpdateDto;
 }

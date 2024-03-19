@@ -7,7 +7,7 @@ import { formatDate } from '../../utils/util';
 
 export interface UsersTrainingItemProps {
   trainerInfoDto: TrainingOutlineDto;
-  usersTrainingLike: boolean;
+  usersTrainingLike?: boolean;
 }
 
 const UserTrainingItem: React.FC<UsersTrainingItemProps> = ({

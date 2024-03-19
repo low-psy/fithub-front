@@ -31,9 +31,9 @@ const ReservationSection: React.FC<ReservationSectionProps> = ({
   );
 
   return (
-    <div className="shrink-0 space-y-8 rounded-md bg-white p-6 shadow-md drop-shadow-md md:w-[450px] lg:w-[500px]">
+    <div className="w-[450px] shrink-0 space-y-8 rounded-md bg-white lg:w-[500px]">
       <h3 className="text-xl font-bold">트레이닝 예약</h3>
-      <div className="rounded-md border-2 border-black ">
+      <div className="rounded-md border-2 border-black p-8">
         <Calendar
           availableDates={availableDates}
           singleDateSelect

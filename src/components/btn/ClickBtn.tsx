@@ -1,17 +1,18 @@
 import React from 'react';
 
 interface ClickBtnProps {
-  children: string;
+  children: any;
   onClick: () => void;
+  className?: string;
 }
 
-const ClickBtn: React.FC<ClickBtnProps> = ({ children, onClick }) => {
+const ClickBtn: React.FC<ClickBtnProps> = ({
+  children,
+  onClick,
+  className,
+}) => {
   return (
-    <button
-      type="button"
-      className="h-full w-full rounded-full bg-gray-200 px-5 py-3"
-      onClick={onClick}
-    >
+    <button type="button" onClick={onClick} className={className}>
       {children}
     </button>
   );

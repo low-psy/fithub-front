@@ -19,6 +19,10 @@ export interface CommentInfoDto {
      */
     commentId?: number;
     /**
+     * 답글 작성자의 id
+     */
+    writerId?: number;
+    /**
      * 답글 작성자의 닉네임
      */
     writerNickName?: string;

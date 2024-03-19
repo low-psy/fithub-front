@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import ImageSlider from '../../components/imageSlider/ImageBtnSlider';
 import DefaultModal from '../../components/modal/DefaultModal';
@@ -17,7 +17,6 @@ import { PostInfoDto } from '../../types/swagger/model/postInfoDto';
 import { LikesInfoDto } from '../../types/swagger/model/likesInfoDto';
 import { postBook, deleteBook, deletePost } from '../../apis/post';
 import { formatDate } from '../../utils/util';
-import RedirectModal from '../../components/modal/RedirectModal';
 
 interface PostItemProps extends PostInfoDto {
   bookAndLikes: LikesBookmarkStatusDto;
@@ -46,6 +45,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
   });
   const location = useLocation();
   const isModal = location.state?.isModal;
+  console.log(isModal);
   const toggleModal = (modalName: string) => {
     setModalsOpen((prev) => ({ ...prev, [modalName]: !prev[modalName] }));
   };
@@ -91,127 +91,122 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
     }
   };
   return (
-    <>
-      <article key={postId} className="mb-12">
-        <div className="space-y-4  bg-white p-4 shadow-sm drop-shadow-xl ">
-          <div className="flex items-center justify-between ">
-            <ProfileSection
-              profileName={writerInfo?.nickname}
-              profileImage={writerInfo?.profileUrl}
-              date={date}
-            />
-            <DropdownMenu
-              onMenuItemClick={handleMenuItemClick}
-              menuArray={['수정하기', '삭제하기']}
-            />
-          </div>
-          <div className="space-y-4">
-            <h3 className="pl-1">{content}</h3>
-            {documentUrls && (
-              <div className="max-h-[500px]">
-                <ImageSlider postImages={documentUrls} imageSize="468" />
-              </div>
-            )}
-          </div>
-          <div className="flex  justify-between">
-            <div className="relative flex items-center gap-2">
-              <RoundedIcon defaultState={isLiked} onClick={toggleLike}>
-                favorite
-              </RoundedIcon>
-              <RoundedIcon
-                defaultState={isBooked}
-                onClick={toggleBook}
-                iconColor="text-accent"
-              >
-                bookmark
-              </RoundedIcon>
-            </div>
-            <Hashtags hashtags={hashTags} />
-          </div>
-          <LikesSection
-            likes={likedUsers}
-            onLikesClick={() => toggleModal('likeModal')}
+    <article key={postId} className="mb-12">
+      <div className="space-y-4  bg-white p-4 shadow-sm drop-shadow-xl ">
+        <div className="flex items-center justify-between ">
+          <ProfileSection
+            profileName={writerInfo?.nickname}
+            profileImage={writerInfo?.profileUrl}
+            date={date}
           />
-          <div>
-            {postCommentsCount && postCommentsCount > 0 ? (
-              <div>
-                <Link to={`${postId}`} state={{ isModal: true }}>
-                  {`댓글 ${postCommentsCount}개 보기...`}
-                </Link>
-              </div>
-            ) : null}
-            <CommentForm postId={postId} parentCommentId={0} />
-          </div>
-          <div />
+          <DropdownMenu
+            onMenuItemClick={handleMenuItemClick}
+            menuArray={['수정하기', '삭제하기']}
+          />
         </div>
-        <DefaultModal
-          isOpen={modalsOpen.likeModal}
-          onClose={() => toggleModal('likeModal')}
-          modalMaxHeight="400px"
-        >
-          <ul className="w-[200px] space-y-6">
-            {likedUsers?.map((likeInfoDto) => {
-              return (
-                <li
-                  className="flex items-center justify-between "
-                  key={likeInfoDto.nickname}
-                >
-                  <div className="aspect-square w-[48px] overflow-hidden rounded-full">
-                    <img
-                      src={likeInfoDto.profileUrl}
-                      alt="좋아요 누른 사용자 이미지"
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <div>{likeInfoDto.nickname}</div>
-                </li>
-              );
-            })}
-          </ul>
-        </DefaultModal>
-        <DefaultModal
-          isOpen={modalsOpen.editModal}
-          onClose={() => toggleModal('editModal')}
-          modalMaxHeight="600px"
-          modalWidth="1000px"
-        >
-          <div className="w-full space-y-6">
-            <PostForm
-              content={content}
-              images={documentUrls}
-              hashTags={hashTags}
-              useCase="put"
-              id={postId}
-            />
-          </div>
-        </DefaultModal>
-        <DefaultModal
-          isOpen={modalsOpen.deleteModal}
-          onClose={() => toggleModal('deleteModal')}
-          modalMaxHeight="400"
-        >
-          <div className="w-[400px] space-y-6">
-            <div>정말 게시물을 삭제 하시겠습니까?</div>
-            <div className="text-right">
-              <button
-                type="button"
-                className="rounded-full bg-slate-200 px-6 py-1"
-                onClick={btnDeleteHandler}
-              >
-                삭제
-              </button>
+        <div className="space-y-4">
+          <h3 className="pl-1">{content}</h3>
+          {documentUrls && (
+            <div className="max-h-[500px]">
+              <ImageSlider postImages={documentUrls} imageSize="468" />
             </div>
+          )}
+        </div>
+        <div className="flex  justify-between">
+          <div className="relative flex items-center gap-2">
+            <RoundedIcon
+              defaultState={isLiked}
+              onClick={toggleLike}
+              iconColor="text-main"
+            >
+              favorite
+            </RoundedIcon>
+            <RoundedIcon
+              defaultState={isBooked}
+              onClick={toggleBook}
+              iconColor="text-accent"
+            >
+              bookmark
+            </RoundedIcon>
           </div>
-        </DefaultModal>
-      </article>
-      {isModal && (
-        <RedirectModal>
-          <Outlet
-            context={{ likedUsers, isLiked, isBooked, toggleLike, toggleBook }}
+          <Hashtags hashtags={hashTags} />
+        </div>
+        <LikesSection
+          likes={likedUsers}
+          onLikesClick={() => toggleModal('likeModal')}
+        />
+        <div>
+          {postCommentsCount && postCommentsCount > 0 ? (
+            <div>
+              <Link to={`${postId}`} state={{ isModal: true }}>
+                {`댓글 ${postCommentsCount}개 보기...`}
+              </Link>
+            </div>
+          ) : null}
+          <CommentForm postId={postId} parentCommentId={0} />
+        </div>
+        <div />
+      </div>
+      <DefaultModal
+        isOpen={modalsOpen.likeModal}
+        onClose={() => toggleModal('likeModal')}
+        modalMaxHeight="400px"
+      >
+        <ul className="w-[200px] space-y-6">
+          {likedUsers?.map((likeInfoDto) => {
+            return (
+              <li
+                className="flex items-center justify-between "
+                key={likeInfoDto.nickname}
+              >
+                <div className="aspect-square w-[48px] overflow-hidden rounded-full">
+                  <img
+                    src={likeInfoDto.profileUrl}
+                    alt="좋아요 누른 사용자 이미지"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div>{likeInfoDto.nickname}</div>
+              </li>
+            );
+          })}
+        </ul>
+      </DefaultModal>
+      <DefaultModal
+        isOpen={modalsOpen.editModal}
+        onClose={() => toggleModal('editModal')}
+        modalMaxHeight="600px"
+        modalWidth="1000px"
+      >
+        <div className="w-full space-y-6">
+          <PostForm
+            content={content}
+            images={documentUrls}
+            hashTags={hashTags}
+            useCase="put"
+            id={postId}
           />
-        </RedirectModal>
-      )}
-    </>
+        </div>
+      </DefaultModal>
+      <DefaultModal
+        isOpen={modalsOpen.deleteModal}
+        onClose={() => toggleModal('deleteModal')}
+        modalMaxHeight="400"
+      >
+        <div className="w-[400px] space-y-6">
+          <div>정말 게시물을 삭제 하시겠습니까?</div>
+          <div className="text-right">
+            <button
+              type="button"
+              className="rounded-full bg-slate-200 px-6 py-1"
+              onClick={btnDeleteHandler}
+            >
+              삭제
+            </button>
+          </div>
+        </div>
+      </DefaultModal>
+    </article>
   );
 };
 

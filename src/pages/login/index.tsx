@@ -92,7 +92,7 @@ function Login() {
   };
 
   const handleChange = (id?: string, value?: string) => {
-    if (id && value) {
+    if (id) {
       setFormValue((prevInput) => ({ ...prevInput, [id]: value }));
     }
   };
