@@ -40,10 +40,7 @@ const Reservations = () => {
       <p className="mb-4 text-lg font-semibold">예약 내역</p>
       <div className="grid grid-cols-2 gap-4">
         {reservationList?.map((reservation: UsersReserveInfoDto) => (
-          <Reservation
-            info={reservation}
-            setReservationList={setReservationList}
-          />
+          <Reservation info={reservation} setList={setReservationList} />
         ))}
       </div>
       <div className="mb-4 mt-8 w-full border shadow-slate-500" />
@@ -53,7 +50,7 @@ const Reservations = () => {
           <Reservation
             closed
             info={reservation}
-            setReservationList={setReservationList}
+            setList={setCompletedReservationList}
           />
         ))}
       </div>

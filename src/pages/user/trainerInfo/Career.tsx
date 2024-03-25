@@ -32,9 +32,34 @@ const Career: FC<Prop> = ({ list }) => {
     });
   };
 
+  const isValid = () => {
+    if (!newCareer?.company.length) {
+      alert('회사를 입력해주세요');
+      return false;
+    }
+    if (!newCareer?.work.length) {
+      alert('업무를 입력해주세요');
+      return false;
+    }
+    if (!newCareer?.startDate.length) {
+      alert('입사날짜를 입력해주세요');
+      return false;
+    }
+    // 입사날짜가 퇴사날짜보다 늦는경우
+    if (
+      newCareer?.endDate.length &&
+      new Date(newCareer?.startDate) > new Date(newCareer.endDate)
+    ) {
+      alert('올바른 퇴사날짜를 입력해주세요');
+      return false;
+    }
+    return true;
+  };
+
   const addCareer = async () => {
+    if (!isValid()) return;
     const newCareerId = await addTrainerCareer({
-      address: '서울특별시 마포구 등교동 205-17',
+      address: '서울특별시 마포구 동교동 205-17',
       working: true,
       longitude: 126.919286,
       latitude: 37.557453126,
@@ -80,7 +105,7 @@ const Career: FC<Prop> = ({ list }) => {
               className="mt-[1rem] text-gray-400"
               onClick={newCareer ? addCareer : showNewCareerInput}
             >
-              {newCareer ? '완료' : '추가하기'}
+              {newCareer ? '추가 완료' : '추가하기'}
             </button>
           </div>
         </div>
