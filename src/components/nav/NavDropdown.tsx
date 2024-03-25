@@ -31,11 +31,12 @@ const NavDropdown: React.FC<{ menuArray: string[]; iconString?: string }> = ({
     } else if (value === '로그아웃') {
       try {
         const response = await logout();
+        console.log(response);
         if (response && response.status === 200) {
           localStorage.removeItem('accessToken');
           localStorage.removeItem('trainer');
           localStorage.removeItem('email');
-          navigate(0);
+          window.location.href = '/';
         }
       } catch (error) {
         if (axios.isAxiosError(error)) {

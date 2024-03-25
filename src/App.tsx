@@ -57,7 +57,6 @@ import SuccessPage, {
 
 import TrainerInfo from './pages/user/trainerInfo';
 import PostHome from './pages/post/home';
-import TrainingExplore from './pages/home/explore';
 import UserHome from './pages/home/home';
 import UserMap, { loader as TrainingMapLoader } from './pages/map';
 
@@ -93,7 +92,7 @@ function App() {
             },
             {
               path: 'explore',
-              element: <TrainingExplore />,
+              element: <UserHome />,
             },
           ],
         },

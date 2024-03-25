@@ -157,15 +157,11 @@ function CertifyTrainer() {
         alert(
           '트레이너 인증 요청이 완료되었습니다.\n인증 완료까지 몇일이 소요될 수 있습니다.',
         );
-        dispsatch(SET_TRAINER());
-        navigate('/trainer/new');
+        navigate('/');
       }
     } catch (error) {
       const err = error as AxiosError<ErrorResponseDto>;
-      if (err.response?.data.code === 'DUPLICATE') {
-        dispsatch(SET_TRAINER());
-        navigate('/trainer/home');
-      }
+      navigate('/');
     }
   };
 

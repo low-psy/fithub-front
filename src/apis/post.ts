@@ -146,8 +146,9 @@ export const getPostSearch = async (
   align?: string | null,
   page?: number,
 ): Promise<AxiosResponse<PagePostInfoDto>> => {
-  const queryString = qs.stringify(requestDto);
+  const queryString = qs.stringify({ sort: 'commetns,desc' });
+  console.log(queryString);
   const url = `/posts/search?${queryString}`;
-  const pageable = { page, size: 2, sort: [align, 'desc'] };
+  const pageable = { page, size: 10, sort: [align, 'desc'] };
   return authAxios.post<PagePostInfoDto>(url, pageable);
 };
