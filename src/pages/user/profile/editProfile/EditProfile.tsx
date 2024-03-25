@@ -9,6 +9,7 @@ import { Gender } from '../../../../types/user';
 const EditProfile = () => {
   const navigate = useNavigate();
   const prevProfile = useLoaderData() as IProfile;
+  const [profileImgFile, setProfileImgFile] = useState<File | undefined>();
 
   // 프로필(nickname, email, phone, gender, bio, profileImg)
   const [profile, setProfile] = useState<IProfile>(prevProfile);
@@ -33,22 +34,7 @@ const EditProfile = () => {
     const imageURL = URL.createObjectURL(e.target.files[0]);
     // setInfo({ ...info, profileImg: imageURL });
     setProfileImage(imageURL);
-
-    const formData = new FormData();
-
-    formData.append('image', e.target.files[0]);
-
-    try {
-      const response = await updateProfileImg(formData);
-
-      if (response && response.status === 200) {
-        alert('프로필 이미지 변경 성공');
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error(error);
-      }
-    }
+    setProfileImgFile(e.target.files[0]);
   };
 
   // 이름, 닉네임, 전화번호, 소개 변경
@@ -70,6 +56,21 @@ const EditProfile = () => {
 
   const handlePutProfile = async () => {
     const { name, nickname, phone, gender, bio } = profile;
+    if (profileImgFile) {
+      const formData = new FormData();
+      formData.append('image', profileImgFile);
+
+      try {
+        const response = await updateProfileImg(formData);
+        if (response && response.status === 200) {
+          alert('프로필 이미지 변경 성공');
+        }
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error(error);
+        }
+      }
+    }
 
     try {
       const response = await updateProfile(name, nickname, phone, gender, bio);
