@@ -29,7 +29,6 @@ import SignupSuccess from './pages/signup/SignupSuccess';
 import User from './pages/user';
 import Profile from './pages/user/profile';
 import Posts from './pages/user/posts';
-import Reservations from './pages/user/Reservation';
 import Cancellation from './pages/user/cancellation';
 import EditProfile from './pages/user/profile/editProfile/EditProfile';
 import profileLoader from './pages/user/loader';
@@ -121,7 +120,7 @@ function App() {
           element: <Post />,
           loader: postLoader,
           children: [
-            { path: 'home', element: <PostHome /> },
+            { path: '', element: <PostHome /> },
             { path: 'favorite', element: <PostHome /> },
             { path: 'book', element: <PostHome /> },
             { path: 'explore', element: <PostHome /> },
@@ -155,10 +154,6 @@ function App() {
             {
               path: pageRoutes.user.posts,
               element: <Posts />,
-            },
-            {
-              path: pageRoutes.user.reservations,
-              element: <Reservations />,
             },
             {
               path: pageRoutes.user.cancellations,

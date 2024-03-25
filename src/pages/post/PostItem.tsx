@@ -43,9 +43,6 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
     likeModal: false,
     // 기타 모달 상태
   });
-  const location = useLocation();
-  const isModal = location.state?.isModal;
-  console.log(isModal);
   const toggleModal = (modalName: string) => {
     setModalsOpen((prev) => ({ ...prev, [modalName]: !prev[modalName] }));
   };
@@ -107,7 +104,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
         <div className="space-y-4">
           <h3 className="pl-1">{content}</h3>
           {documentUrls && (
-            <div className="max-h-[500px]">
+            <div>
               <ImageSlider postImages={documentUrls} imageSize="468" />
             </div>
           )}

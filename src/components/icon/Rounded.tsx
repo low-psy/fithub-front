@@ -14,12 +14,10 @@ const RoundedIcon: React.FC<IconComponentProps> = ({
   defaultState,
 }) => {
   const [isClicked, setIsClicked] = useState(false);
-  const [isIconFilled, setIsIconFilled] = useState(defaultState || false);
+  const [isIconFilled, setIsIconFilled] = useState<boolean | undefined>(false);
 
   useEffect(() => {
-    if (defaultState) {
-      setIsIconFilled(defaultState);
-    }
+    setIsIconFilled(defaultState);
   }, [defaultState]);
 
   const handleIconClick = (

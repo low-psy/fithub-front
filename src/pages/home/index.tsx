@@ -174,7 +174,7 @@ const Home: React.FC = () => {
       <div className="space-y-4 md:space-y-10">
         <section className="hidden h-56 grid-cols-2 gap-3  md:grid">
           <div className="row-span-2  flex ">
-            <FilterSection bg={lookupFilter} to="/post/home">
+            <FilterSection bg={lookupFilter} to="/post">
               운동 게시글 조회하기
             </FilterSection>
           </div>

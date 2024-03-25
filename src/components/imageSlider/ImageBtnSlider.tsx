@@ -64,7 +64,7 @@ const ImageBtnSlider: React.FC<ImageSliderProps> = ({
             key={imageUrl as string}
             src={imageUrl as string}
             alt={`게시물 이미지 ${index + 1}`}
-            className="max-h-full max-w-full object-cover"
+            className="max-h-[500px] max-w-full object-cover"
           />
         </div>
       ))}

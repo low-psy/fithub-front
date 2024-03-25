@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ActionFunctionArgs, redirect } from 'react-router-dom';
+import { ActionFunctionArgs, redirect, useNavigate } from 'react-router-dom';
 import { createPost, updatePost } from '../../apis/post';
 import validatePostData from '../../validation/postValidation';
 import withAuth from '../../hocs/withAuth';
@@ -8,8 +8,14 @@ import { getImages } from '../../redux/slices/updateImageSlice';
 import store from '../../redux/store';
 import PostForm from './PostForm';
 import { errorFunc } from '../../utils/util';
+import { useAppSelector } from '../../hooks/reduxHooks';
 
 function NewPost() {
+  const { isLogin } = useAppSelector((state) => state.user);
+  const navigate = useNavigate();
+  if (!isLogin) {
+    navigate('/login');
+  }
   return <PostForm useCase="post" />;
 }
 
@@ -26,7 +32,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const hashtag = formData.get('hashtag') as string;
   const postId = formData.get('id') as string;
   const imgDeleted = formData.get('imgDeleted') as string;
-  console.log(imgDeleted);
 
   const validationErrors = validatePostData(content, images, hashtag);
   console.log(content, images, hashtag);
@@ -74,12 +79,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
     if (res && res.status === 200) {
       console.log('success');
-      return redirect('/');
+      return redirect('/post');
     }
   } catch (err) {
     errorFunc(err);
     console.error(err);
-    return redirect('/post');
+    return redirect('/newpost');
   }
 
   return null;

@@ -75,7 +75,7 @@ const Post = () => {
   const alignBtnHandler = (i: number) => {
     switch (i) {
       case 0:
-        return navigate('/post/home');
+        return navigate('/post');
       case 1:
         searchParams.set('align', 'id');
         break;
@@ -110,10 +110,12 @@ const Post = () => {
       });
       if (isLogin && PostRequestDtos) {
         getLikeBook(PostRequestDtos).then((res) => {
+          console.log(res.data);
           setBookAndLikes(res.data);
         });
       }
       getLikes(PostRequestDtos).then((res) => {
+        console.log(res.data);
         setLikedInfos(res.data);
       });
     },
@@ -136,7 +138,6 @@ const Post = () => {
   const isNotSearch =
     location.pathname.includes('favorite') ||
     location.pathname.includes('book');
-  const isNotFilterLayout = !location.pathname.includes('home');
   let title;
   if (liked) {
     title = '좋아요한 게시물';
@@ -155,25 +156,21 @@ const Post = () => {
   }
   return (
     <div className="flex gap-8 space-y-4 md:space-y-0">
-      {!isNotFilterLayout && (
-        <FilterLayout>
-          <div className="space-y-12">
-            <div>
-              <Link
-                to="/newpost"
-                className=" block break-keep bg-accent_sub p-4 text-center text-3xl font-extrabold text-accent"
-              >
-                게시물 작성하기
-              </Link>
-            </div>
-            <div>chat</div>
+      <FilterLayout>
+        <div className="space-y-12">
+          <div>
+            <Link
+              to="/newpost"
+              className=" block break-keep bg-accent_sub p-4 text-center text-3xl font-extrabold text-accent"
+            >
+              게시물 작성하기
+            </Link>
           </div>
-        </FilterLayout>
-      )}
+          <div>chat</div>
+        </div>
+      </FilterLayout>
       <section className="relative mx-auto w-[728px] space-y-4">
-        {isNotFilterLayout && (
-          <h1 className="text-3xl font-extrabold">{title}</h1>
-        )}
+        <h1 className="text-3xl font-extrabold">{title}</h1>
         {!isNotSearch && (
           <PostSearch
             clickHandler={clickHandler}
