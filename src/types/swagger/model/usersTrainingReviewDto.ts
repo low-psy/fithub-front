@@ -13,6 +13,7 @@
 export interface UsersTrainingReviewDto { 
     reviewId?: number;
     trainingId?: number;
+    trainerProfileImg?: string;
     trainingTitle?: string;
     reserveDateTime?: Date;
     content?: string;

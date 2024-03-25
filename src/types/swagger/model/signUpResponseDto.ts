@@ -22,6 +22,7 @@ export interface SignUpResponseDto {
     grade?: SignUpResponseDto.GradeEnum;
     status?: SignUpResponseDto.StatusEnum;
     createdDate?: Date;
+    interests?: Array<SignUpResponseDto.InterestsEnum>;
 }
 export namespace SignUpResponseDto {
     export type GenderEnum = 'F' | 'M' | 'UNDEFINED';
@@ -40,5 +41,13 @@ export namespace SignUpResponseDto {
     export type StatusEnum = 'NORMAL';
     export const StatusEnum = {
         NORMAL: 'NORMAL' as StatusEnum
+    };
+    export type InterestsEnum = 'PILATES' | 'HEALTH' | 'PT' | 'CROSSFIT' | 'YOGA';
+    export const InterestsEnum = {
+        PILATES: 'PILATES' as InterestsEnum,
+        HEALTH: 'HEALTH' as InterestsEnum,
+        PT: 'PT' as InterestsEnum,
+        CROSSFIT: 'CROSSFIT' as InterestsEnum,
+        YOGA: 'YOGA' as InterestsEnum
     };
 }
