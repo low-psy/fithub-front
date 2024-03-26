@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import testImg from '../../../assets/newpostFilter.png';
 import { UsersReserveInfoDto } from '../../../types/swagger/model/usersReserveInfoDto';
@@ -11,6 +11,7 @@ import {
 import {
   fetchCompletedReservation,
   fetchTrainingReservation,
+  updateReview,
   writeReview,
 } from '../../../apis/user';
 import ConfirmationModal from '../../../components/modal/ConfirmationModal';
@@ -33,6 +34,10 @@ interface IReservationProps {
   setList: (newList: UsersReserveInfoDto[]) => void;
 }
 
+interface ReviewInfo {
+  content: string;
+  star: number;
+}
 const Reservation = ({ closed, info, setList }: IReservationProps) => {
   const {
     title,
@@ -53,6 +58,10 @@ const Reservation = ({ closed, info, setList }: IReservationProps) => {
   const [reviewInput, setReviewInput] = useState<string>('');
   const [reviewList, setReviewList] = useState<TrainingReviewDto[]>([]);
   const navigate = useNavigate();
+  const [editingReviewInfo, setEditingReviewInfo] = useState<ReviewInfo | null>(
+    null,
+  );
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // useEffect(() => {
   //   deleteTrainingReview(13);
@@ -77,10 +86,14 @@ const Reservation = ({ closed, info, setList }: IReservationProps) => {
     if (cancelingInfo && cancelingInfo.impUid && reservationId) {
       await cancelReservation(reservationId, cancelingInfo.impUid);
       const newReservationList: UsersReserveInfoDto[] =
-        await fetchTrainingReservation();
+        await fetchTrainingReservation('BEFORE');
       setList(newReservationList);
     }
     setCancelingInfo(undefined);
+  };
+
+  const stopEditReview = () => {
+    setEditingReviewInfo(null);
   };
 
   const closeReviewModal = () => {
@@ -88,6 +101,7 @@ const Reservation = ({ closed, info, setList }: IReservationProps) => {
     setReviewingInfo(undefined);
     setReviewInput('');
     setCurrRate(0);
+    stopEditReview();
     // }
   };
 
@@ -195,8 +209,38 @@ const Reservation = ({ closed, info, setList }: IReservationProps) => {
     </>
   );
 
-  const editReview = () => {
-    console.log(reviewingInfo);
+  const editReview = (item: TrainingReviewDto) => {
+    inputRef.current?.focus();
+
+    if (item.content && item.star) {
+      console.log(item, '++');
+      setEditingReviewInfo({
+        content: item.content,
+        star: item.star,
+      });
+    }
+  };
+
+  const handleEditReview = async (item: TrainingReviewDto) => {
+    if (!item.reviewId || !reservationId) return;
+    if (editingReviewInfo) {
+      await updateReview({
+        reviewId: item.reviewId,
+        reservationId,
+        ...editingReviewInfo,
+      });
+      setEditingReviewInfo(null);
+      // update review
+      const { data } = await getTrainingReservation(reservationId);
+      setReviewingInfo(data);
+      // 리뷰가 이미 작성된 경우 리뷰리스트 조회
+      if (reviewWritten && data?.trainingId) {
+        const reviews = await fetchTrainingReview(data?.trainingId);
+        setReviewList(reviews);
+      }
+    } else {
+      editReview(item);
+    }
   };
 
   // 리뷰조회
@@ -206,11 +250,11 @@ const Reservation = ({ closed, info, setList }: IReservationProps) => {
         {reviewList.map((item: TrainingReviewDto) => {
           return (
             <div className="mb-4 flex justify-between border border-solid border-input_bg p-4">
-              <div className="flex">
+              <div className="flex flex-1">
                 <div className="item-start border-gray h-10 w-10 overflow-hidden rounded-full border border-solid">
                   <img src={item.userInfo?.profileUrl} alt="" />
                 </div>
-                <div className="ml-6 flex flex-col">
+                <div className="ml-6 flex w-[80%] flex-col">
                   <div className="flex items-center">
                     <p className="mr-4  font-bold">{item.userInfo?.nickname}</p>
                     {item.createdDate && (
@@ -220,18 +264,48 @@ const Reservation = ({ closed, info, setList }: IReservationProps) => {
                     )}
                   </div>
 
-                  <p className="mt-7">{item.content}</p>
+                  {editingReviewInfo ? (
+                    <textarea
+                      value={editingReviewInfo.content}
+                      onChange={(e) => {
+                        setEditingReviewInfo({
+                          ...editingReviewInfo,
+                          content: e.target.value,
+                        });
+                      }}
+                      className="mt-[28px] h-[5rem] w-[100%] resize-none bg-input_bg p-[1rem] outline-none"
+                      placeholder="후기를 입력해주세요"
+                    />
+                  ) : (
+                    <p className="mt-4">{item.content}</p>
+                  )}
                 </div>
               </div>
               <div className="flex flex-col items-end justify-between">
                 <button
-                  onClick={editReview}
+                  onClick={() => handleEditReview(item)}
                   type="button"
                   className="flex h-[30px] w-fit items-center rounded-full bg-sub p-4"
                 >
-                  수정하기
+                  {editingReviewInfo ? '저장하기' : '수정하기'}
                 </button>
-                {item?.star && <StarRating currRate={item?.star} />}
+                {item?.star && (
+                  <StarRating
+                    currRate={
+                      editingReviewInfo ? editingReviewInfo.star : item?.star
+                    }
+                    onChange={
+                      editingReviewInfo
+                        ? (n) => {
+                            setEditingReviewInfo({
+                              ...editingReviewInfo,
+                              star: n,
+                            });
+                          }
+                        : undefined
+                    }
+                  />
+                )}
               </div>
             </div>
           );

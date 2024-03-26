@@ -1,7 +1,7 @@
 import { Gender } from './user';
 
 export interface IProfile {
-  [key: string]: string;
+  [key: string]: string | any;
   bio: string;
   email: string;
   gender: Gender;
@@ -9,4 +9,5 @@ export interface IProfile {
   phone: string;
   profileImg: string;
   grade: string;
+  interests: string[];
 }

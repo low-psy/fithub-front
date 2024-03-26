@@ -247,3 +247,27 @@ export const writeReview = async (
     star,
   });
 };
+
+/**
+ * [PUT] 리뷰수정
+ */
+export const updateReview = async ({
+  reviewId,
+  reservationId,
+  content,
+  star,
+}: {
+  reviewId: number;
+  reservationId: number;
+  content: string;
+  star: number;
+}) => {
+  await authAxios.put(
+    `/users/training/reservation/review?reviewId=${reviewId}`,
+    {
+      reservationId,
+      content,
+      star,
+    },
+  );
+};
