@@ -207,8 +207,12 @@ export const logout = async () => {
 /**
  * [GET] 예약리스트
  */
-export const fetchTrainingReservation = async () => {
-  const response = await authAxios.get('/users/training/reservation/all');
+export const fetchTrainingReservation = async (
+  status?: 'BEFORE' | 'START' | 'CANCEL' | 'NOSHOW',
+) => {
+  const response = await authAxios.get(
+    `/users/training/reservation/all?status=${status}`,
+  );
   return response.data.content;
 };
 /**

@@ -25,7 +25,7 @@ const Reservations = () => {
     useState<UsersReserveInfoDto[]>();
 
   const getReservations = async () => {
-    const res: UsersReserveInfoDto[] = await fetchTrainingReservation();
+    const res: UsersReserveInfoDto[] = await fetchTrainingReservation('BEFORE');
     setReservationList(res);
     const completedRes = await fetchCompletedReservation();
     setCompletedReservationList(completedRes);
