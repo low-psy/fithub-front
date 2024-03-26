@@ -7,6 +7,7 @@ import {
   redirect,
   useLoaderData,
   useNavigation,
+  useSearchParams,
 } from 'react-router-dom';
 import { AxiosResponse } from 'axios';
 import { useDispatch } from 'react-redux';
@@ -29,6 +30,9 @@ import { useAppSelector } from '../../hooks/reduxHooks';
 import useModal from '../../hooks/useModal';
 import DefaultModal from '../../components/modal/DefaultModal';
 import TrainingFilter from './TrainingFilter';
+import UndefinedCover from '../../components/common/UndefinedCover';
+
+export type CategoryEnum = 'PILATES' | 'HEALTH' | 'PT' | 'CROSSFIT' | 'YOGA';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
@@ -38,9 +42,18 @@ export const loader: LoaderFunction = async ({ request }) => {
     Number(url.searchParams.get('highestPrice')) || undefined;
   const startDate = url.searchParams.get('startDate') || undefined;
   const endDate = url.searchParams.get('endDate') || undefined;
+  const category =
+    (url.searchParams.get('category') as CategoryEnum) || undefined;
   try {
     let response;
-    if (keyword || lowestPrice || highestPrice || startDate || endDate) {
+    if (
+      keyword ||
+      lowestPrice ||
+      highestPrice ||
+      startDate ||
+      endDate ||
+      category
+    ) {
       response = await postSearchTraining({
         conditions: {
           keyword,
@@ -48,8 +61,9 @@ export const loader: LoaderFunction = async ({ request }) => {
           highestPrice,
           startDate,
           endDate,
+          category,
         },
-        pageable: { page: 0, size: 1 },
+        pageable: { page: 0, size: 10 },
       });
     } else {
       response = await getTraining();
@@ -70,7 +84,13 @@ export const loader: LoaderFunction = async ({ request }) => {
   return null;
 };
 
-const categoryArray = ['전체', 'PT', '요가', '필라테스', '크로스핏'];
+const categoryArray = [
+  { name: '전체', value: 'ALL' },
+  { name: 'PT', value: 'PT' },
+  { name: '요가', value: 'YOGA' },
+  { name: '필라테스', value: 'PILATES' },
+  { name: '크로스핏', value: 'CROSSFIT' },
+];
 
 const Home: React.FC = () => {
   const response = useLoaderData() as AxiosResponse<PageTrainingOutlineDto>;
@@ -85,7 +105,8 @@ const Home: React.FC = () => {
   const { isLogin } = useAppSelector((state) => state.user);
   const navigation = useNavigation();
   const filterModal = useModal();
-  const [selectCategory, setSelectCategory] = useState<string>('전체');
+  const [selectCategory, setSelectCategory] = useState<string>('ALL');
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     const fetchUsersTrainingLike = async () => {
@@ -109,7 +130,6 @@ const Home: React.FC = () => {
         errorFunc(err);
       }
     };
-    console.log(isLogin);
     if (isLogin) {
       fetchUsersTrainingLike();
     }
@@ -139,12 +159,22 @@ const Home: React.FC = () => {
     [last],
   );
 
+  const categoryFilterHandler = (category: string, index: number) => {
+    setSelectCategory(category);
+    if (category === 'ALL') {
+      searchParams.delete('category');
+    } else {
+      searchParams.set('category', categoryArray[index].value);
+    }
+    setSearchParams(searchParams);
+  };
+
   return (
     <>
       <div className="space-y-4 md:space-y-10">
         <section className="hidden h-56 grid-cols-2 gap-3  md:grid">
           <div className="row-span-2  flex ">
-            <FilterSection bg={lookupFilter} to="/post/home">
+            <FilterSection bg={lookupFilter} to="/post">
               운동 게시글 조회하기
             </FilterSection>
           </div>
@@ -166,16 +196,18 @@ const Home: React.FC = () => {
                 이런 <span className="text-main">트레이닝</span>은 어떠세요?
               </p>
               <div className="flex gap-x-3 text-2xl font-extrabold text-stone-400">
-                {categoryArray.map((category) => {
-                  const isSelected = selectCategory === category;
+                {categoryArray.map((category, index) => {
+                  const isSelected = selectCategory === category.value;
                   return (
                     <button
                       type="button"
-                      key={category}
+                      key={category.value}
                       className={`hover:text-black ${isSelected && 'text-black'}`}
-                      onClick={() => setSelectCategory(category)}
+                      onClick={() =>
+                        categoryFilterHandler(category.value, index)
+                      }
                     >
-                      {category}
+                      {category.name}
                     </button>
                   );
                 })}
@@ -190,6 +222,12 @@ const Home: React.FC = () => {
               필터
             </button>
           </article>
+          {!trainingInfo ||
+            (trainingInfo.length < 1 && (
+              <div className="relative h-[300px] w-full bg-gray-100">
+                <UndefinedCover>생성한 트레이닝이 없습니다</UndefinedCover>
+              </div>
+            ))}
           <Outlet
             context={{ trainingInfo, fetchData, last, usersTrainingLike }}
           />
@@ -202,13 +240,15 @@ const Home: React.FC = () => {
       >
         <TrainingFilter onClose={filterModal.toggle} />
       </DefaultModal>
-      <Link
-        to="/map"
-        className="fixed bottom-14 left-1/2 flex -translate-x-1/2 gap-x-1 rounded-full bg-purple-300 px-4 py-4 font-bold text-white drop-shadow-md"
-      >
-        <span className="material-symbols-rounded">location_on</span>
-        현재 위치 주변 검색하기
-      </Link>
+      {trainingInfo && trainingInfo.length > 0 && (
+        <Link
+          to="/map"
+          className="fixed bottom-14 left-1/2 flex -translate-x-1/2 gap-x-1 rounded-full bg-purple-300 px-4 py-4 font-bold text-white drop-shadow-md"
+        >
+          <span className="material-symbols-rounded">location_on</span>
+          현재 위치 주변 검색하기
+        </Link>
+      )}
     </>
   );
 };

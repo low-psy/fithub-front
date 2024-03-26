@@ -2,12 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import DropdownMenu from './DropdownMenu';
 import FloatRoundedIcon from '../icon/FloatRounded';
+import { TrainingOutlineDto } from '../../types/swagger/model/trainingOutlineDto';
 
 interface LinkBtnWithImgProps {
   to: string;
   img?: string;
   title?: string;
-  closed?: boolean;
   address?: string;
   startDate?: string;
   endDate?: string;
@@ -17,13 +17,13 @@ interface LinkBtnWithImgProps {
   defaultIconState?: boolean;
   dropdownHandler?: (action: string) => void;
   menuArray?: string[];
+  categories?: TrainingOutlineDto.CategoriesEnum[] | undefined;
 }
 
 const LinkBtnWithImg: React.FC<LinkBtnWithImgProps> = ({
   title,
   to,
   address,
-  closed,
   img,
   startDate,
   endDate,
@@ -33,7 +33,9 @@ const LinkBtnWithImg: React.FC<LinkBtnWithImgProps> = ({
   defaultIconState,
   dropdownHandler,
   menuArray,
+  categories,
 }) => {
+  const categoriesStr = categories?.join(',');
   return (
     <Link to={to} className="flex flex-col gap-y-4 ">
       {img && (
@@ -57,7 +59,7 @@ const LinkBtnWithImg: React.FC<LinkBtnWithImgProps> = ({
           {!dropdown ? (
             <div className="shrink-0 pl-2">
               <h3 className="rounded-full bg-sub px-2 py-1 font-bold xl:px-4 xl:py-2">
-                {closed ? '종료' : '모집중'}
+                {categoriesStr}
               </h3>
             </div>
           ) : (

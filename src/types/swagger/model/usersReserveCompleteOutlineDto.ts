@@ -23,6 +23,10 @@ export interface UsersReserveCompleteOutlineDto {
      */
     trainingId?: number;
     /**
+     * 예약한 트레이닝의 트레이너 프로필 이미지
+     */
+    trainerProfileImgUrl?: string;
+    /**
      * 트레이닝 제목
      */
     title?: string;

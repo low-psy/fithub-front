@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
 import CommentItem from './CommentItem';
 import { SET_REPLY_TO } from '../../redux/slices/commentSlice';
-import { getChildComments } from '../../apis/post';
+import { deleteComment, getChildComments } from '../../apis/post';
 import { ParentCommentInfoDto } from '../../types/swagger/model/parentCommentInfoDto';
 import { CommentInfoDto } from '../../types/swagger/model/commentInfoDto';
+import DropdownMenu from '../../components/btn/DropdownMenu';
+import { errorFunc } from '../../utils/util';
 
 interface CommentsProps {
   comments?: ParentCommentInfoDto[];
@@ -13,6 +16,7 @@ interface CommentsProps {
 }
 
 const Comment: React.FC<CommentsProps> = ({ comments, postId }) => {
+  console.log(comments);
   const [replyVisibles, setReplyVisibles] = useState<number[]>([]);
   const [childCommentsMap, setChildCommentsMap] = useState<{
     [key: number]: CommentInfoDto[];
@@ -48,6 +52,31 @@ const Comment: React.FC<CommentsProps> = ({ comments, postId }) => {
   const handleReplyClick = (replyTo: string, replyId: number) => {
     dispatch(SET_REPLY_TO({ replyId, replyTo }));
   };
+  const navigate = useNavigate();
+  const deleteHandler = async (commentId: number | undefined) => {
+    if (commentId) {
+      try {
+        const res = await deleteComment(commentId);
+        if (res.status === 200) {
+          return navigate(0);
+        }
+      } catch (err) {
+        errorFunc(err);
+        navigate('/post');
+      }
+    }
+  };
+  const editHandler = (
+    writer: string | undefined,
+    comment: string | undefined,
+    id: number | undefined,
+  ) => {
+    if (writer && comment) {
+      dispatch(
+        SET_REPLY_TO({ replyTo: writer, replyId: id as number, comment }),
+      );
+    }
+  };
 
   const renderComments = (
     commentId: number,
@@ -57,10 +86,26 @@ const Comment: React.FC<CommentsProps> = ({ comments, postId }) => {
       <div className="space-y-3 pl-12 text-sm">
         {childComments.map((childComment) => (
           <li key={childComment.commentId} className="space-y-2">
-            <CommentItem
-              comment={childComment}
-              onReplyClick={handleReplyClick}
-            />
+            <div className="flex justify-between">
+              <CommentItem
+                comment={childComment}
+                onReplyClick={handleReplyClick}
+              />
+              <DropdownMenu
+                menuArray={['수정하기', '삭제하기']}
+                onMenuItemClick={(value: string) => {
+                  if (value === '수정하기') {
+                    editHandler(
+                      childComment.writerNickName,
+                      childComment.content,
+                      childComment.commentId,
+                    );
+                  } else {
+                    deleteHandler(childComment.commentId);
+                  }
+                }}
+              />
+            </div>
             {childComment.childComments &&
               childComment.childComments?.length > 0 && (
                 <button
@@ -91,7 +136,23 @@ const Comment: React.FC<CommentsProps> = ({ comments, postId }) => {
     <ul className="space-y-4">
       {comments?.map((comment) => (
         <li key={comment.commentId} className="space-y-2">
-          <CommentItem comment={comment} onReplyClick={handleReplyClick} />
+          <div className="flex justify-between">
+            <CommentItem comment={comment} onReplyClick={handleReplyClick} />
+            <DropdownMenu
+              menuArray={['수정하기', '삭제하기']}
+              onMenuItemClick={(value: string) => {
+                if (value === '수정하기') {
+                  editHandler(
+                    comment.writerNickName,
+                    comment.content,
+                    comment.commentId,
+                  );
+                } else {
+                  deleteHandler(comment.commentId);
+                }
+              }}
+            />
+          </div>
           {comment.hasChildComment && (
             <button
               type="button"

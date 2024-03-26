@@ -29,6 +29,7 @@ export const initialPaymentState: PaymentState = {
 export const initialCommentState: CommentState = {
   replyTo: '',
   selectReplyId: null,
+  comment: '',
 };
 
 export const initialUpdateImageState: PostDocumentUpdateDto[] = [];

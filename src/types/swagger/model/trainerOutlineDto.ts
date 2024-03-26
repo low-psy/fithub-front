@@ -10,26 +10,37 @@
  * Do not edit the class manually.
  */
 
-export interface SignUpDto { 
-    email: string;
-    password: string;
-    name: string;
-    nickname: string;
-    phone: string;
-    bio?: string;
-    gender: SignUpDto.GenderEnum;
+export interface TrainerOutlineDto { 
     /**
-     * 관심사(최소 1개 이상). ex) PILATES, HEALTH, PT, CROSSFIT, YOGA
+     * 현재 일하는 장소
      */
-    interests: Array<SignUpDto.InterestsEnum>;
+    address?: string;
+    /**
+     * 트레이너 id
+     */
+    id?: number;
+    /**
+     * 트레이너 이름
+     */
+    bio?: string;
+    /**
+     * 트레이너 이름
+     */
+    name?: string;
+    /**
+     * 트레이너 이메일
+     */
+    email?: string;
+    /**
+     * 트레이너 프로필 이미지
+     */
+    profileUrl?: string;
+    /**
+     * 트레이너 전문 분야
+     */
+    interests?: Array<TrainerOutlineDto.InterestsEnum>;
 }
-export namespace SignUpDto {
-    export type GenderEnum = 'F' | 'M' | 'UNDEFINED';
-    export const GenderEnum = {
-        F: 'F' as GenderEnum,
-        M: 'M' as GenderEnum,
-        UNDEFINED: 'UNDEFINED' as GenderEnum
-    };
+export namespace TrainerOutlineDto {
     export type InterestsEnum = 'PILATES' | 'HEALTH' | 'PT' | 'CROSSFIT' | 'YOGA';
     export const InterestsEnum = {
         PILATES: 'PILATES' as InterestsEnum,

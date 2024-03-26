@@ -18,10 +18,11 @@ export const loader = (async () => {
     const status = err.response?.status;
     if (status === 401) {
       alert('로그인한 사용자만 사용가능한 기능입니다');
-      redirect('/login');
-    } else if (status === 404) {
+      return redirect('/login');
+    }
+    if (status === 404) {
       alert('존재하지 않는 회원입니다');
-      redirect('/signup');
+      return redirect('/signup');
     }
     return null;
   }

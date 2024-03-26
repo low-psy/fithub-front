@@ -9,13 +9,18 @@ import {
   useNavigate,
   redirect,
 } from 'react-router-dom';
-import { LoaderData } from '../../types/common';
+import { LoaderData, refreshResData } from '../../types/common';
 import { getLikeBook, getLikes } from '../../apis/post';
 import { LikesBookmarkStatusDto } from '../../types/swagger/model/likesBookmarkStatusDto';
 import { LikedUsersInfoDto } from '../../types/swagger/model/likedUsersInfoDto';
 import { useAppSelector } from '../../hooks/reduxHooks';
 import FilterLayout from '../../components/filter/FilterLayout';
-import { errorFunc, postFetchFunc } from '../../utils/util';
+import {
+  errorFunc,
+  isRefreshResData,
+  postFetchFunc,
+  setRefreshToken,
+} from '../../utils/util';
 import useSearchModal from '../../hooks/useSearchModal';
 import { PostInfoDto } from '../../types/swagger/model/postInfoDto';
 import PostSearch from './PostSearch';
@@ -28,6 +33,12 @@ export const loader = (async ({ request }) => {
     const res = await postFetchFunc(searchParams, 0);
     if (res.status === 200) {
       return res;
+    }
+    if (res.status === 201) {
+      if (isRefreshResData(res.data)) {
+        const { accessToken } = res.data as refreshResData;
+        setRefreshToken(accessToken);
+      }
     }
     throw new Error('server is trouble');
   } catch (err) {
@@ -55,6 +66,7 @@ const Post = () => {
 
   const { enteredText, clickHandler, inputChangeHandler } = useSearchModal();
   const [last, setLast] = useState<boolean>(postPage.last as boolean);
+  console.log(last);
 
   const [page, setPage] = useState<number>(postPage.number as number);
 
@@ -75,7 +87,7 @@ const Post = () => {
   const alignBtnHandler = (i: number) => {
     switch (i) {
       case 0:
-        return navigate('/post/home');
+        return navigate('/post');
       case 1:
         searchParams.set('align', 'id');
         break;
@@ -110,15 +122,18 @@ const Post = () => {
       });
       if (isLogin && PostRequestDtos) {
         getLikeBook(PostRequestDtos).then((res) => {
+          console.log(res.data);
           setBookAndLikes(res.data);
         });
       }
       getLikes(PostRequestDtos).then((res) => {
+        console.log(res.data);
         setLikedInfos(res.data);
       });
     },
     [isLogin],
   );
+
   const outletContext = {
     inputChangeHandler,
     alignBtnArray,
@@ -136,7 +151,6 @@ const Post = () => {
   const isNotSearch =
     location.pathname.includes('favorite') ||
     location.pathname.includes('book');
-  const isNotFilterLayout = !location.pathname.includes('home');
   let title;
   if (liked) {
     title = '좋아요한 게시물';
@@ -155,25 +169,21 @@ const Post = () => {
   }
   return (
     <div className="flex gap-8 space-y-4 md:space-y-0">
-      {!isNotFilterLayout && (
-        <FilterLayout>
-          <div className="space-y-12">
-            <div>
-              <Link
-                to="/newpost"
-                className=" block break-keep bg-accent_sub p-4 text-center text-3xl font-extrabold text-accent"
-              >
-                게시물 작성하기
-              </Link>
-            </div>
-            <div>chat</div>
+      <FilterLayout>
+        <div className="space-y-12">
+          <div>
+            <Link
+              to="/newpost"
+              className=" block break-keep bg-accent_sub p-4 text-center text-3xl font-extrabold text-accent"
+            >
+              게시물 작성하기
+            </Link>
           </div>
-        </FilterLayout>
-      )}
+          <div>chat</div>
+        </div>
+      </FilterLayout>
       <section className="relative mx-auto w-[728px] space-y-4">
-        {isNotFilterLayout && (
-          <h1 className="text-3xl font-extrabold">{title}</h1>
-        )}
+        <h1 className="text-3xl font-extrabold">{title}</h1>
         {!isNotSearch && (
           <PostSearch
             clickHandler={clickHandler}

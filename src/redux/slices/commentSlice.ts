@@ -7,13 +7,20 @@ export const commentSlice = createSlice({
   reducers: {
     SET_REPLY_TO: (
       state,
-      action: PayloadAction<{ replyTo: string; replyId: number | null }>,
+      action: PayloadAction<{
+        replyTo: string;
+        replyId: number | null;
+        comment?: string | undefined;
+      }>,
     ) => {
       const replyPrefix = action.payload.replyTo
         ? `@${action.payload.replyTo} `
         : '';
       state.replyTo = replyPrefix;
       state.selectReplyId = action.payload.replyId;
+      if (action.payload.comment) {
+        state.comment = action.payload.comment;
+      }
     },
     SET_REPLY_INITIALIZE: (state) => {
       state.replyTo = '';

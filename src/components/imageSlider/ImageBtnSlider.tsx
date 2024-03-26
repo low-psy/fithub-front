@@ -7,7 +7,7 @@ interface ImageSliderProps {
 
 const ImageBtnSlider: React.FC<ImageSliderProps> = ({
   postImages,
-  imageSize = '468',
+  imageSize,
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   if (!postImages) {
@@ -64,7 +64,8 @@ const ImageBtnSlider: React.FC<ImageSliderProps> = ({
             key={imageUrl as string}
             src={imageUrl as string}
             alt={`게시물 이미지 ${index + 1}`}
-            className="max-h-full max-w-full object-cover"
+            className="object-cover"
+            style={{ maxHeight: imageSize || '500px' }}
           />
         </div>
       ))}

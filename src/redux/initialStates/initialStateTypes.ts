@@ -23,6 +23,7 @@ export interface PaymentState extends PaymentReqDto {
 export interface CommentState {
   replyTo: string;
   selectReplyId: number | null;
+  comment: string | undefined;
 }
 
 export interface IDropdownState {
