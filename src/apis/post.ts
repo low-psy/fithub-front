@@ -50,7 +50,7 @@ export const deletePost = async (id: number) => {
 export const getPost = async (
   page: number,
 ): Promise<AxiosResponse<PagePostInfoDto>> => {
-  return defaultAxios.get<PagePostInfoDto>(`/posts?page=${page}&size=2`);
+  return defaultAxios.get<PagePostInfoDto>(`/posts?page=${page}&size=10`);
 };
 
 export const getBookedPost = async (

@@ -6,6 +6,7 @@ import {
   Outlet,
   redirect,
   useLoaderData,
+  useNavigate,
   useNavigation,
   useSearchParams,
 } from 'react-router-dom';
@@ -106,7 +107,6 @@ const Home: React.FC = () => {
   const navigation = useNavigation();
   const filterModal = useModal();
   const [selectCategory, setSelectCategory] = useState<string>('ALL');
-  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     const fetchUsersTrainingLike = async () => {
@@ -158,15 +158,13 @@ const Home: React.FC = () => {
     },
     [last],
   );
-
+  const navigate = useNavigate();
   const categoryFilterHandler = (category: string, index: number) => {
     setSelectCategory(category);
     if (category === 'ALL') {
-      searchParams.delete('category');
-    } else {
-      searchParams.set('category', categoryArray[index].value);
+      return navigate('/');
     }
-    setSearchParams(searchParams);
+    navigate(`/?category=${categoryArray[index].value}`);
   };
 
   return (
@@ -184,8 +182,8 @@ const Home: React.FC = () => {
             </FilterSection>
           </div>
           <div className=" flex ">
-            <FilterSection bg={mapFilter} to="map">
-              지도에서 찾아보기
+            <FilterSection bg={mapFilter} to="">
+              트레이너 조회하기
             </FilterSection>
           </div>
         </section>
@@ -244,6 +242,7 @@ const Home: React.FC = () => {
         <Link
           to="/map"
           className="fixed bottom-14 left-1/2 flex -translate-x-1/2 gap-x-1 rounded-full bg-purple-300 px-4 py-4 font-bold text-white drop-shadow-md"
+          state={{ fromHome: true }}
         >
           <span className="material-symbols-rounded">location_on</span>
           현재 위치 주변 검색하기

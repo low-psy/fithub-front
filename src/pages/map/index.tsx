@@ -5,6 +5,7 @@ import {
   LoaderFunction,
   redirect,
   useLoaderData,
+  useNavigate,
 } from 'react-router-dom';
 import { postSearchLocationTraining } from '../../apis/trainig';
 import { addressToPositions, errorFunc, fetchLocation } from '../../utils/util';
@@ -21,9 +22,15 @@ interface mapTrainingData {
   position: kakaoLocation;
 }
 
-export const loader = (async () => {
+export const loader = (async ({ request }) => {
   try {
-    const { latitude, longitude } = (await fetchLocation()).coords;
+    let latitude = Number(localStorage.getItem('lat'));
+    let longitude = Number(localStorage.getItem('lng'));
+    if (!latitude && !longitude) {
+      const { coords } = await fetchLocation();
+      latitude = coords.latitude;
+      longitude = coords.longitude;
+    }
     const res = await postSearchLocationTraining({ latitude, longitude });
     localStorage.setItem('lat', latitude.toString());
     localStorage.setItem('lng', longitude.toString());
@@ -33,6 +40,7 @@ export const loader = (async () => {
     return redirect('/');
   }
 }) satisfies LoaderFunction;
+
 const UserMap = () => {
   const initialRes = useLoaderData() as LoaderData<typeof loader>;
   const initialData = useMemo(() => initialRes.data, [initialRes.data]);
@@ -58,7 +66,7 @@ const UserMap = () => {
       setMapTrainingData(tDataWithPosition);
     });
   };
-
+  const navigate = useNavigate();
   const updateCurrentCenter = async () => {
     if (mapRef.current) {
       const center = mapRef.current.getCenter();
@@ -66,10 +74,13 @@ const UserMap = () => {
         lat: center.getLat(),
         lng: center.getLng(),
       });
+      localStorage.setItem('lat', center.getLat().toString());
+      localStorage.setItem('lng', center.getLng().toString());
+      navigate(0);
     }
   };
   useEffect(() => {
-    if (initialData && initialData.length > 1) {
+    if (initialData && initialData.length > 0) {
       dataWithPositionHandler(initialData);
     }
     const lat = Number(localStorage.getItem('lat') as string);
