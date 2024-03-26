@@ -221,6 +221,17 @@ const Reservation = ({ closed, info, setList }: IReservationProps) => {
     }
   };
 
+  const updateReviewList = async () => {
+    if (!reservationId) return;
+    const { data } = await getTrainingReservation(reservationId);
+    setReviewingInfo(data);
+    // 리뷰가 이미 작성된 경우 리뷰리스트 조회
+    if (reviewWritten && data?.trainingId) {
+      const reviews = await fetchTrainingReview(data?.trainingId);
+      setReviewList(reviews);
+    }
+  };
+
   const handleEditReview = async (item: TrainingReviewDto) => {
     if (!item.reviewId || !reservationId) return;
     if (editingReviewInfo) {
@@ -230,17 +241,16 @@ const Reservation = ({ closed, info, setList }: IReservationProps) => {
         ...editingReviewInfo,
       });
       setEditingReviewInfo(null);
-      // update review
-      const { data } = await getTrainingReservation(reservationId);
-      setReviewingInfo(data);
-      // 리뷰가 이미 작성된 경우 리뷰리스트 조회
-      if (reviewWritten && data?.trainingId) {
-        const reviews = await fetchTrainingReview(data?.trainingId);
-        setReviewList(reviews);
-      }
+      await updateReviewList();
     } else {
       editReview(item);
     }
+  };
+
+  const handleDeleteReview = async (item: TrainingReviewDto) => {
+    if (!item.reviewId) return;
+    await deleteTrainingReview(item.reviewId);
+    await updateReviewList();
   };
 
   // 리뷰조회
@@ -282,13 +292,22 @@ const Reservation = ({ closed, info, setList }: IReservationProps) => {
                 </div>
               </div>
               <div className="flex flex-col items-end justify-between">
-                <button
-                  onClick={() => handleEditReview(item)}
-                  type="button"
-                  className="flex h-[30px] w-fit items-center rounded-full bg-sub p-4"
-                >
-                  {editingReviewInfo ? '저장하기' : '수정하기'}
-                </button>
+                <div className="flex">
+                  <button
+                    onClick={() => handleEditReview(item)}
+                    type="button"
+                    className="mr-3 flex h-[30px] w-fit items-center rounded-full bg-sub p-4"
+                  >
+                    {editingReviewInfo ? '저장' : '수정'}
+                  </button>
+                  <button
+                    onClick={() => handleDeleteReview(item)}
+                    type="button"
+                    className="flex h-[30px] w-fit items-center rounded-full bg-red-300 p-4"
+                  >
+                    삭제
+                  </button>
+                </div>
                 {item?.star && (
                   <StarRating
                     currRate={
@@ -310,6 +329,7 @@ const Reservation = ({ closed, info, setList }: IReservationProps) => {
             </div>
           );
         })}
+        {!reviewList.length && <p>리뷰가 존재하지 않습니다</p>}
       </section>
     );
   };
