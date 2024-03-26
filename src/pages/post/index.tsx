@@ -9,13 +9,18 @@ import {
   useNavigate,
   redirect,
 } from 'react-router-dom';
-import { LoaderData } from '../../types/common';
+import { LoaderData, refreshResData } from '../../types/common';
 import { getLikeBook, getLikes } from '../../apis/post';
 import { LikesBookmarkStatusDto } from '../../types/swagger/model/likesBookmarkStatusDto';
 import { LikedUsersInfoDto } from '../../types/swagger/model/likedUsersInfoDto';
 import { useAppSelector } from '../../hooks/reduxHooks';
 import FilterLayout from '../../components/filter/FilterLayout';
-import { errorFunc, postFetchFunc } from '../../utils/util';
+import {
+  errorFunc,
+  isRefreshResData,
+  postFetchFunc,
+  setRefreshToken,
+} from '../../utils/util';
 import useSearchModal from '../../hooks/useSearchModal';
 import { PostInfoDto } from '../../types/swagger/model/postInfoDto';
 import PostSearch from './PostSearch';
@@ -28,6 +33,12 @@ export const loader = (async ({ request }) => {
     const res = await postFetchFunc(searchParams, 0);
     if (res.status === 200) {
       return res;
+    }
+    if (res.status === 201) {
+      if (isRefreshResData(res.data)) {
+        const { accessToken } = res.data as refreshResData;
+        setRefreshToken(accessToken);
+      }
     }
     throw new Error('server is trouble');
   } catch (err) {
@@ -55,6 +66,7 @@ const Post = () => {
 
   const { enteredText, clickHandler, inputChangeHandler } = useSearchModal();
   const [last, setLast] = useState<boolean>(postPage.last as boolean);
+  console.log(last);
 
   const [page, setPage] = useState<number>(postPage.number as number);
 
@@ -121,6 +133,7 @@ const Post = () => {
     },
     [isLogin],
   );
+
   const outletContext = {
     inputChangeHandler,
     alignBtnArray,

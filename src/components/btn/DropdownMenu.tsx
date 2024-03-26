@@ -5,6 +5,7 @@ interface DropdownMenuProps {
   menuArray: string[];
   children?: any;
   onToggleMenuClick?: () => void;
+  className?: string;
 }
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({
@@ -12,6 +13,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   menuArray,
   children,
   onToggleMenuClick,
+  className,
 }) => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -47,7 +49,9 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
         )}
       </button>
       {showMenu && (
-        <ul className="absolute right-7 top-0 z-20 w-36 overflow-hidden rounded-lg  bg-white shadow-md">
+        <ul
+          className={`absolute ${className || 'right-7 top-0'} z-20 w-36 overflow-hidden rounded-lg  bg-white shadow-md`}
+        >
           {menuArray.map((value) => (
             <li
               key={value}

@@ -125,7 +125,7 @@ function App() {
             { path: 'book', element: <PostHome /> },
             { path: 'explore', element: <PostHome /> },
             {
-              path: '/post/:category/:postId',
+              path: '/post/:category?/:postId',
               element: <DetailPost />,
               loader: detailPostLoader,
               action: detailPostAction,

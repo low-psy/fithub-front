@@ -7,6 +7,8 @@ import {
   SET_REPLY_TO,
 } from '../../redux/slices/commentSlice';
 
+type HTMLFormMethod = 'get' | 'post' | 'put' | 'patch' | 'delete';
+
 interface CommentFormProps {
   parentCommentId: number | undefined;
   postId: number | undefined;
@@ -24,14 +26,20 @@ const CommentForm: React.FC<CommentFormProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
+  let method: HTMLFormMethod = 'post';
+  if (cmt.comment) {
+    method = 'put';
+  }
+
   useEffect(() => {
     setReplyTo(cmt.replyTo);
+    setInputValue(cmt.comment);
     if (fetcher.data?.comment) {
       setInputValue(''); // input value 초기화
       dispatch(SET_REPLY_INITIALIZE());
       navigate(0);
     }
-  }, [fetcher.data, cmt.replyTo, navigate, postId, dispatch]);
+  }, [fetcher.data, cmt.replyTo, navigate, postId, dispatch, cmt.comment]);
 
   const handleChange = () => {
     setInputValue(inputRef.current?.value);
@@ -45,7 +53,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
     <fetcher.Form
       className="flex items-center"
       action={`/post/${postId}`}
-      method="post"
+      method={method}
     >
       <div className="flex grow rounded-md">
         <div
@@ -79,7 +87,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
           type="submit"
           className="block w-[80px] rounded-full bg-sub py-2 "
         >
-          제출
+          {method === 'post' ? '제출' : '수정'}
         </button>
       </div>
     </fetcher.Form>

@@ -240,7 +240,7 @@ const Home: React.FC = () => {
       >
         <TrainingFilter onClose={filterModal.toggle} />
       </DefaultModal>
-      {trainingInfo && trainingInfo.length > 1 && (
+      {trainingInfo && trainingInfo.length > 0 && (
         <Link
           to="/map"
           className="fixed bottom-14 left-1/2 flex -translate-x-1/2 gap-x-1 rounded-full bg-purple-300 px-4 py-4 font-bold text-white drop-shadow-md"

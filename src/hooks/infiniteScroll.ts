@@ -41,8 +41,8 @@ const useInfiniteScroll = <T>({
     );
 
     const currentLoader = loaderIndicator.current;
-    if (loaderIndicator.current && !last) {
-      observer.observe(loaderIndicator.current);
+    if (currentLoader && !last) {
+      observer.observe(currentLoader);
     } else if (currentLoader) {
       observer.unobserve(currentLoader);
     }
