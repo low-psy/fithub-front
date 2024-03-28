@@ -43,12 +43,12 @@ import Help from './pages/help';
 import NewTrainer from './pages/trainer/new';
 import CreateTrainer, {
   action as createTrainerAction,
+  loader as createTrainerLoader,
 } from './pages/trainer/create';
 import Detail, { loader as detailedTrainingLoader } from './pages/detail';
 import pageRoutes from './pageRoutes';
 
 // hooks
-import useGoogleMapsApiLoader from './hooks/useGoogleMap';
 import { LOGIN, SET_TRAINER } from './redux/slices/userSlice';
 import TrainingBook, { loader as TrainingBookLoader } from './pages/book';
 import SuccessPage, {
@@ -56,6 +56,10 @@ import SuccessPage, {
 } from './pages/detail/success';
 
 import TrainerInfo from './pages/user/trainerInfo';
+import PostHome from './pages/post/home';
+import TrainingExplore from './pages/home/explore';
+import UserHome from './pages/home/home';
+import UserMap, { loader as TrainingMapLoader } from './pages/map';
 
 function App() {
   // 전역 로그인 상태 관리
@@ -71,8 +75,6 @@ function App() {
     }
   }, [dispatch]);
 
-  useGoogleMapsApiLoader();
-
   const router = createBrowserRouter([
     {
       path: pageRoutes.main.base,
@@ -80,16 +82,32 @@ function App() {
       children: [
         // 홈
         {
-          index: true,
+          path: '/',
           element: <Home />,
           loader: homeLoader,
           action: homeAction,
+          children: [
+            {
+              index: true,
+              element: <UserHome />,
+            },
+            {
+              path: 'explore',
+              element: <TrainingExplore />,
+            },
+          ],
         },
         // 트레이닝 예약
         {
           path: pageRoutes.userTraining.book,
           element: <TrainingBook />,
           loader: TrainingBookLoader,
+        },
+        // 트레이닝 지도
+        {
+          path: '/map',
+          element: <UserMap />,
+          loader: TrainingMapLoader,
         },
         // 게시글 작성
         {
@@ -103,10 +121,13 @@ function App() {
           path: pageRoutes.userPost.base,
           element: <Post />,
           loader: postLoader,
-          // 게시글 상세 조회
           children: [
+            { path: 'home', element: <PostHome /> },
+            { path: 'favorite', element: <PostHome /> },
+            { path: 'book', element: <PostHome /> },
+            { path: 'explore', element: <PostHome /> },
             {
-              path: pageRoutes.userPost.detail,
+              path: '/post/:category/:postId',
               element: <DetailPost />,
               loader: detailPostLoader,
               action: detailPostAction,
@@ -216,6 +237,7 @@ function App() {
               path: pageRoutes.trainer.create,
               element: <CreateTrainer />,
               action: createTrainerAction,
+              loader: createTrainerLoader,
             },
           ],
         },

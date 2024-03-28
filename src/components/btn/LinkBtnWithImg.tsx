@@ -37,11 +37,11 @@ const LinkBtnWithImg: React.FC<LinkBtnWithImgProps> = ({
   return (
     <Link to={to} className="flex flex-col gap-y-4 ">
       {img && (
-        <div className="relative flex  justify-center rounded-xl bg-white shadow-md">
+        <div className="relative flex h-[300px] items-center justify-center rounded-xl shadow-md">
           <img
             src={img}
             alt="프로필 이미지"
-            className="h-full w-full rounded-xl"
+            className="h-full w-full rounded-xl object-cover"
           />
           <FloatRoundedIcon
             onClick={toggleBook}

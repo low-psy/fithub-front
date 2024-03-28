@@ -24,4 +24,15 @@ export interface TrainingInfoDto {
     startDate?: string;
     endDate?: string;
     availableDates?: Array<TrainingAvailableDateDto>;
+    categories?: Array<TrainingInfoDto.CategoriesEnum>;
+}
+export namespace TrainingInfoDto {
+    export type CategoriesEnum = 'PILATES' | 'HEALTH' | 'PT' | 'CROSSFIT' | 'YOGA';
+    export const CategoriesEnum = {
+        PILATES: 'PILATES' as CategoriesEnum,
+        HEALTH: 'HEALTH' as CategoriesEnum,
+        PT: 'PT' as CategoriesEnum,
+        CROSSFIT: 'CROSSFIT' as CategoriesEnum,
+        YOGA: 'YOGA' as CategoriesEnum
+    };
 }

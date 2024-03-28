@@ -1,10 +1,9 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../hooks/reduxHooks';
+import NavDropdown from './NavDropdown';
 import BookmarkIcon from '../../assets/icons/BookmarkIcon';
 import ChatIcon from '../../assets/icons/ChatIcon';
-import ProfileIcon from '../../assets/icons/ProfileIcon';
-import NavDropdown from './NavDropdown';
 
 const NavMenu = () => {
   const { isLogin, role } = useAppSelector((state) => state.user);

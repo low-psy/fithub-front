@@ -1,16 +1,36 @@
 import React from 'react';
-import { ActionFunctionArgs, redirect } from 'react-router-dom';
+import {
+  ActionFunctionArgs,
+  LoaderFunction,
+  redirect,
+  useLoaderData,
+} from 'react-router-dom';
 import { AxiosError } from 'axios';
 import TrainerForm from './TrainerForm';
-import { FormErrors } from '../../types/common';
-import { createTraining } from '../../apis/trainig';
+import { FormErrors, LoaderData } from '../../types/common';
+import { createTraining, getTrainersDateList } from '../../apis/trainig';
 import { errorFunc } from '../../utils/util';
 import { ErrorResponseDto } from '../../types/swagger/model/errorResponseDto';
+import { TrainingCreateDto } from '../../types/swagger/model/trainingCreateDto';
+
+export const loader = (async () => {
+  try {
+    const res = await getTrainersDateList();
+    if (res.status === 200) {
+      return res;
+    }
+    return null;
+  } catch (err) {
+    errorFunc(err);
+    redirect('/');
+  }
+}) satisfies LoaderFunction;
 
 const CreateTrainer = () => {
+  const res = useLoaderData() as LoaderData<typeof loader>;
   return (
     <div className="space-y-8">
-      <TrainerForm />
+      <TrainerForm dateList={res?.data} />
     </div>
   );
 };
@@ -25,8 +45,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     images.filter((file) => file.size > 0).length === 0
       ? undefined
       : images.filter((file) => file.size > 0);
-
-  const location = formData.get('finalLocation') as string;
+  const categories = formData.getAll(
+    'categories',
+  ) as Array<TrainingCreateDto.CategoriesEnum>;
   const quota = formData.get('quota');
   const quotaNumber = quota ? Number(quota) : 0;
   const price = formData.get('price');
@@ -46,7 +67,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     errors.title = '제목은 2글자 이상 100글자 이하로 입력해야 합니다.';
   if (!content) errors.content = '내용을 입력해야 합니다.';
   if (images.length === 0) errors.images = '이미지를 업로드해야 합니다.';
-  if (!location) errors.location = '위치를 입력해야 합니다.';
   if (!price) errors.price = '가격을 입력해야 합니다.';
   if (!startDate || !endDate || !startHour || !endHour) {
     errors.dateTime = '날짜와 시간을 입력해야 합니다';
@@ -66,7 +86,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     title,
     content,
     images: nonEmptyImageFiles,
-    location,
     quota: quotaNumber,
     price: priceNumber,
     startDate,
@@ -74,6 +93,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     startHour,
     endHour,
     unableDates: nonEmptyUnableDates,
+    categories,
   };
 
   try {

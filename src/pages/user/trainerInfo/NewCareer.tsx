@@ -69,20 +69,20 @@ const NewCareer = ({
 
     const { address } = data;
     let latitude: number;
-    let logitude: number;
+    let longitude: number;
 
     // 위도 및 경도 구하기
     const geocoder = new kakao.maps.services.Geocoder();
     geocoder.addressSearch(address, (result: any, status: any) => {
       if (status === kakao.maps.services.Status.OK) {
         latitude = Number(result[0].y); // 위도
-        logitude = Number(result[0].x); // 경도
+        longitude = Number(result[0].x); // 경도
         setData((prev: any) => {
           return {
             ...prev,
             address,
             latitude,
-            logitude,
+            longitude,
           };
         });
       }

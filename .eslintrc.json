@@ -28,7 +28,7 @@
     "dot-notation": "off",
     "consistent-return": "warn",
     "no-nested-ternary": "off",
-    "no-undef": ["error", { "typeof": true }],
+    "no-undef": ["warn", { "typeof": true }],
     "no-shadow": "off",
     "react/prop-types": "off",
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
@@ -84,8 +84,5 @@
     "import/resolver": {
       "typescript": {}
     }
-  },
-  "globals": {
-    "google": "readonly"
   }
 }

@@ -13,7 +13,6 @@
 export interface TrainerCareerDto { 
     careerId: number;
     company: string;
-    address: string;
     work: string;
     startDate: string;
     endDate?: string;

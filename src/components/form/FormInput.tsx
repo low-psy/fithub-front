@@ -7,6 +7,7 @@ function FormInput({ error, isTextArea, className, ...rest }: IInputProps) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (rest.onChange) {
       rest.onChange(rest.id, event.target.value);
+      console.log(event.target.value);
     }
   };
 
@@ -42,6 +43,7 @@ function FormInput({ error, isTextArea, className, ...rest }: IInputProps) {
         isError && 'border-2 border-accent'
       } ${textColor} w-full`}
       onChange={handleChange}
+      value={rest.value}
     />
   );
 }

@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActionFunctionArgs,
+  Link,
   LoaderFunction,
+  Outlet,
   redirect,
   useLoaderData,
   useNavigation,
@@ -19,36 +21,39 @@ import lookupFilter from '../../assets/lookupFilter.png';
 import mapFilter from '../../assets/mapFilter.png';
 import newpostFilter from '../../assets/newpostFilter.png';
 import FilterIcon from '../../assets/icons/filterIcon';
-import useInfiniteScroll from '../../hooks/infiniteScroll';
 import { TrainingOutlineDto } from '../../types/swagger/model/trainingOutlineDto';
 import { PageTrainingOutlineDto } from '../../types/swagger/model/pageTrainingOutlineDto';
 import { errorFunc, isRefreshResData, setRefreshToken } from '../../utils/util';
-import UserTrainingItem from './UserTrainingItem';
 import { refreshResData } from '../../types/common';
 import { useAppSelector } from '../../hooks/reduxHooks';
+import useModal from '../../hooks/useModal';
+import DefaultModal from '../../components/modal/DefaultModal';
+import TrainingFilter from './TrainingFilter';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
-  const keyword = url.searchParams.get('searchInput');
-  const lowestPrice = url.searchParams.get('lowestPrice');
-  const highestPrice = url.searchParams.get('highestPrice');
-  const startDate = url.searchParams.get('startDate');
-  const endDate = url.searchParams.get('endDate');
+  const keyword = url.searchParams.get('searchInput') || undefined;
+  const lowestPrice = Number(url.searchParams.get('lowestPrice')) || undefined;
+  const highestPrice =
+    Number(url.searchParams.get('highestPrice')) || undefined;
+  const startDate = url.searchParams.get('startDate') || undefined;
+  const endDate = url.searchParams.get('endDate') || undefined;
   try {
-    let res;
+    let response;
     if (keyword || lowestPrice || highestPrice || startDate || endDate) {
-      res = await postSearchTraining({
+      response = await postSearchTraining({
         conditions: {
           keyword,
-          lowestPrice: Number(lowestPrice),
-          highestPrice: Number(highestPrice),
+          lowestPrice,
+          highestPrice,
           startDate,
           endDate,
         },
-        pageable: {},
+        pageable: { page: 0, size: 1 },
       });
+    } else {
+      response = await getTraining();
     }
-    const response = await getTraining();
     if (response.status === 200) {
       return response;
     }
@@ -65,18 +70,22 @@ export const loader: LoaderFunction = async ({ request }) => {
   return null;
 };
 
+const categoryArray = ['전체', 'PT', '요가', '필라테스', '크로스핏'];
+
 const Home: React.FC = () => {
   const response = useLoaderData() as AxiosResponse<PageTrainingOutlineDto>;
   const pageTrainersTraining = useMemo(() => response.data, [response.data]);
+  const trainingInfo = pageTrainersTraining.content;
   const idList = useMemo(
-    () =>
-      pageTrainersTraining.content?.map((training) => training.id as number),
-    [pageTrainersTraining.content],
+    () => trainingInfo?.map((training) => training.id as number),
+    [trainingInfo],
   );
   const dispatch = useDispatch();
   const [usersTrainingLike, setUsersTrainingLike] = useState<boolean[]>([]);
   const { isLogin } = useAppSelector((state) => state.user);
   const navigation = useNavigation();
+  const filterModal = useModal();
+  const [selectCategory, setSelectCategory] = useState<string>('전체');
 
   useEffect(() => {
     const fetchUsersTrainingLike = async () => {
@@ -96,11 +105,11 @@ const Home: React.FC = () => {
             setRefreshToken(accessToken);
           }
         }
-        throw new Error(`server is trouble with${res.status}`);
       } catch (err) {
         errorFunc(err);
       }
     };
+    console.log(isLogin);
     if (isLogin) {
       fetchUsersTrainingLike();
     }
@@ -115,7 +124,6 @@ const Home: React.FC = () => {
       if (last) {
         return [];
       }
-      console.log('next page data');
       try {
         const nextPageData = await getNextPageData(page);
         if (nextPageData.status === 200) {
@@ -131,61 +139,77 @@ const Home: React.FC = () => {
     [last],
   );
 
-  const { data, loaderIndicator } = useInfiniteScroll<TrainingOutlineDto>({
-    initialData: pageTrainersTraining?.content || [],
-    fetchData,
-  });
-
   return (
-    <div className="space-y-4 md:space-y-10">
-      <section className="hidden h-56 grid-cols-2 gap-3  md:grid">
-        <div className="row-span-2  flex ">
-          <FilterSection bg={lookupFilter} to="/post">
-            운동 게시글 조회하기
-          </FilterSection>
-        </div>
-        <div className=" flex">
-          <FilterSection bg={newpostFilter} to="newpost">
-            게시글 작성하기
-          </FilterSection>
-        </div>
-        <div className=" flex ">
-          <FilterSection bg={mapFilter} to="map">
-            지도에서 찾아보기
-          </FilterSection>
-        </div>
-      </section>
-      <section className="space-y-4">
-        <article className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">
-            이런 <span className="text-main">트레이닝</span>은 어떠세요?
-          </h2>
-          <button
-            type="button"
-            className="hidden gap-4 rounded-xl bg-slate-200 px-6 py-4 drop-shadow-sm md:flex"
-          >
-            <FilterIcon />
-            필터
-          </button>
-        </article>
-        <article>
-          <ul className="grid grid-cols-1 gap-6  sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-            {data &&
-              data.map((value, index) => {
-                const userTrainingLike = usersTrainingLike[index];
-                return (
-                  <UserTrainingItem
-                    key={value.id}
-                    trainerInfoDto={value}
-                    usersTrainingLike={userTrainingLike}
-                  />
-                );
-              })}
-          </ul>
-          <div ref={loaderIndicator} />
-        </article>
-      </section>
-    </div>
+    <>
+      <div className="space-y-4 md:space-y-10">
+        <section className="hidden h-56 grid-cols-2 gap-3  md:grid">
+          <div className="row-span-2  flex ">
+            <FilterSection bg={lookupFilter} to="/post/home">
+              운동 게시글 조회하기
+            </FilterSection>
+          </div>
+          <div className=" flex">
+            <FilterSection bg={newpostFilter} to="newpost">
+              게시글 작성하기
+            </FilterSection>
+          </div>
+          <div className=" flex ">
+            <FilterSection bg={mapFilter} to="map">
+              지도에서 찾아보기
+            </FilterSection>
+          </div>
+        </section>
+        <section className="space-y-4">
+          <article className="flex items-center justify-between">
+            <div className="items-center gap-x-4 space-y-6 md:flex md:space-y-0">
+              <p className="shrink-0  text-2xl font-bold">
+                이런 <span className="text-main">트레이닝</span>은 어떠세요?
+              </p>
+              <div className="flex gap-x-3 text-2xl font-extrabold text-stone-400">
+                {categoryArray.map((category) => {
+                  const isSelected = selectCategory === category;
+                  return (
+                    <button
+                      type="button"
+                      key={category}
+                      className={`hover:text-black ${isSelected && 'text-black'}`}
+                      onClick={() => setSelectCategory(category)}
+                    >
+                      {category}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <button
+              type="button"
+              className="hidden gap-4 rounded-xl bg-slate-200 px-6 py-4 drop-shadow-sm md:flex"
+              onClick={() => filterModal.toggle()}
+            >
+              <FilterIcon />
+              필터
+            </button>
+          </article>
+          <Outlet
+            context={{ trainingInfo, fetchData, last, usersTrainingLike }}
+          />
+        </section>
+      </div>
+      <DefaultModal
+        isOpen={filterModal.isOpen}
+        onClose={filterModal.toggle}
+        className="my-4 h-full"
+      >
+        <TrainingFilter onClose={filterModal.toggle} />
+      </DefaultModal>
+      <Link
+        to="/map"
+        className="fixed bottom-14 left-1/2 flex -translate-x-1/2 gap-x-1 rounded-full bg-purple-300 px-4 py-4 font-bold text-white drop-shadow-md"
+      >
+        <span className="material-symbols-rounded">location_on</span>
+        현재 위치 주변 검색하기
+      </Link>
+    </>
   );
 };
 export default Home;

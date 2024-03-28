@@ -78,7 +78,7 @@ const CareerInput: FC<Prop> = ({ careerId, setCareerList }) => {
     const newData: any = { ...data };
     const strDate = handleDateToString(date);
     if (type === 'startDate') {
-      if (date > new Date(newData.endDate)) {
+      if (newData.endDate && date > new Date(newData.endDate)) {
         alert('올바른 입사날짜를 입력해주세요');
         return;
       }
@@ -118,20 +118,20 @@ const CareerInput: FC<Prop> = ({ careerId, setCareerList }) => {
 
     const { address } = data;
     let latitude: number;
-    let logitude: number;
+    let longitude: number;
 
     // 위도 및 경도 구하기
     const geocoder = new kakao.maps.services.Geocoder();
     geocoder.addressSearch(address, (result: any, status: any) => {
       if (status === kakao.maps.services.Status.OK) {
         latitude = Number(result[0].y); // 위도
-        logitude = Number(result[0].x); // 경도
+        longitude = Number(result[0].x); // 경도
         setData((prev: any) => {
           return {
             ...prev,
             address,
             latitude,
-            logitude,
+            longitude,
           };
         });
       }

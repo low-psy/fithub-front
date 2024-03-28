@@ -15,4 +15,5 @@ import { TrainerLicenseDto } from './trainerLicenseDto';
 export interface TrainerSpecDto { 
     trainerCareerList?: Array<TrainerCareerDto>;
     trainerLicenseList?: Array<TrainerLicenseDto>;
+    address?: string;
 }

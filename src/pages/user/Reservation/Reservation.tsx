@@ -34,6 +34,7 @@ interface IReservationProps {
   setList: (newList: UsersReserveInfoDto[]) => void;
 }
 
+// <<<<<<< HEAD
 interface ReviewInfo {
   content: string;
   star: number;
