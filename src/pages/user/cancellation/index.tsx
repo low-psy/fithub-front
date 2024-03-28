@@ -11,21 +11,7 @@ const Cancellations = () => {
     const cancelRes = await fetchTrainingReservation('CANCEL');
     setCancelList(cancelRes);
     const noshowRes = await fetchTrainingReservation('NOSHOW');
-    // setNoshowList(noshowRes);
-    setNoshowList([
-      {
-        location: '서울특별시 마포구 동교동 205-17',
-        // modifiedDateTime: '2024-03-19 22:25:00',
-        // paymentDateTime: '2024-03-19 22:24:24',
-        reservationId: 3,
-        // reserveDateTime: '2024-03-23 14:00:00',
-        status: 'NOSHOW',
-        title: '테스트233',
-        trainerProfileImgUrl:
-          'https://fithub-bucket.s3.ap-northeast-2.amazonaws.com/profiles/6216dca7-3024-46ca-a1c9-5058db302fcc',
-        trainingId: 2,
-      },
-    ]);
+    setNoshowList(noshowRes);
   };
 
   useEffect(() => {

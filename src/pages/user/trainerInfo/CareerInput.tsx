@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 import ReactDatePicker from 'react-datepicker';
 import { ko } from 'date-fns/locale';
+import DaumPostcode from 'react-daum-postcode';
 import { CareerType } from './type';
 import {
   deleteTrainerCareer,
@@ -17,9 +18,11 @@ import {
 } from '../../../apis/trainer';
 import { handleDateToString } from '../../../utils/util';
 import ConfirmationModal from '../../../components/modal/ConfirmationModal';
+import DefaultModal from '../../../components/modal/DefaultModal';
 
 export enum InputTypes {
   company = 'company',
+  address = 'address',
   work = 'work',
 }
 interface Prop {
@@ -27,11 +30,21 @@ interface Prop {
   setCareerList: (data: any) => void;
 }
 
+const { kakao } = window;
+
+declare global {
+  interface Window {
+    kakao: any;
+  }
+}
+
 const CareerInput: FC<Prop> = ({ careerId, setCareerList }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [data, setData] = useState<CareerType>();
   const [deletingId, setDeletingId] = useState<number | undefined>();
+  const [isAddressModalOpened, setIsAddressModalOpened] =
+    useState<boolean>(false);
 
   const getCareerInfo = useCallback(async () => {
     const res = await fetchCareerInfo(careerId);
@@ -99,6 +112,31 @@ const CareerInput: FC<Prop> = ({ careerId, setCareerList }) => {
       </div>
     </div>
   );
+
+  const handleGetAddress = (data: { address: string }) => {
+    setIsAddressModalOpened(false);
+
+    const { address } = data;
+    let latitude: number;
+    let logitude: number;
+
+    // 위도 및 경도 구하기
+    const geocoder = new kakao.maps.services.Geocoder();
+    geocoder.addressSearch(address, (result: any, status: any) => {
+      if (status === kakao.maps.services.Status.OK) {
+        latitude = Number(result[0].y); // 위도
+        logitude = Number(result[0].x); // 경도
+        setData((prev: any) => {
+          return {
+            ...prev,
+            address,
+            latitude,
+            logitude,
+          };
+        });
+      }
+    });
+  };
   return (
     <>
       <div className="mb-[10px] flex items-center justify-between">
@@ -111,7 +149,21 @@ const CareerInput: FC<Prop> = ({ careerId, setCareerList }) => {
             readOnly={!isEditing}
             onChange={(e) => handleChange(e, InputTypes.company)}
             style={{
-              width: '30%',
+              width: '15%',
+              marginRight: '1rem',
+              paddingBottom: '3px',
+              outline: 'none',
+              borderBottom: isEditing ? '1px solid lightgrey' : 'none',
+            }}
+          />
+          <input
+            type="address"
+            value={data?.address}
+            placeholder="주소"
+            readOnly={!isEditing}
+            onClick={() => isEditing && setIsAddressModalOpened(true)}
+            style={{
+              width: '35%',
               marginRight: '1rem',
               paddingBottom: '3px',
               outline: 'none',
@@ -125,7 +177,7 @@ const CareerInput: FC<Prop> = ({ careerId, setCareerList }) => {
             readOnly={!isEditing}
             onChange={(e) => handleChange(e, InputTypes.work)}
             style={{
-              width: '20%',
+              width: '10%',
               marginRight: '1rem',
               paddingBottom: '3px',
               outline: 'none',
@@ -137,7 +189,7 @@ const CareerInput: FC<Prop> = ({ careerId, setCareerList }) => {
               <ReactDatePicker
                 id="startDate"
                 locale={ko}
-                className="w-40 cursor-pointer rounded border border-main px-2 text-black"
+                className="w-[100px] cursor-pointer rounded border border-main px-2 text-black"
                 selected={data && new Date(data?.startDate)}
                 onChange={(date: Date) => handleCareerDate(date, 'startDate')}
                 dateFormat="yyyy-MM-dd"
@@ -150,7 +202,7 @@ const CareerInput: FC<Prop> = ({ careerId, setCareerList }) => {
               <ReactDatePicker
                 id="startDate"
                 locale={ko}
-                className="w-36 cursor-pointer rounded border border-main px-2 text-black"
+                className="w-[100px] cursor-pointer rounded border border-main px-2 text-black"
                 selected={new Date(data.endDate)}
                 onChange={(date: Date) => handleCareerDate(date, 'endDate')}
                 dateFormat="yyyy-MM-dd"
@@ -189,6 +241,13 @@ const CareerInput: FC<Prop> = ({ careerId, setCareerList }) => {
         cancelText="취소"
         children={deleteContent}
       />
+      <DefaultModal
+        isOpen={isAddressModalOpened}
+        onClose={() => setIsAddressModalOpened(false)}
+        modalWidth="500px"
+      >
+        <DaumPostcode onComplete={handleGetAddress} />
+      </DefaultModal>
     </>
   );
 };
