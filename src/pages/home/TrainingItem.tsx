@@ -31,6 +31,7 @@ const UserTrainingItem: React.FC<UsersTrainingItemProps> = ({
       img={trainerInfoDto.trainerInfoDto?.trainerProfileImg}
       startDate={startDate}
       endDate={endDate}
+      categories={trainerInfoDto.categories}
     />
   );
 };

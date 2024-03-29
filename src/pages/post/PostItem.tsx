@@ -43,9 +43,6 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
     likeModal: false,
     // 기타 모달 상태
   });
-  const location = useLocation();
-  const isModal = location.state?.isModal;
-  console.log(isModal);
   const toggleModal = (modalName: string) => {
     setModalsOpen((prev) => ({ ...prev, [modalName]: !prev[modalName] }));
   };
@@ -90,25 +87,34 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
       navigate('/post');
     }
   };
+  const isWriter = localStorage.getItem('email') === writerInfo?.email;
   return (
     <article key={postId} className="mb-12">
       <div className="space-y-4  bg-white p-4 shadow-sm drop-shadow-xl ">
         <div className="flex items-center justify-between ">
-          <ProfileSection
-            profileName={writerInfo?.nickname}
-            profileImage={writerInfo?.profileUrl}
-            date={date}
-          />
           <DropdownMenu
             onMenuItemClick={handleMenuItemClick}
-            menuArray={['수정하기', '삭제하기']}
-          />
+            menuArray={['게시글 보기', '채팅하기']}
+            className="left-14 top-0"
+          >
+            <ProfileSection
+              profileName={writerInfo?.nickname}
+              profileImage={writerInfo?.profileUrl}
+              date={date}
+            />
+          </DropdownMenu>
+          {isWriter && (
+            <DropdownMenu
+              onMenuItemClick={handleMenuItemClick}
+              menuArray={['수정하기', '삭제하기']}
+            />
+          )}
         </div>
         <div className="space-y-4">
           <h3 className="pl-1">{content}</h3>
           {documentUrls && (
-            <div className="max-h-[500px]">
-              <ImageSlider postImages={documentUrls} imageSize="468" />
+            <div>
+              <ImageSlider postImages={documentUrls} imageSize="500px" />
             </div>
           )}
         </div>

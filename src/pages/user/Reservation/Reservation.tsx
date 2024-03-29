@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import testImg from '../../../assets/newpostFilter.png';
-import { UsersReserveInfoDto } from '../../../types/swagger/model/usersReserveInfoDto';
 import {
   cancelReservation,
   deleteTrainingReview,
@@ -20,6 +19,21 @@ import ReviewModal from '../../../components/modal/ReviewModal';
 import StarRating from '../../../components/StarRating';
 import { TrainingReviewDto } from '../../../types/swagger/model/trainingReviewDto';
 
+interface UsersReserveInfoType {
+  reservationId?: number;
+  trainingId?: number;
+  trainerProfileImgUrl?: string;
+  title?: string;
+  reserveDateTime?: Date;
+  location?: string;
+  reviewWritten?: boolean;
+  price?: number;
+  impUid?: string;
+  status?: 'BEFORE' | 'START' | 'COMPLETE' | 'CANCEL' | 'NOSHOW';
+  paymentDateTime?: Date;
+  modifiedDateTime?: Date;
+}
+
 const ReservationStatusObj = {
   BEFORE: '예약완료',
   START: '시작',
@@ -30,11 +44,10 @@ const ReservationStatusObj = {
 
 interface IReservationProps {
   closed?: boolean;
-  info: UsersReserveInfoDto;
-  setList: (newList: UsersReserveInfoDto[]) => void;
+  info: UsersReserveInfoType;
+  setList: (newList: UsersReserveInfoType[]) => void;
 }
 
-// <<<<<<< HEAD
 interface ReviewInfo {
   content: string;
   star: number;
@@ -50,10 +63,10 @@ const Reservation = ({ closed, info, setList }: IReservationProps) => {
     reviewWritten,
   } = info;
   const [cancelingInfo, setCancelingInfo] = useState<
-    UsersReserveInfoDto | undefined
+    UsersReserveInfoType | undefined
   >(undefined);
   const [reviewingInfo, setReviewingInfo] = useState<
-    UsersReserveInfoDto | undefined
+    UsersReserveInfoType | undefined
   >();
   const [currRate, setCurrRate] = useState<number>(0);
   const [reviewInput, setReviewInput] = useState<string>('');
@@ -86,7 +99,7 @@ const Reservation = ({ closed, info, setList }: IReservationProps) => {
   const handleCancel = async () => {
     if (cancelingInfo && cancelingInfo.impUid && reservationId) {
       await cancelReservation(reservationId, cancelingInfo.impUid);
-      const newReservationList: UsersReserveInfoDto[] =
+      const newReservationList: UsersReserveInfoType[] =
         await fetchTrainingReservation('BEFORE');
       setList(newReservationList);
     }
@@ -128,7 +141,7 @@ const Reservation = ({ closed, info, setList }: IReservationProps) => {
       <p>
         {' '}
         <span className="mr-3">장소:</span>
-        {cancelingInfo?.address}
+        {cancelingInfo?.location}
       </p>
       <p>
         <span className="mr-3">수업일시:</span>
@@ -183,7 +196,7 @@ const Reservation = ({ closed, info, setList }: IReservationProps) => {
                   convertDateWithDay(reviewingInfo?.paymentDateTime)}
               </p>
               <p>
-                장소: &nbsp;{reviewingInfo?.address || reviewingInfo?.location}
+                장소: &nbsp;{reviewingInfo?.location || reviewingInfo?.location}
               </p>
               <p>
                 수업일시: &nbsp;

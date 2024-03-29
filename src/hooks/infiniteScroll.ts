@@ -37,12 +37,12 @@ const useInfiniteScroll = <T>({
           loadMoreData();
         }
       },
-      { threshold: 1.0 },
+      { threshold: 0.5 },
     );
 
     const currentLoader = loaderIndicator.current;
-    if (loaderIndicator.current && !last) {
-      observer.observe(loaderIndicator.current);
+    if (currentLoader && !last) {
+      observer.observe(currentLoader);
     } else if (currentLoader) {
       observer.unobserve(currentLoader);
     }

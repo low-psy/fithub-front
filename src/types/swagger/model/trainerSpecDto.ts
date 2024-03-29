@@ -15,5 +15,19 @@ import { TrainerLicenseDto } from './trainerLicenseDto';
 export interface TrainerSpecDto { 
     trainerCareerList?: Array<TrainerCareerDto>;
     trainerLicenseList?: Array<TrainerLicenseDto>;
+    /**
+     * 트레이너 전문 분야
+     */
+    trainerExpertiseList?: Array<TrainerSpecDto.TrainerExpertiseListEnum>;
     address?: string;
+}
+export namespace TrainerSpecDto {
+    export type TrainerExpertiseListEnum = 'PILATES' | 'HEALTH' | 'PT' | 'CROSSFIT' | 'YOGA';
+    export const TrainerExpertiseListEnum = {
+        PILATES: 'PILATES' as TrainerExpertiseListEnum,
+        HEALTH: 'HEALTH' as TrainerExpertiseListEnum,
+        PT: 'PT' as TrainerExpertiseListEnum,
+        CROSSFIT: 'CROSSFIT' as TrainerExpertiseListEnum,
+        YOGA: 'YOGA' as TrainerExpertiseListEnum
+    };
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { stat } from 'fs';
 import {
   closeTraining,
   deleteTraining,
@@ -82,9 +83,22 @@ const TrainingItem: React.FunctionComponent<TrainingItemProps> = ({
         throw new Error(`Server error with status: ${res && res.status}`);
       }
     } catch (err) {
-      console.error(err);
-      errorFunc(err);
-      navigate(0); // 실패 시 페이지 새로고침
+      const status = errorFunc(err);
+      if (status === 400) {
+        return navigate(0);
+      }
+      if (status === 401) {
+        return navigate('/login'); // 실패 시 페이지 새로고침
+      }
+      if (status === 403) {
+        return navigate(0);
+      }
+      if (status === 404) {
+        return navigate('/login');
+      }
+      if (status === 409) {
+        return navigate(0);
+      }
     }
   };
 

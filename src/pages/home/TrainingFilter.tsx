@@ -67,7 +67,7 @@ const TrainingFilter: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             />
             <input
               hidden
-              name="startDate"
+              name="endDate"
               value={selectedDates?.endDate as string}
             />
           </div>

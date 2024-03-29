@@ -20,6 +20,10 @@ export interface OAuthSignUpDto {
      * 소셜 회원가입, 로그인시에 저장된 제공자 + id
      */
     providerId: string;
+    /**
+     * 관심사(최소 1개 이상). ex) PILATES, HEALTH, PT, CROSSFIT, YOGA
+     */
+    interests: Array<OAuthSignUpDto.InterestsEnum>;
 }
 export namespace OAuthSignUpDto {
     export type GenderEnum = 'F' | 'M' | 'UNDEFINED';
@@ -27,5 +31,13 @@ export namespace OAuthSignUpDto {
         F: 'F' as GenderEnum,
         M: 'M' as GenderEnum,
         UNDEFINED: 'UNDEFINED' as GenderEnum
+    };
+    export type InterestsEnum = 'PILATES' | 'HEALTH' | 'PT' | 'CROSSFIT' | 'YOGA';
+    export const InterestsEnum = {
+        PILATES: 'PILATES' as InterestsEnum,
+        HEALTH: 'HEALTH' as InterestsEnum,
+        PT: 'PT' as InterestsEnum,
+        CROSSFIT: 'CROSSFIT' as InterestsEnum,
+        YOGA: 'YOGA' as InterestsEnum
     };
 }

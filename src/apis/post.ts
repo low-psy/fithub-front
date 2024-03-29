@@ -11,6 +11,7 @@ import { CommentInfoDto } from '../types/swagger/model/commentInfoDto';
 import { PostUpdateDto } from '../types/swagger/model/postUpdateDto';
 import { PostCreateDto } from '../types/swagger/model/postCreateDto';
 import { PostSearchFilterDto } from '../types/swagger/model/postSearchFilterDto';
+import { CommentUpdateDto } from '../types/swagger/model/commentUpdateDto';
 
 /**
  * [POST] 게시물 생성
@@ -49,7 +50,7 @@ export const deletePost = async (id: number) => {
 export const getPost = async (
   page: number,
 ): Promise<AxiosResponse<PagePostInfoDto>> => {
-  return defaultAxios.get<PagePostInfoDto>(`/posts?page=${page}&size=2`);
+  return defaultAxios.get<PagePostInfoDto>(`/posts?page=${page}&size=10`);
 };
 
 export const getBookedPost = async (
@@ -116,7 +117,7 @@ export const deleteBook = async (id: number) => {
 export const postComment = async (
   content: string,
   postId: number,
-  parentCommentId: number | null,
+  parentCommentId: number | undefined,
 ) => {
   const data = {
     content,
@@ -124,6 +125,10 @@ export const postComment = async (
     parentCommentId,
   };
   return authAxios.post('/users/posts/comments', data);
+};
+
+export const editComment = async (data: CommentUpdateDto) => {
+  return authAxios.put('/users/posts/comments', data);
 };
 
 export const getParentComments = async (
@@ -146,8 +151,16 @@ export const getPostSearch = async (
   align?: string | null,
   page?: number,
 ): Promise<AxiosResponse<PagePostInfoDto>> => {
-  const queryString = qs.stringify(requestDto);
+  const queryString = qs.stringify({
+    sort: `${align},desc`,
+    keyword: requestDto?.keyword,
+    scope: requestDto?.scope,
+  });
   const url = `/posts/search?${queryString}`;
-  const pageable = { page, size: 2, sort: [align, 'desc'] };
+  const pageable = { page, size: 10 };
   return authAxios.post<PagePostInfoDto>(url, pageable);
+};
+
+export const deleteComment = async (id: number) => {
+  return authAxios.delete(`/users/posts/comments?commentId=${id}`);
 };

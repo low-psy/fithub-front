@@ -11,8 +11,9 @@ const useLike = (
   const [isLiked, setLiked] = useState(liked);
 
   useEffect(() => {
+    console.log(postId, liked);
     setLiked(liked);
-  }, [liked]);
+  }, [liked, postId]);
   const toggleLike = async () => {
     // 먼저 UI 업데이트
     if (!postId) {

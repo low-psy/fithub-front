@@ -28,4 +28,18 @@ export interface TrainingSearchConditionDto {
     highestPrice?: number;
     startDate?: string;
     endDate?: string;
+    /**
+     * 카테고리, 하나만 가능
+     */
+    category?: TrainingSearchConditionDto.CategoryEnum;
+}
+export namespace TrainingSearchConditionDto {
+    export type CategoryEnum = 'PILATES' | 'HEALTH' | 'PT' | 'CROSSFIT' | 'YOGA';
+    export const CategoryEnum = {
+        PILATES: 'PILATES' as CategoryEnum,
+        HEALTH: 'HEALTH' as CategoryEnum,
+        PT: 'PT' as CategoryEnum,
+        CROSSFIT: 'CROSSFIT' as CategoryEnum,
+        YOGA: 'YOGA' as CategoryEnum
+    };
 }

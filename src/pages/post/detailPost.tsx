@@ -8,8 +8,16 @@ import {
   redirect,
   useLoaderData,
   useOutletContext,
+  useParams,
 } from 'react-router-dom';
-import { getDetailPost, getParentComments, postComment } from '../../apis/post';
+import {
+  deleteBook,
+  editComment,
+  getDetailPost,
+  getParentComments,
+  postBook,
+  postComment,
+} from '../../apis/post';
 import { LoaderData } from '../../types/common';
 import ImageSlider from '../../components/imageSlider/ImageBtnSlider';
 import ProfileSection from '../../components/common/ProfileSection';
@@ -24,13 +32,13 @@ import useModal from '../../hooks/useModal';
 import { LikesInfoDto } from '../../types/swagger/model/likesInfoDto';
 import RoundedIcon from '../../components/icon/Rounded';
 import RedirectModal from '../../components/modal/RedirectModal';
+import useLike from '../../hooks/likeHook';
+import useBook from '../../hooks/bookHook';
 
 interface Context {
   likedUsers: LikesInfoDto[] | undefined;
   isLiked: boolean;
   isBooked: boolean;
-  toggleLike: () => Promise<void>;
-  toggleBook: () => Promise<void>;
 }
 
 export const loader = (async ({ params }: LoaderFunctionArgs) => {
@@ -52,8 +60,8 @@ const DetailPost = () => {
   const cmt = useAppSelector((state) => state.comment);
   const parentCommentId = cmt.selectReplyId || undefined;
   const detailPost = response.data;
-  const { likedUsers, isLiked, isBooked, toggleLike, toggleBook } =
-    useOutletContext<Context>();
+  const { writerInfo, documentUrls, postId } = detailPost;
+  const { likedUsers } = useOutletContext<Context>();
 
   const likedModal = useModal();
 
@@ -67,8 +75,6 @@ const DetailPost = () => {
       hasChildComment: false,
     },
   ]);
-
-  const { writerInfo, documentUrls, postId } = detailPost;
 
   useEffect(() => {
     const fetchParentComments = async () => {
@@ -89,11 +95,11 @@ const DetailPost = () => {
 
   return (
     <RedirectModal>
-      <section className="flex h-full flex-col bg-white md:flex-row">
-        <article className="md:basis-1/2">
-          <div className="flex h-full items-center">
-            {documentUrls && <ImageSlider postImages={documentUrls} />}
-          </div>
+      <section className="flex h-full w-full flex-col  bg-white md:flex-row">
+        <article className="flex items-center justify-center md:basis-1/2">
+          {documentUrls && (
+            <ImageSlider postImages={documentUrls} imageSize="636px" />
+          )}
         </article>
         <article className="flex grow flex-col border-[1px] border-zinc-300 md:basis-1/2">
           <div className="border-b-[1px] border-zinc-300  p-3">
@@ -110,7 +116,7 @@ const DetailPost = () => {
           </div>
           <div className="flex  justify-between">
             <div className="relative flex items-center gap-2 p-3">
-              <RoundedIcon
+              {/* <RoundedIcon
                 defaultState={isLiked}
                 onClick={toggleLike}
                 iconColor="text-main"
@@ -123,7 +129,7 @@ const DetailPost = () => {
                 iconColor="text-accent"
               >
                 bookmark
-              </RoundedIcon>
+              </RoundedIcon> */}
             </div>
           </div>
           <div className=" border-zinc-300 p-3 pt-0">
@@ -167,18 +173,22 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const content = formData.get('content')?.toString();
   const postId = Number(formData.get('postId'));
-  const parentCommentId = Number(formData.get('parentCommentId'))
-    ? Number(formData.get('parentCommentId'))
-    : null;
+  const parentCommentId = Number(formData.get('parentCommentId')) || undefined;
   if (!content && !content?.trim()) {
     return redirect(`/post`); // 빈 입력은 무시
   }
+  const { method } = request;
+  let response;
+  console.log(method, content, postId, parentCommentId);
   try {
-    const response = await postComment(content, postId, parentCommentId); // postComment API 호출
-    if (response.status === 200) {
+    if (method === 'POST') {
+      response = await postComment(content, postId, parentCommentId); // postComment
+    } else if (parentCommentId) {
+      response = await editComment({ commentId: parentCommentId, content });
+    }
+    if (response?.status === 200) {
       return json({ comment: true });
     }
-    throw new Error('Server has trouble something');
   } catch (err) {
     const error = err as unknown as AxiosError;
     alert(error.message);

@@ -5,7 +5,7 @@ import {
   useLoaderData,
   useNavigate,
 } from 'react-router-dom';
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 import ProfileSection from '../../components/common/ProfileSection';
 import {
   getDetailTraining,
@@ -13,7 +13,6 @@ import {
   postPaymentOrder,
   postPaymentValidation,
 } from '../../apis/trainig';
-import { TrainingInfoDto } from '../../types/swagger/model/trainingInfoDto';
 import {
   addressToPositions,
   errorFunc,
@@ -25,7 +24,6 @@ import Line from '../../components/common/Line';
 import ImageXScroll from '../../components/imageSlider/ImageXScroll';
 import withAuth from '../../hocs/withAuth';
 import SingleMap from '../../components/map/SingleMap';
-import { TrainingReviewDto } from '../../types/swagger/model/trainingReviewDto';
 import { LoaderData } from '../../types/common';
 import ClickBtn from '../../components/btn/ClickBtn';
 import { RequestPayParams, RequestPayResponse } from '../../types/portone';
@@ -194,61 +192,6 @@ const Detail = () => {
           />
           <Line />
           <div className="space-y-8">
-            <h3 className="text-xl font-bold">트레이닝 리뷰</h3>
-            <ul className="space-y-6">
-              {trainingReviews.map((review, index) => {
-                const {
-                  userInfo,
-                  createdDate,
-                  content,
-                  reviewId,
-                  star,
-                  reserveDateTime,
-                } = review;
-                const isPlusReview = plusReviews.includes(reviewId as number);
-                return (
-                  reserveDateTime && (
-                    <li
-                      key={reviewId}
-                      className="relative w-full  bg-gray-50 p-4 shadow-md drop-shadow-md  lg:w-[500px]"
-                    >
-                      <div className="flex justify-between">
-                        <ProfileSection
-                          profileImage={userInfo?.profileUrl}
-                          profileName={userInfo?.nickname}
-                          date={createdDate?.toString()}
-                        />
-                        <div className="flex items-center text-2xl font-bold">
-                          <span className="material-symbols-rounded filled text-3xl text-main">
-                            star
-                          </span>
-                          {star?.toFixed(1)}
-                        </div>
-                      </div>
-                      <div
-                        className={` ${!isPlusReview && 'line-clamp-3'}  whitespace-pre-wrap p-2 text-base leading-relaxed text-gray-800 transition-transform `}
-                      >
-                        {content}
-                      </div>
-                      <div className="absolute -bottom-4 left-1/2 -translate-x-1/2">
-                        <ClickBtn
-                          onClick={() => plusBtnHandler(reviewId as number)}
-                        >
-                          <div className="flex rounded-full bg-main px-[6px] py-1 text-white">
-                            <span className="material-symbols-rounded text-4xl font-extrabold">
-                              expand_more
-                            </span>
-                          </div>
-                        </ClickBtn>
-                      </div>
-                    </li>
-                  )
-                );
-              })}
-            </ul>
-          </div>
-          <Line />
-          <div className="space-y-8">
             <h3 className="text-xl font-bold">트레이닝 내용</h3>
             <p className="mb-4 whitespace-pre-wrap  bg-white p-4 text-base leading-relaxed text-gray-800 ">
               {content}
@@ -265,6 +208,60 @@ const Detail = () => {
               </div>
               <h3>{date}</h3>
             </div>
+          </div>
+          <Line />
+          <div className="space-y-8">
+            <h3 className="text-xl font-bold">트레이닝 리뷰</h3>
+            <ul className="space-y-6">
+              {trainingReviews.length < 1 && (
+                <div className="bg-gray-400 p-6  ">등록된 리뷰가 없습니다</div>
+              )}
+              {trainingReviews.map((review, index) => {
+                const { userInfo, createdDate, content, reviewId, star } =
+                  review;
+                const isPlusReview = plusReviews.includes(reviewId as number);
+                const isDropBtn =
+                  (content?.match(/\n/gi)?.length as number) > 3;
+                return (
+                  <li
+                    key={reviewId}
+                    className="relative w-full  bg-gray-50 p-4 shadow-md drop-shadow-md  lg:w-[500px]"
+                  >
+                    <div className="flex justify-between">
+                      <ProfileSection
+                        profileImage={userInfo?.profileUrl}
+                        profileName={userInfo?.nickname}
+                        date={createdDate?.toString()}
+                      />
+                      <div className="flex items-center text-2xl font-bold">
+                        <span className="material-symbols-rounded filled text-3xl text-main">
+                          star
+                        </span>
+                        {star?.toFixed(1)}
+                      </div>
+                    </div>
+                    <div
+                      className={` ${!isPlusReview && 'line-clamp-3'}  whitespace-pre-wrap p-2 text-base leading-relaxed text-gray-800 transition-transform `}
+                    >
+                      {content}
+                    </div>
+                    <div className="absolute -bottom-4 left-1/2 -translate-x-1/2">
+                      {isDropBtn && (
+                        <ClickBtn
+                          onClick={() => plusBtnHandler(reviewId as number)}
+                        >
+                          <div className="flex rounded-full bg-main px-[6px] py-1 text-white">
+                            <span className="material-symbols-rounded text-4xl font-extrabold">
+                              expand_more
+                            </span>
+                          </div>
+                        </ClickBtn>
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
           <Line />
           <div className="space-y-8">
