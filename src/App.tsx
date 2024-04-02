@@ -58,6 +58,7 @@ import TrainerInfo from './pages/user/trainerInfo';
 import PostHome from './pages/post/home';
 import UserHome from './pages/home/home';
 import UserMap, { loader as TrainingMapLoader } from './pages/map';
+import Reservation from './pages/user/Reservation';
 
 function App() {
   // 전역 로그인 상태 관리
@@ -154,6 +155,10 @@ function App() {
             {
               path: pageRoutes.user.posts,
               element: <Posts />,
+            },
+            {
+              path: pageRoutes.user.reservations,
+              element: <Reservation />,
             },
             {
               path: pageRoutes.user.cancellations,

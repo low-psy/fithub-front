@@ -207,8 +207,12 @@ export const logout = async () => {
 /**
  * [GET] 예약리스트
  */
-export const fetchTrainingReservation = async () => {
-  const response = await authAxios.get('/users/training/reservation/all');
+export const fetchTrainingReservation = async (
+  status?: 'BEFORE' | 'START' | 'CANCEL' | 'NOSHOW',
+) => {
+  const response = await authAxios.get(
+    `/users/training/reservation/all?status=${status}`,
+  );
   return response.data.content;
 };
 /**
@@ -242,4 +246,28 @@ export const writeReview = async (
     content,
     star,
   });
+};
+
+/**
+ * [PUT] 리뷰수정
+ */
+export const updateReview = async ({
+  reviewId,
+  reservationId,
+  content,
+  star,
+}: {
+  reviewId: number;
+  reservationId: number;
+  content: string;
+  star: number;
+}) => {
+  await authAxios.put(
+    `/users/training/reservation/review?reviewId=${reviewId}`,
+    {
+      reservationId,
+      content,
+      star,
+    },
+  );
 };

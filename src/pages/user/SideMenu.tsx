@@ -15,7 +15,7 @@ const SideMenu = ({ profileImg }: ISideMenuProps) => {
   const profileUrl = '/user/profile';
   const postsUrl = '/user/posts';
   const reservationUrl = '/user/reservations';
-  const cancellationUrl = '/user/cancellation';
+  const cancellationUrl = '/user/cancellations';
   const trainerInfoUrl = '/user/trainerInfo';
   const { role } = useAppSelector((state) => state.user);
 
@@ -43,7 +43,7 @@ const SideMenu = ({ profileImg }: ISideMenuProps) => {
           clicked={clicked === 'reservations'}
         />
         <SideMenuButton
-          text="취소 / 환불 내역"
+          text="취소 / 노쇼 내역"
           to={cancellationUrl}
           clicked={clicked === 'cancellation'}
         />

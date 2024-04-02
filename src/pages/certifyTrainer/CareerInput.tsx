@@ -54,15 +54,15 @@ function CareerInput({
 
     const { address } = data;
     let latitude;
-    let logitude;
+    let longitude;
 
     // 위도 및 경도 구하기
     const geocoder = new kakao.maps.services.Geocoder();
     geocoder.addressSearch(address, (result: any, status: any) => {
       if (status === kakao.maps.services.Status.OK) {
         latitude = Number(result[0].y); // 위도
-        logitude = Number(result[0].x); // 경도
-        handleCareerAddress(address, latitude, logitude);
+        longitude = Number(result[0].x); // 경도
+        handleCareerAddress(address, latitude, longitude);
       }
     });
   };

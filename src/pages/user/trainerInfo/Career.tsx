@@ -10,6 +10,7 @@ interface Prop {
 
 interface NewCareerType {
   company: string;
+  address: string;
   work: string;
   startDate: string;
   endDate: string;
@@ -26,6 +27,7 @@ const Career: FC<Prop> = ({ list }) => {
   const showNewCareerInput = async () => {
     setNewCareer({
       company: '',
+      address: '',
       work: '',
       startDate: '',
       endDate: '',

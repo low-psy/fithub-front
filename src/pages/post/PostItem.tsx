@@ -17,6 +17,8 @@ import { PostInfoDto } from '../../types/swagger/model/postInfoDto';
 import { LikesInfoDto } from '../../types/swagger/model/likesInfoDto';
 import { postBook, deleteBook, deletePost } from '../../apis/post';
 import { formatDate } from '../../utils/util';
+import { useAppDispatch } from '../../hooks/reduxHooks';
+import { SET_CHATTING_ROOM_ID } from '../../redux/slices/chatSlice';
 
 interface PostItemProps extends PostInfoDto {
   bookAndLikes: LikesBookmarkStatusDto;
@@ -37,6 +39,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
   likedUsers,
   onClick,
 }) => {
+  const dispatch = useAppDispatch();
   const [modalsOpen, setModalsOpen] = useState<{ [key: string]: boolean }>({
     deleteModal: false,
     editModal: false,
@@ -52,6 +55,8 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
       toggleModal('editModal');
     } else if (value === '삭제하기') {
       toggleModal('deleteModal');
+    } else if (value === '채팅하기') {
+      dispatch(SET_CHATTING_ROOM_ID(1)); // id TODO
     }
   };
   const { isLiked, toggleLike } = useLike(
@@ -95,7 +100,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
           <DropdownMenu
             onMenuItemClick={handleMenuItemClick}
             menuArray={['게시글 보기', '채팅하기']}
-            className="left-14 top-0"
+            className="left-14 top-0 cursor-pointer"
           >
             <ProfileSection
               profileName={writerInfo?.nickname}

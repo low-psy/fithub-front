@@ -6,6 +6,7 @@ import MyInfo from './MyInfo';
 import { IProfile } from '../../../types/profile';
 import MyAccount from './MyAccount';
 import withAuth from '../../../hocs/withAuth';
+import MyInterest from './MyInterest';
 
 interface IProfileOutletContext {
   profile: IProfile;
@@ -13,7 +14,8 @@ interface IProfileOutletContext {
 
 const Profile = () => {
   const { profile } = useOutletContext<IProfileOutletContext>();
-  const { name, nickname, gender, phone, email, grade, bio } = profile;
+  const { name, nickname, gender, phone, email, grade, bio, interests } =
+    profile;
 
   return (
     <div className="flex flex-col">
@@ -32,7 +34,11 @@ const Profile = () => {
       <div className="mb-4 mt-8 w-full border shadow-slate-500" />
 
       {/* 내 등급 */}
-      <MyGrade grade={grade} />
+      {/* <MyGrade grade={grade} />
+      <div className="mb-4 mt-8 w-full border shadow-slate-500" /> */}
+
+      {/* 내 관심사 */}
+      <MyInterest interests={interests} />
       <div className="mb-4 mt-8 w-full border shadow-slate-500" />
 
       {/* 비밀번호 변경, 회원 탈퇴 */}
