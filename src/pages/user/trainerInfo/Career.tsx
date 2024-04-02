@@ -1,6 +1,6 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState, useCallback } from 'react';
 import { CareerType } from './type';
-import CareerInput from './CareerInput';
+import SingleCareer from './SingleCareer';
 import { addTrainerCareer } from '../../../apis/trainer';
 import NewCareer from './NewCareer';
 import { useAppDispatch, useAppSelector } from '../../../hooks/reduxHooks';
@@ -95,10 +95,8 @@ const Career: FC<Prop> = ({ list }) => {
 
   return (
     <section className="flex flex-col">
-      <div className="flex flex-row">
-        <div className="relative flex w-[70px] items-center">
-          <p className="absolute top-[8px]">경력</p>
-        </div>
+      <div className="flex flex-col">
+        <p className="mb-5 font-bold">경력</p>
 
         <div className="flex flex-1 flex-col">
           {careerList?.map((li: CareerType) => {
@@ -107,7 +105,7 @@ const Career: FC<Prop> = ({ list }) => {
             }
             return (
               <div className="flex flex-col" key={li.careerId}>
-                <CareerInput careerId={li?.careerId} />
+                <SingleCareer careerId={li?.careerId} />
               </div>
             );
           })}

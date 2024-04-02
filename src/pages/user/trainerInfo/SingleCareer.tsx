@@ -42,7 +42,7 @@ declare global {
   }
 }
 
-const CareerInput: FC<Prop> = ({ careerId }) => {
+const SingleCareer: FC<Prop> = ({ careerId }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [data, setData] = useState<CareerType>();
@@ -71,6 +71,7 @@ const CareerInput: FC<Prop> = ({ careerId }) => {
       if (!data) return;
       await editTrainerCareer(careerId, { ...data, working: isChecked });
       dispatch(SET_WORKING_CAREERID(data?.careerId));
+      window.location.reload();
     }
     setIsEditing((prev) => !prev);
   };
@@ -277,4 +278,4 @@ const CareerInput: FC<Prop> = ({ careerId }) => {
   );
 };
 
-export default CareerInput;
+export default SingleCareer;
