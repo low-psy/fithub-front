@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Form, useActionData } from 'react-router-dom';
 import SubmitButton from '../../components/form/FormSubmitButton';
 import MultipleDateInput from '../../components/calendar/MultipleDate';
@@ -32,6 +32,7 @@ const TrainerForm: React.FC<{ dateList?: string[] }> = ({ dateList }) => {
 
   const className =
     'w-full rounded-xl bg-input_bg px-4 py-6 text-xl text-slate-700 outline-none focus:outline-none focus:ring-2 focus:ring-gray-200 md:w-2/3 ';
+
   const options = [
     { value: 'PILATES', text: '필라테스' },
     { value: 'PT', text: '피티' },

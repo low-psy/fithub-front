@@ -8,7 +8,6 @@ import {
   useLoaderData,
   useNavigate,
   useNavigation,
-  useSearchParams,
 } from 'react-router-dom';
 import { AxiosResponse } from 'axios';
 import { useDispatch } from 'react-redux';
@@ -32,6 +31,7 @@ import useModal from '../../hooks/useModal';
 import DefaultModal from '../../components/modal/DefaultModal';
 import TrainingFilter from './TrainingFilter';
 import UndefinedCover from '../../components/common/UndefinedCover';
+import TrainerFilter from './TrainerFilter';
 
 export type CategoryEnum = 'PILATES' | 'HEALTH' | 'PT' | 'CROSSFIT' | 'YOGA';
 
@@ -106,6 +106,7 @@ const Home: React.FC = () => {
   const { isLogin } = useAppSelector((state) => state.user);
   const navigation = useNavigation();
   const filterModal = useModal();
+  const trainerModal = useModal();
   const [selectCategory, setSelectCategory] = useState<string>('ALL');
 
   useEffect(() => {
@@ -182,9 +183,14 @@ const Home: React.FC = () => {
             </FilterSection>
           </div>
           <div className=" flex ">
-            <FilterSection bg={mapFilter} to="">
-              트레이너 조회하기
-            </FilterSection>
+            <button
+              type="button"
+              style={{ backgroundImage: `url(${mapFilter})` }}
+              className="bg flex h-full w-full items-center justify-center rounded-xl bg-cover bg-center text-2xl font-extrabold text-white drop-shadow-2xl xl:text-3xl"
+              onClick={() => trainerModal.toggle()}
+            >
+              트레이너 검색하기
+            </button>
           </div>
         </section>
         <section className="space-y-4">
@@ -238,9 +244,12 @@ const Home: React.FC = () => {
       >
         <TrainingFilter onClose={filterModal.toggle} />
       </DefaultModal>
+      <DefaultModal isOpen={trainerModal.isOpen} onClose={trainerModal.toggle}>
+        <TrainerFilter onClose={trainerModal.toggle} />
+      </DefaultModal>
       {trainingInfo && trainingInfo.length > 0 && (
         <Link
-          to="/map"
+          to="/map?fromHome=true"
           className="fixed bottom-14 left-1/2 flex -translate-x-1/2 gap-x-1 rounded-full bg-purple-300 px-4 py-4 font-bold text-white drop-shadow-md"
           state={{ fromHome: true }}
         >

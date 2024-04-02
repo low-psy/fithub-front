@@ -12,7 +12,7 @@ const CheckBoxInput: React.FC<{
             id={option.text}
             name="categories"
             value={option.value}
-            className="mr-2"
+            className="mr-2 "
           />
           <label htmlFor={option.text}>{option.text}</label>
         </div>

@@ -266,7 +266,7 @@ const Detail = () => {
           <Line />
           <div className="space-y-8">
             <h3 className="text-xl font-bold">트레이닝 위치</h3>
-            <div className="aspect-square w-[450px] space-y-4">
+            <div className="aspect-square max-w-[450px] space-y-4">
               <SingleMap isMarker location={location} level={5} />
             </div>
           </div>

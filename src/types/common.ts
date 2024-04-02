@@ -44,6 +44,7 @@ export interface LinkButtonProps {
   className?: string;
   to: string;
   bg?: string;
+  onClick?: () => void;
 }
 
 export interface FilterItemsProps {

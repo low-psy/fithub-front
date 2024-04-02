@@ -41,7 +41,6 @@ type searchRequestDto = {
 export const postSearchTraining = async (
   requestData: searchRequestDto,
 ): Promise<AxiosResponse<PageTrainingOutlineDto>> => {
-  console.log(requestData);
   const queryString = qs.stringify(requestData.conditions);
   const url = `/training/search?${queryString}`;
   return defaultAxios.post<PageTrainingOutlineDto>(url, requestData.pageable);
