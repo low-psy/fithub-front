@@ -1,5 +1,9 @@
 import React, { useEffect } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 // pages
@@ -58,6 +62,12 @@ import TrainerInfo from './pages/user/trainerInfo';
 import PostHome from './pages/post/home';
 import UserHome from './pages/home/home';
 import UserMap, { loader as TrainingMapLoader } from './pages/map';
+import TrainerExplore, {
+  loader as TrainerExploreLoader,
+} from './pages/home/trainerExplore';
+import TrainerDetail, {
+  loader as TrainerDetailLoader,
+} from './pages/home/trainerDetail';
 
 function App() {
   // 전역 로그인 상태 관리
@@ -74,6 +84,7 @@ function App() {
   }, [dispatch]);
 
   const router = createBrowserRouter([
+    { path: '*', element: <Navigate replace to="/" /> },
     {
       path: pageRoutes.main.base,
       element: <Root />,
@@ -94,6 +105,16 @@ function App() {
               element: <UserHome />,
             },
           ],
+        },
+        {
+          path: '/explore/trainer',
+          element: <TrainerExplore />,
+          loader: TrainerExploreLoader,
+        },
+        {
+          path: '/explore/trainer/:trainerId',
+          element: <TrainerDetail />,
+          loader: TrainerDetailLoader,
         },
         // 트레이닝 예약
         {

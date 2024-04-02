@@ -1,6 +1,9 @@
 import { AxiosResponse } from 'axios';
-import { authAxios } from './axios';
+import qs from 'qs';
+import { authAxios, defaultAxios } from './axios';
 import { CareerType, TrainerInfoRes } from '../pages/user/trainerInfo/type';
+import { PageTrainerOutlineDto } from '../types/swagger/model/pageTrainerOutlineDto';
+import { TrainerSearchAllReviewDto } from '../types/swagger/model/trainerSearchAllReviewDto';
 
 const certifyTrainer = (formData: FormData) => {
   const response = authAxios.post('/auth/trainer/certificate', formData, {
@@ -55,4 +58,24 @@ export const addTrainerCareer = async (data: any) => {
 // 트레이너 경력 하나 삭제
 export const deleteTrainerCareer = async (careerId: number) => {
   await authAxios.delete(`/trainers/careers?careerId=${careerId}`);
+};
+
+type getTrainerProps = {
+  page: number;
+  size: number;
+  sort: string[];
+  interest?: string;
+  keyword?: string;
+  gender?: string;
+};
+export const getTrainers = async (requestData: getTrainerProps) => {
+  const queryString = qs.stringify(requestData);
+  const url = `/search/trainers?${queryString}`;
+  return defaultAxios.get<PageTrainerOutlineDto>(url);
+};
+
+export const getTrainersReviews = async (trainerId: string) => {
+  return defaultAxios.get<TrainerSearchAllReviewDto>(
+    `/search/trainers/reviews?trainerId=${trainerId}`,
+  );
 };
