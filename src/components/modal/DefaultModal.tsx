@@ -29,7 +29,7 @@ const DefaultModal: React.FC<ModalProps> = ({
         className={`overflow-auto rounded-md bg-white p-4 ${className}`}
         style={{ width: modalWidth, maxHeight: modalMaxHeight }}
       >
-        <div className="text-end">
+        <div className="mr-2 text-end">
           <button
             type="button"
             onClick={(e) => {
