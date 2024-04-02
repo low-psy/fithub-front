@@ -70,13 +70,17 @@ const TrainerHome = () => {
         }
       } else if (setFunc === setSelectedButtonId) {
         const status =
-          id === 3
-            ? 'COMPLETE'
-            : id === 4
-              ? 'NOSHOW'
-              : id === 5
-                ? 'CANCEL'
-                : '';
+          id === 1
+            ? 'START'
+            : id === 2
+              ? 'BEFORE'
+              : id === 3
+                ? 'COMPLETE'
+                : id === 4
+                  ? 'NOSHOW'
+                  : id === 5
+                    ? 'CANCEL'
+                    : '';
         if (status) {
           searchParams.set('status', status);
         } else {

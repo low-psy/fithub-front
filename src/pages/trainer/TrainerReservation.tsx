@@ -18,25 +18,22 @@ const TrainerReservation: React.FC<{
   const date = dateTime.getDate();
   const time = dateTime.getHours();
   const timeString = time <= 12 ? `오전 ${time}시` : `오후 ${time - 12}시`;
-  const { trainingId } = session;
+  const { trainingId, reservationId } = session;
   const navigate = useNavigate();
 
-  const reservationConfirmModal = useModal(); // 수정 모달 상태 관리
   const noShowModal = useModal(); // 수정 모달 상태 관리
 
   const modlaToggleHandler = (selectedBtnId: number) => {
-    if (selectedBtnId === 2) {
-      reservationConfirmModal.toggle();
-    } else if (selectedBtnId === 3) {
+    if (selectedBtnId === 3) {
       noShowModal.toggle();
     }
   };
 
   const noShowClkHandler = async () => {
     try {
-      const res = await postTrainerNoShow(trainingId as number);
+      const res = await postTrainerNoShow(reservationId as number);
       if (res.status === 200) {
-        navigate('/trainer/home');
+        navigate(0);
         noShowModal.toggle();
       } else {
         throw new Error(`Server is Troubling : ${res.status}`);
@@ -54,10 +51,10 @@ const TrainerReservation: React.FC<{
         alert(
           '트레이닝이 예정 중이거나 진행중입니다. 트레이닝이 완료된 후 다시 시도해 주세요',
         );
-        navigate('/trainer/home');
+        navigate(0);
       } else {
         alert('존재하지 않는 예약압니다');
-        navigate('/trainer/home');
+        navigate(0);
       }
     }
   };
@@ -103,16 +100,6 @@ const TrainerReservation: React.FC<{
       >
         해당 예약을 회원님이 방문하지 않으셨나요?
       </ConfirmationModal>
-      <DefaultModal
-        isOpen={reservationConfirmModal.isOpen}
-        onClose={reservationConfirmModal.toggle}
-        modalMaxHeight="600px"
-        modalWidth="1000px"
-      >
-        <div className="w-full space-y-6">
-          <div>reservation</div>
-        </div>
-      </DefaultModal>
     </>
   );
 };

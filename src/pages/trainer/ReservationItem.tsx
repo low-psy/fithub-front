@@ -6,12 +6,12 @@ const ReservationItem: React.FC<{
   iconString: string;
 }> = ({ title, value, iconString }) => {
   return (
-    <div className="flex justify-between">
-      <h2 className="flex items-center gap-x-1">
+    <div className="flex justify-between gap-x-6">
+      <h2 className="flex shrink-0 items-center gap-x-1">
         <span className="material-symbols-rounded">{iconString}</span>
         {title}
       </h2>
-      <p className="text-xl font-bold">{value}</p>
+      <p className="truncate  text-xl font-bold">{value}</p>
     </div>
   );
 };

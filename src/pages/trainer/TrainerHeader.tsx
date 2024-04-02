@@ -21,16 +21,6 @@ const TrainerHeader = () => {
             <img src={logo} alt="logo" />
           </div>
         </Link>
-        {!isNew && (
-          <button
-            className="flex items-center rounded-full border-2 border-neutral-400 p-2"
-            type="button"
-          >
-            <span className="material-symbols-outlined text-neutral-500">
-              menu
-            </span>
-          </button>
-        )}
       </div>
     </header>
   );
