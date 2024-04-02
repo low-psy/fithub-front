@@ -1,6 +1,9 @@
-import React, { FC, useCallback, useEffect } from 'react';
+/* eslint-disable jsx-a11y/control-has-associated-label */
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import { SET_CHATTING_ROOM_ID } from '../../redux/slices/chatSlice';
+import CloseIcon from '../../assets/icons/CloseIcon';
+import PictureIcon from '../../assets/icons/PictureIcon';
 
 const chatData = [
   {
@@ -30,6 +33,7 @@ const chatData = [
 
 const ChatModal: FC = () => {
   const { chattingRoomId } = useAppSelector((state) => state.chat);
+  const [text, setText] = useState('');
   const dispatch = useAppDispatch();
 
   const handleClose = useCallback(() => {
@@ -50,17 +54,22 @@ const ChatModal: FC = () => {
   }, [chattingRoomId, handleClose]);
 
   const handleChat = (e: any) => {
-    console.log(e.target.value);
+    setText(e.target.value);
   };
 
   const closeChatModal = () => {
     dispatch(SET_CHATTING_ROOM_ID(undefined));
   };
+  const sendText = () => {
+    console.log(text);
+    // await
+    setText('');
+  };
 
   return (
     <div
       // eslint-disable-next-line
-      className="bg-sub_light fixed bottom-5 right-[10%] z-10 h-[630px] w-[360px] flex-col justify-between rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+      className="animate-in fade-in bg-sub_light fixed bottom-5 right-[10%] z-10 h-[630px] w-[360px] flex-col justify-between rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
       style={{ display: `${chattingRoomId ? 'flex' : 'none'}` }}
     >
       {/* 상대방 정보 */}
@@ -74,11 +83,7 @@ const ChatModal: FC = () => {
           <span>트레이너 쌤</span>
         </div>
         <button type="button" onClick={closeChatModal} className="mr-4">
-          {/* <img
-            src="https://w7.pngwing.com/pngs/1008/558/png-transparent-computer-icons-button-close-angle-rectangle-logo-thumbnail.png"
-            alt=""
-          /> */}
-          x
+          <CloseIcon />
         </button>
       </div>
       {/* 채팅 내용 */}
@@ -126,21 +131,16 @@ const ChatModal: FC = () => {
       </div>
       <div>
         <textarea
+          value={text}
           onChange={handleChat}
-          className="h-[8rem] w-[100%] resize-none border-b-2 border-t-2 p-[1rem] text-sm outline-none"
+          className="relative bottom-[-6px] h-[8rem] w-[100%] resize-none border-b-2 border-t-2 p-[1rem] text-sm outline-none"
           placeholder="채팅내용을 입력해 주세요!"
         />
-        <div className="flex items-center justify-between px-5 py-2 pb-3">
-          <button type="button">
-            <img
-              className="h-6 w-6"
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Picture_icon_BLACK.svg/1200px-Picture_icon_BLACK.svg.png"
-              alt="pictureIcon"
-            />
-          </button>
+        <div className="flex justify-end bg-white px-5 py-2 pb-3 ">
           <button
             type="button"
             className="w-[80px] rounded-full bg-gray-200 p-1"
+            onClick={sendText}
           >
             전송
           </button>

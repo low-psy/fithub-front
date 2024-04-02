@@ -12,6 +12,7 @@ interface DataType {
   work: string;
   startDate: string;
   endDate: string;
+  // working: boolean | undefined;
 }
 
 const { kakao } = window;

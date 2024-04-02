@@ -19,6 +19,11 @@ import {
 import { handleDateToString } from '../../../utils/util';
 import ConfirmationModal from '../../../components/modal/ConfirmationModal';
 import DefaultModal from '../../../components/modal/DefaultModal';
+import { useAppDispatch, useAppSelector } from '../../../hooks/reduxHooks';
+import {
+  SET_CAREERLIST,
+  SET_WORKING_CAREERID,
+} from '../../../redux/slices/careerSlice';
 
 export enum InputTypes {
   company = 'company',
@@ -27,7 +32,6 @@ export enum InputTypes {
 }
 interface Prop {
   careerId: number;
-  setCareerList: (data: any) => void;
 }
 
 const { kakao } = window;
@@ -38,13 +42,16 @@ declare global {
   }
 }
 
-const CareerInput: FC<Prop> = ({ careerId, setCareerList }) => {
+const CareerInput: FC<Prop> = ({ careerId }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [data, setData] = useState<CareerType>();
   const [deletingId, setDeletingId] = useState<number | undefined>();
   const [isAddressModalOpened, setIsAddressModalOpened] =
     useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const { workingCareerId } = useAppSelector((state) => state.career);
+  const [isChecked, setIsChecked] = useState(false);
 
   const getCareerInfo = useCallback(async () => {
     const res = await fetchCareerInfo(careerId);
@@ -62,7 +69,8 @@ const CareerInput: FC<Prop> = ({ careerId, setCareerList }) => {
     } else {
       // 수정한 데이터 제출
       if (!data) return;
-      await editTrainerCareer(careerId, data);
+      await editTrainerCareer(careerId, { ...data, working: isChecked });
+      dispatch(SET_WORKING_CAREERID(data?.careerId));
     }
     setIsEditing((prev) => !prev);
   };
@@ -97,7 +105,7 @@ const CareerInput: FC<Prop> = ({ careerId, setCareerList }) => {
   const handleDelete = async () => {
     await deleteTrainerCareer(careerId);
     const updatedInfo = await fetchTrainerInfo();
-    setCareerList(updatedInfo.data.trainerCareerList);
+    dispatch(SET_CAREERLIST(updatedInfo.data.trainerCareerList));
   };
 
   const deleteContent = (
@@ -137,6 +145,10 @@ const CareerInput: FC<Prop> = ({ careerId, setCareerList }) => {
       }
     });
   };
+
+  // const handleWorking = () => {
+  //   setIsChecked((prev: boolean) => !prev);
+  // };
   return (
     <>
       <div className="mb-[10px] flex items-center justify-between">
@@ -149,7 +161,7 @@ const CareerInput: FC<Prop> = ({ careerId, setCareerList }) => {
             readOnly={!isEditing}
             onChange={(e) => handleChange(e, InputTypes.company)}
             style={{
-              width: '15%',
+              width: '11%',
               marginRight: '1rem',
               paddingBottom: '3px',
               outline: 'none',
@@ -184,7 +196,7 @@ const CareerInput: FC<Prop> = ({ careerId, setCareerList }) => {
               borderBottom: isEditing ? '1px solid lightgrey' : 'none',
             }}
           />
-          <div>
+          <div className="mr-1">
             {isEditing ? (
               <ReactDatePicker
                 id="startDate"
@@ -211,6 +223,19 @@ const CareerInput: FC<Prop> = ({ careerId, setCareerList }) => {
               data?.endDate || '현재'
             )}
           </div>
+          {/* 재직중 */}
+          {(isEditing || data?.working) && (
+            <div className="ml-3">
+              <input
+                name="working"
+                type="checkbox"
+                checked={isChecked || data?.careerId === workingCareerId}
+                disabled={!isEditing || data?.careerId === workingCareerId}
+                onClick={() => setIsChecked((prev: boolean) => !prev)}
+              />
+              <label htmlFor="working">재직중</label>
+            </div>
+          )}
         </div>
         <div>
           <button

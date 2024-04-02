@@ -14,15 +14,6 @@ declare global {
   }
 }
 
-interface ICareer {
-  [key: string]: string | boolean | (() => void);
-  company: string;
-  work: string;
-  startDate: string;
-  endDate: string;
-  working: 'true' | 'false';
-}
-
 interface ICareerInputProps {
   career: TrainerCareerRequestDto;
   handleCareerInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
