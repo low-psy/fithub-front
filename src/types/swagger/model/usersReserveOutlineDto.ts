@@ -31,6 +31,10 @@ export interface UsersReserveOutlineDto {
      */
     title?: string;
     /**
+     * 트레이닝 가격
+     */
+    price?: number;
+    /**
      * 예약한 트레이닝 날짜, 시간
      */
     reserveDateTime?: Date;
