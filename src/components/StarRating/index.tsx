@@ -4,7 +4,7 @@ import Star from './Star';
 interface Props {
   maxRate?: number;
   currRate: number;
-  onChange?: (n: number) => void;
+  onChange?: (n: number) => void | undefined;
 }
 
 const StarRating: FC<Props> = ({ maxRate = 5, currRate, onChange }) => {

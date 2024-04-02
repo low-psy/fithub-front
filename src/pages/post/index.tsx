@@ -25,6 +25,7 @@ import useSearchModal from '../../hooks/useSearchModal';
 import { PostInfoDto } from '../../types/swagger/model/postInfoDto';
 import PostSearch from './PostSearch';
 import PostAlign from './PostAlign';
+import Chat from '../Chat';
 
 export const loader = (async ({ request }) => {
   const url = new URL(request.url);
@@ -66,7 +67,6 @@ const Post = () => {
 
   const { enteredText, clickHandler, inputChangeHandler } = useSearchModal();
   const [last, setLast] = useState<boolean>(postPage.last as boolean);
-  console.log(last);
 
   const [page, setPage] = useState<number>(postPage.number as number);
 
@@ -122,12 +122,10 @@ const Post = () => {
       });
       if (isLogin && PostRequestDtos) {
         getLikeBook(PostRequestDtos).then((res) => {
-          console.log(res.data);
           setBookAndLikes(res.data);
         });
       }
       getLikes(PostRequestDtos).then((res) => {
-        console.log(res.data);
         setLikedInfos(res.data);
       });
     },
@@ -179,7 +177,7 @@ const Post = () => {
               게시물 작성하기
             </Link>
           </div>
-          <div>chat</div>
+          <Chat />
         </div>
       </FilterLayout>
       <section className="relative mx-auto w-[728px] space-y-4">

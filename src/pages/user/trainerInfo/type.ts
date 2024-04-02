@@ -28,6 +28,8 @@ export interface CareerType {
   endDate: string | null;
   work: string;
   working: boolean;
+  latitude: number;
+  logitude: number;
 }
 
 export interface NewCareerType {

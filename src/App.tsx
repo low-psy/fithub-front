@@ -68,6 +68,7 @@ import TrainerExplore, {
 import TrainerDetail, {
   loader as TrainerDetailLoader,
 } from './pages/home/trainerDetail';
+import Reservation from './pages/user/Reservation';
 
 function App() {
   // 전역 로그인 상태 관리
@@ -175,6 +176,10 @@ function App() {
             {
               path: pageRoutes.user.posts,
               element: <Posts />,
+            },
+            {
+              path: pageRoutes.user.reservations,
+              element: <Reservation />,
             },
             {
               path: pageRoutes.user.cancellations,
