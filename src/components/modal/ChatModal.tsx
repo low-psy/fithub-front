@@ -3,19 +3,19 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import { SET_CHATTING_ROOM_ID } from '../../redux/slices/chatSlice';
 import CloseIcon from '../../assets/icons/CloseIcon';
-import PictureIcon from '../../assets/icons/PictureIcon';
+import PortraitIcon from '../../assets/icons/PortraitIcon';
 
 const chatData = [
   {
     isMe: false,
     name: '트레이너 썜',
-    img: 'https://www.freeiconspng.com/thumbs/portrait-icon/portrait-icon-2.png',
+    img: null,
     text: '회원님',
   },
   {
     isMe: false,
     name: '트레이너 썜',
-    img: 'https://www.freeiconspng.com/thumbs/portrait-icon/portrait-icon-2.png',
+    img: null,
     text: '오늘 식단 보여주세요',
   },
   {
@@ -26,7 +26,7 @@ const chatData = [
   {
     isMe: false,
     name: '트레이너 썜',
-    img: 'https://www.freeiconspng.com/thumbs/portrait-icon/portrait-icon-2.png',
+    img: null,
     text: '잘하셨어요',
   },
 ];
@@ -75,20 +75,17 @@ const ChatModal: FC = () => {
       {/* 상대방 정보 */}
       <div className="flex justify-between">
         <div className="flex items-center justify-start p-3">
-          <img
-            className="mr-5 h-12 w-12"
-            src="https://www.freeiconspng.com/thumbs/portrait-icon/portrait-icon-2.png"
-            alt="상대방이미지"
-          />
-          <span>트레이너 쌤</span>
+          {/* <img className="h-12 w-12" src="" alt="상대방이미지" /> */}
+          <PortraitIcon />
+          <span className="ml-3">트레이너 쌤</span>
         </div>
         <button type="button" onClick={closeChatModal} className="mr-4">
           <CloseIcon />
         </button>
       </div>
       {/* 채팅 내용 */}
-      <div className="flex-1 p-5">
-        {chatData.map((data) => {
+      <div className="flex-1 p-3">
+        {chatData.map((data: any) => {
           if (data.isMe) {
             return (
               <div className="align-center flex justify-end">
@@ -108,8 +105,12 @@ const ChatModal: FC = () => {
           }
           return (
             <div className="align-center my-2 flex">
-              <img src={data.img} alt="" className="mr-2 h-8 w-8" />
-              <div className="flex flex-col">
+              {data?.img ? (
+                <img src={data?.img} alt="" className=" h-8 w-8" />
+              ) : (
+                <PortraitIcon />
+              )}
+              <div className="ml-2 flex flex-col">
                 <p className="text-sm">{data.name}</p>
                 <div className="align-center flex">
                   <div className="h-[30px] w-2 overflow-hidden">

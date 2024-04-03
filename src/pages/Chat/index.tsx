@@ -3,14 +3,18 @@
 import React, { useEffect, useState } from 'react';
 import { fetchChatList } from '../../apis/chat';
 import { useAppDispatch } from '../../hooks/reduxHooks';
-import { SET_CHATTING_ROOM_ID } from '../../redux/slices/chatSlice';
+import {
+  SET_CHATTING_ROOM_ID,
+  SET_IS_CHATLIST_MODAL_OPEN,
+} from '../../redux/slices/chatSlice';
+import PortraitIcon from '../../assets/icons/PortraitIcon';
 
 interface ChatType {
   roomId: number;
   name: string;
   modifiedDate: string;
   lastTime: string;
-  img: string;
+  img: string | null;
   newCount: number;
 }
 
@@ -28,7 +32,7 @@ const Chat = () => {
         modifiedDate: '2024-03-31T23:58:17.541Z',
         lastTime: '오후 4:38',
         newCount: 3,
-        img: 'https://www.freeiconspng.com/thumbs/portrait-icon/portrait-icon-2.png',
+        img: null,
       },
       {
         roomId: 2,
@@ -36,13 +40,14 @@ const Chat = () => {
         modifiedDate: '2024-03-31T23:58:17.541Z',
         lastTime: '오후 4:38',
         newCount: 1,
-        img: 'https://www.freeiconspng.com/thumbs/portrait-icon/portrait-icon-2.png',
+        img: null,
       },
     ]);
   };
 
-  const openChatModal = (id: number) => {
+  const handleOpenChat = (id: number) => {
     dispatch(SET_CHATTING_ROOM_ID(id));
+    dispatch(SET_IS_CHATLIST_MODAL_OPEN(false));
   };
 
   useEffect(() => {
@@ -55,12 +60,12 @@ const Chat = () => {
         return (
           <div
             key={chat.roomId}
-            onClick={() => openChatModal(chat.roomId)}
+            onClick={() => handleOpenChat(chat.roomId)}
             className="flex cursor-pointer items-center justify-between  px-2 py-4 transition duration-150 ease-in-out hover:bg-accent_sub"
           >
             <div className="flex">
               <div className="mr-5 h-10 w-11">
-                <img src={chat.img} alt="채팅방이미지" />
+                {chat.img ? <img src={chat.img} alt="img" /> : <PortraitIcon />}
               </div>
               <div>
                 <p>{chat.name}</p>
@@ -70,6 +75,7 @@ const Chat = () => {
             <div className="flex flex-col items-end justify-between">
               <p className="mb-1 text-sm">{chat.lastTime}</p>
               {chat.newCount && (
+                // eslint-disable-next-line prettier/prettier
                 <div className="bg-accent_mid flex h-4 w-4 items-center justify-center rounded-full text-[13px] text-white">
                   {chat.newCount}
                 </div>
