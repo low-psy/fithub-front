@@ -21,6 +21,7 @@ import FilterSection from '../../components/btn/LinkBtnWithUrl';
 import lookupFilter from '../../assets/lookupFilter.png';
 import mapFilter from '../../assets/mapFilter.png';
 import newpostFilter from '../../assets/newpostFilter.png';
+import trainerFilter from '../../assets/trainerFilter.png';
 import FilterIcon from '../../assets/icons/filterIcon';
 import { TrainingOutlineDto } from '../../types/swagger/model/trainingOutlineDto';
 import { PageTrainingOutlineDto } from '../../types/swagger/model/pageTrainingOutlineDto';
@@ -77,12 +78,12 @@ export const loader: LoaderFunction = async ({ request }) => {
       setRefreshToken(accessToken);
       return redirect('');
     }
+    throw new Error('server is trouble');
   } catch (err) {
-    const status = errorFunc(err);
-    console.log(status);
-    redirect('/login');
+    console.log(err, 'error called');
+    errorFunc(err);
+    return redirect('/login');
   }
-  return null;
 };
 
 const categoryArray = [
@@ -134,11 +135,12 @@ const Home: React.FC = () => {
     if (isLogin) {
       fetchUsersTrainingLike();
     }
-  }, [idList, dispatch, isLogin, navigation.state]);
+  }, [idList, dispatch, isLogin]);
 
   const [last, setLast] = useState<boolean>(
     pageTrainersTraining.last as boolean,
   );
+  // const [page, setPage] = useState<number>(1);
 
   const fetchData = useCallback(
     async (page: number): Promise<TrainingOutlineDto[] | []> => {
@@ -149,6 +151,7 @@ const Home: React.FC = () => {
         const nextPageData = await getNextPageData(page);
         if (nextPageData.status === 200) {
           setLast(nextPageData.data.last as boolean);
+          // setPage(page);
           return nextPageData.data.content || [];
         }
         return [];
@@ -168,11 +171,13 @@ const Home: React.FC = () => {
     navigate(`/?category=${categoryArray[index].value}`);
   };
 
+  const mapTo = isLogin ? '/mapList' : '/login';
+
   return (
     <>
       <div className="space-y-4 md:space-y-10">
-        <section className="hidden h-56 grid-cols-2 gap-3  md:grid">
-          <div className="row-span-2  flex ">
+        <section className="grid  h-56 grid-cols-2  gap-3">
+          <div className=" flex  ">
             <FilterSection bg={lookupFilter} to="/post">
               운동 게시글 조회하기
             </FilterSection>
@@ -185,12 +190,17 @@ const Home: React.FC = () => {
           <div className=" flex ">
             <button
               type="button"
-              style={{ backgroundImage: `url(${mapFilter})` }}
-              className="bg flex h-full w-full items-center justify-center rounded-xl bg-cover bg-center text-2xl font-extrabold text-white drop-shadow-2xl xl:text-3xl"
+              style={{ backgroundImage: `url(${trainerFilter})` }}
+              className="bg flex h-full w-full items-center justify-center rounded-xl bg-cover bg-center text-2xl font-extrabold text-white drop-shadow-2xl xl:text-3xl "
               onClick={() => trainerModal.toggle()}
             >
               트레이너 검색하기
             </button>
+          </div>
+          <div className=" flex  ">
+            <FilterSection bg={mapFilter} to={mapTo}>
+              주변 헬스장 조회하기
+            </FilterSection>
           </div>
         </section>
         <section className="space-y-4">

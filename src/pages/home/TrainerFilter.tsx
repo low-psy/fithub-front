@@ -17,9 +17,10 @@ const TrainerFilter: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     if (navigation.state === 'loading') {
       onClose();
     }
-  }, [navigation.state, onClose]);
+    console.log('trainerfillter effect');
+  }, [onClose]);
   return (
-    <Form action="/explore/trainer" method="GET" className=" w-[600px] p-4">
+    <Form action="/search/trainer" method="GET" className=" w-[600px] p-4">
       <ul className="h-full space-y-10">
         <li key="interest">
           <FormLabel htmlFor="interest">

@@ -29,6 +29,7 @@ export const loader = (async ({ request }) => {
 }) satisfies LoaderFunction;
 
 const TrainerExplore = () => {
+  console.log('home trainer explore');
   const req = useLoaderData() as LoaderData<typeof loader>;
   const data = req?.data.content;
   return (
@@ -43,7 +44,7 @@ const TrainerExplore = () => {
                   <Link
                     key={id}
                     className="rounded-xl bg-white p-8 shadow-lg hover:opacity-100"
-                    to={`/explore/trainer/${id}`}
+                    to={`/search/trainer/${id}`}
                   >
                     <div className="flex justify-center">
                       <div className=" aspect-square h-[200px]  ">

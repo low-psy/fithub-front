@@ -4,6 +4,7 @@ import { authAxios, defaultAxios } from './axios';
 import { CareerType, TrainerInfoRes } from '../pages/user/trainerInfo/type';
 import { PageTrainerOutlineDto } from '../types/swagger/model/pageTrainerOutlineDto';
 import { TrainerSearchAllReviewDto } from '../types/swagger/model/trainerSearchAllReviewDto';
+import { MapDto } from '../types/swagger/model/mapDto';
 
 const certifyTrainer = (formData: FormData) => {
   const response = authAxios.post('/auth/trainer/certificate', formData, {
@@ -78,4 +79,14 @@ export const getTrainersReviews = async (trainerId: string) => {
   return defaultAxios.get<TrainerSearchAllReviewDto>(
     `/search/trainers/reviews?trainerId=${trainerId}`,
   );
+};
+
+export const getMapList = async (requestData: {
+  page: number;
+  x: number;
+  y: number;
+}) => {
+  const queryString = qs.stringify(requestData);
+  const url = `/auth/map?${queryString}`;
+  return authAxios.get<MapDto>(url);
 };

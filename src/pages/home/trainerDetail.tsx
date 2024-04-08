@@ -25,6 +25,7 @@ export const loader = (async ({ params }) => {
 }) satisfies LoaderFunction;
 
 const TrainerDetail = () => {
+  console.log('home trainer detail');
   const {
     trainerReviews: {
       data: { average, reviewNum, trainerId, usersReviewList },

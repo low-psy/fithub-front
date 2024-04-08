@@ -69,6 +69,7 @@ import TrainerDetail, {
   loader as TrainerDetailLoader,
 } from './pages/home/trainerDetail';
 import Reservation from './pages/user/Reservation';
+import MapList, { loader as MapListLoader } from './pages/map/mapList';
 
 function App() {
   // 전역 로그인 상태 관리
@@ -108,12 +109,12 @@ function App() {
           ],
         },
         {
-          path: '/explore/trainer',
+          path: '/search/trainer',
           element: <TrainerExplore />,
           loader: TrainerExploreLoader,
         },
         {
-          path: '/explore/trainer/:trainerId',
+          path: '/search/trainer/:trainerId',
           element: <TrainerDetail />,
           loader: TrainerDetailLoader,
         },
@@ -128,6 +129,11 @@ function App() {
           path: '/map',
           element: <UserMap />,
           loader: TrainingMapLoader,
+        },
+        {
+          path: '/mapList',
+          element: <MapList />,
+          loader: MapListLoader,
         },
         // 게시글 작성
         {
