@@ -64,10 +64,8 @@ const License: FC<Prop> = ({ list }) => {
   return (
     <>
       <section className="flex flex-col">
-        <div className="flex flex-row">
-          <div className="relative flex w-[100px] items-center">
-            <p className="absolute top-[8px]">자격증</p>
-          </div>
+        <div className="flex flex-col">
+          <p className="mb-5 font-bold">자격증</p>
           <div className="flex flex-1 flex-col">
             <ImageUpload
               imgs={imgs}

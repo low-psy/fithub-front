@@ -18,7 +18,7 @@ export interface ChatRoomResponseDto {
     /**
      * 채팅상대 이름
      */
-    roomName?: string;
+    name?: string;
     /**
      * 채팅방 수정일
      */

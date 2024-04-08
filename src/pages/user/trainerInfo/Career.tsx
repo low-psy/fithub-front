@@ -1,8 +1,13 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState, useCallback } from 'react';
 import { CareerType } from './type';
-import CareerInput from './CareerInput';
+import SingleCareer from './SingleCareer';
 import { addTrainerCareer } from '../../../apis/trainer';
 import NewCareer from './NewCareer';
+import { useAppDispatch, useAppSelector } from '../../../hooks/reduxHooks';
+import {
+  SET_CAREERLIST,
+  SET_WORKING_CAREERID,
+} from '../../../redux/slices/careerSlice';
 
 interface Prop {
   list: CareerType[] | undefined;
@@ -14,15 +19,17 @@ interface NewCareerType {
   work: string;
   startDate: string;
   endDate: string;
+  working: boolean;
 }
 
 const Career: FC<Prop> = ({ list }) => {
-  const [careerList, setCareerList] = useState<any | undefined>(list);
+  const { careerList } = useAppSelector((state) => state.career);
   const [newCareer, setNewCareer] = useState<NewCareerType | null>(null);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    setCareerList(list);
-  }, [list]);
+    dispatch(SET_CAREERLIST(list));
+  }, [dispatch, list]);
 
   const showNewCareerInput = async () => {
     setNewCareer({
@@ -31,6 +38,7 @@ const Career: FC<Prop> = ({ list }) => {
       work: '',
       startDate: '',
       endDate: '',
+      working: false,
     });
   };
 
@@ -61,23 +69,25 @@ const Career: FC<Prop> = ({ list }) => {
   const addCareer = async () => {
     if (!isValid()) return;
     const newCareerId = await addTrainerCareer({
-      address: '서울특별시 마포구 동교동 205-17',
-      working: true,
-      longitude: 126.919286,
-      latitude: 37.557453126,
+      address: '',
+      working: false,
+      longitude: 0,
+      latitude: 0,
       ...newCareer,
     });
 
-    setCareerList([
-      ...careerList,
-      {
-        careerId: newCareerId,
-        company: newCareer?.company,
-        work: newCareer?.work,
-        startDate: newCareer?.startDate,
-        endDate: newCareer?.endDate,
-      },
-    ]);
+    dispatch(
+      SET_CAREERLIST([
+        ...careerList,
+        {
+          careerId: newCareerId,
+          company: newCareer?.company,
+          work: newCareer?.work,
+          startDate: newCareer?.startDate,
+          endDate: newCareer?.endDate,
+        },
+      ]),
+    );
 
     // 초기화
     setNewCareer(null);
@@ -85,20 +95,20 @@ const Career: FC<Prop> = ({ list }) => {
 
   return (
     <section className="flex flex-col">
-      <div className="flex flex-row">
-        <div className="relative flex w-[100px] items-center">
-          <p className="absolute top-[8px]">경력</p>
-        </div>
+      <div className="flex flex-col">
+        <p className="mb-5 font-bold">경력</p>
 
         <div className="flex flex-1 flex-col">
-          {careerList?.map((li: CareerType) => (
-            <div className="flex flex-col" key={li.careerId}>
-              <CareerInput
-                careerId={li?.careerId}
-                setCareerList={setCareerList}
-              />
-            </div>
-          ))}
+          {careerList?.map((li: CareerType) => {
+            if (li.working) {
+              dispatch(SET_WORKING_CAREERID(li.careerId));
+            }
+            return (
+              <div className="flex flex-col" key={li.careerId}>
+                <SingleCareer careerId={li?.careerId} />
+              </div>
+            );
+          })}
           {newCareer && <NewCareer data={newCareer} setData={setNewCareer} />}
 
           <div className="flex justify-start">

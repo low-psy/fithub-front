@@ -2,7 +2,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import ReactDatePicker from 'react-datepicker';
 import { ko } from 'date-fns/locale';
 import DaumPostcode from 'react-daum-postcode';
-import { InputTypes } from './CareerInput';
+import { InputTypes } from './SingleCareer';
 import { handleDateToString } from '../../../utils/util';
 import DefaultModal from '../../../components/modal/DefaultModal';
 
@@ -99,7 +99,7 @@ const NewCareer = ({
           ref={inputRef}
           onChange={(e) => handleChange(e, InputTypes.company)}
           style={{
-            width: '15%',
+            width: '9%',
             marginRight: '1rem',
             paddingBottom: '3px',
             outline: 'none',
@@ -113,7 +113,7 @@ const NewCareer = ({
           // onChange={(e) => handleChange(e, InputTypes.address)}
           onClick={() => setIsAddressModalOpened(true)}
           style={{
-            width: '25%',
+            width: '30%',
             marginRight: '1rem',
             paddingBottom: '3px',
             outline: 'none',
@@ -126,7 +126,7 @@ const NewCareer = ({
           placeholder="업무"
           onChange={(e) => handleChange(e, InputTypes.work)}
           style={{
-            width: '10%',
+            width: '8%',
             marginRight: '1rem',
             paddingBottom: '3px',
             outline: 'none',
