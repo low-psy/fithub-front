@@ -179,12 +179,12 @@ const Home: React.FC = () => {
         <section className="grid  h-56 grid-cols-2  gap-3">
           <div className=" flex  ">
             <FilterSection bg={lookupFilter} to="/post">
-              운동 게시글 조회하기
+              게시글 조회
             </FilterSection>
           </div>
           <div className=" flex">
             <FilterSection bg={newpostFilter} to="newpost">
-              게시글 작성하기
+              게시글 작성
             </FilterSection>
           </div>
           <div className=" flex ">
@@ -194,12 +194,12 @@ const Home: React.FC = () => {
               className="bg flex h-full w-full items-center justify-center rounded-xl bg-cover bg-center text-2xl font-extrabold text-white drop-shadow-2xl xl:text-3xl "
               onClick={() => trainerModal.toggle()}
             >
-              트레이너 검색하기
+              트레이너 검색
             </button>
           </div>
           <div className=" flex  ">
             <FilterSection bg={mapFilter} to={mapTo}>
-              주변 헬스장 조회하기
+              헬스장 조회
             </FilterSection>
           </div>
         </section>

@@ -7,69 +7,69 @@ import {
 import { useDispatch } from 'react-redux';
 
 // pages
-import Root from './pages/Root';
+import Root from 'pages/Root';
 import Home, {
   loader as homeLoader,
   action as homeAction,
-} from './pages/home/index';
-import FindPassword from './pages/help/password';
-import Login from './pages/login';
+} from 'pages/home/index';
+import FindPassword from 'pages/help/password';
+import Login from 'pages/login';
 import NewPost, {
   loader as newPostLoader,
   action as newPostAction,
-} from './pages/newpost/index';
-import Signup from './pages/signup';
+} from 'pages/newpost/index';
+import Signup from 'pages/signup';
 import TrainerHome, {
   action as TrainerAction,
   loader as TrainerLoader,
-} from './pages/trainer';
-import TrainerRoot from './pages/TrainerRoot';
-import Post, { loader as postLoader } from './pages/post';
-import CertifyTrainer from './pages/certifyTrainer';
-import SocialSignup from './pages/signup/SocialSignup';
-import EmailAuthentication from './pages/signup/EmailAuthentication';
-import AdditionalInfo from './pages/signup/AdditionalInfo';
-import SignupSuccess from './pages/signup/SignupSuccess';
-import User from './pages/user';
-import Profile from './pages/user/profile';
-import Posts from './pages/user/posts';
-import Cancellation from './pages/user/cancellation';
-import EditProfile from './pages/user/profile/editProfile/EditProfile';
-import profileLoader from './pages/user/loader';
+} from 'pages/trainer';
+import TrainerRoot from 'pages/TrainerRoot';
+import Post, { loader as postLoader } from 'pages/post';
+import CertifyTrainer from 'pages/certifyTrainer';
+import SocialSignup from 'pages/signup/SocialSignup';
+import EmailAuthentication from 'pages/signup/EmailAuthentication';
+import AdditionalInfo from 'pages/signup/AdditionalInfo';
+import SignupSuccess from 'pages/signup/SignupSuccess';
+import User from 'pages/user';
+import Profile from 'pages/user/profile';
+import Posts from 'pages/user/posts';
+import Cancellation from 'pages/user/cancellation';
+import EditProfile from 'pages/user/profile/editProfile/EditProfile';
+import profileLoader from 'pages/user/loader';
 import DetailPost, {
   loader as detailPostLoader,
   action as detailPostAction,
-} from './pages/post/detailPost';
-import Help from './pages/help';
+} from 'pages/post/detailPost';
+import Help from 'pages/help';
 
 // components
-import NewTrainer from './pages/trainer/new';
+import NewTrainer from 'pages/trainer/new';
 import CreateTrainer, {
   action as createTrainerAction,
   loader as createTrainerLoader,
-} from './pages/trainer/create';
-import Detail, { loader as detailedTrainingLoader } from './pages/detail';
-import pageRoutes from './pageRoutes';
+} from 'pages/trainer/create';
+import Detail, { loader as detailedTrainingLoader } from 'pages/detail';
+import pageRoutes from 'pageRoutes';
 
 // hooks
-import { LOGIN, SET_TRAINER } from './redux/slices/userSlice';
-import TrainingBook, { loader as TrainingBookLoader } from './pages/book';
+import { LOGIN, SET_TRAINER } from 'redux/slices/userSlice';
+import TrainingBook, { loader as TrainingBookLoader } from 'pages/book';
 import SuccessPage, {
   loader as successPaymentLoader,
-} from './pages/detail/success';
+} from 'pages/detail/success';
 
-import TrainerInfo from './pages/user/trainerInfo';
-import PostHome from './pages/post/home';
-import UserHome from './pages/home/home';
-import UserMap, { loader as TrainingMapLoader } from './pages/map';
+import TrainerInfo from 'pages/user/trainerInfo';
+import PostHome from 'pages/post/home';
+import UserHome from 'pages/home/home';
+import UserMap, { loader as TrainingMapLoader } from 'pages/map';
 import TrainerExplore, {
   loader as TrainerExploreLoader,
-} from './pages/home/trainerExplore';
+} from 'pages/home/trainerExplore';
 import TrainerDetail, {
   loader as TrainerDetailLoader,
-} from './pages/home/trainerDetail';
-import Reservation from './pages/user/Reservation';
-import MapList, { loader as MapListLoader } from './pages/map/mapList';
+} from 'pages/home/trainerDetail';
+import Reservation from 'pages/user/Reservation';
+import MapList, { loader as MapListLoader } from 'pages/map/mapList';
 
 function App() {
   // 전역 로그인 상태 관리

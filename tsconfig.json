@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "src",
     "target": "es6",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -22,5 +23,15 @@
     ],
     "types": ["kakao.maps.d.ts"]
   },
-  "include": ["src"]
+  "include": ["src"],
+  "paths": {
+    "pages/*": ["pages/*"],
+    "components/*": ["components/*"],
+    "hocs/*": ["hocs/*"],
+    "hooks/*": ["hooks/*"],
+    "redux/*": ["redux/*"],
+    "types/*": ["types/*"],
+    "utils/*": ["utils/*"],
+    "validation/*": ["validation/*"]
+  }
 }
