@@ -2,89 +2,32 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActionFunctionArgs,
   Link,
-  LoaderFunction,
   Outlet,
-  redirect,
-  useLoaderData,
+  useAsyncValue,
   useNavigate,
   useNavigation,
 } from 'react-router-dom';
 import { AxiosResponse } from 'axios';
 import { useDispatch } from 'react-redux';
-import {
-  getTraining,
-  getNextPageData,
-  getUsersTrainingLikes,
-  postSearchTraining,
-} from '../../apis/trainig';
-import FilterSection from '../../components/btn/LinkBtnWithUrl';
-import lookupFilter from '../../assets/lookupFilter.png';
-import mapFilter from '../../assets/mapFilter.png';
-import newpostFilter from '../../assets/newpostFilter.png';
-import trainerFilter from '../../assets/trainerFilter.png';
-import FilterIcon from '../../assets/icons/filterIcon';
-import { TrainingOutlineDto } from '../../types/swagger/model/trainingOutlineDto';
-import { PageTrainingOutlineDto } from '../../types/swagger/model/pageTrainingOutlineDto';
-import { errorFunc, isRefreshResData, setRefreshToken } from '../../utils/util';
-import { refreshResData } from '../../types/common';
-import { useAppSelector } from '../../hooks/reduxHooks';
-import useModal from '../../hooks/useModal';
-import DefaultModal from '../../components/modal/DefaultModal';
+import { getNextPageData, getUsersTrainingLikes } from 'apis/trainig';
+import FilterSection from 'components/btn/LinkBtnWithUrl';
+import lookupFilter from 'assets/lookupFilter.png';
+import mapFilter from 'assets/mapFilter.png';
+import newpostFilter from 'assets/newpostFilter.png';
+import trainerFilter from 'assets/trainerFilter.png';
+import FilterIcon from 'assets/icons/filterIcon';
+import { TrainingOutlineDto } from 'types/swagger/model/trainingOutlineDto';
+import { PageTrainingOutlineDto } from 'types/swagger/model/pageTrainingOutlineDto';
+import { errorFunc, isRefreshResData, setRefreshToken } from 'utils/util';
+import { refreshResData } from 'types/common';
+import { useAppSelector } from 'hooks/reduxHooks';
+import useModal from 'hooks/useModal';
+import DefaultModal from 'components/modal/DefaultModal';
+import UndefinedCover from 'components/common/UndefinedCover';
 import TrainingFilter from './TrainingFilter';
-import UndefinedCover from '../../components/common/UndefinedCover';
-import TrainerFilter from './TrainerFilter';
+import TrainerFilter from '../searchTrainer/TrainerFilter';
 
 export type CategoryEnum = 'PILATES' | 'HEALTH' | 'PT' | 'CROSSFIT' | 'YOGA';
-
-export const loader: LoaderFunction = async ({ request }) => {
-  const url = new URL(request.url);
-  const keyword = url.searchParams.get('searchInput') || undefined;
-  const lowestPrice = Number(url.searchParams.get('lowestPrice')) || undefined;
-  const highestPrice =
-    Number(url.searchParams.get('highestPrice')) || undefined;
-  const startDate = url.searchParams.get('startDate') || undefined;
-  const endDate = url.searchParams.get('endDate') || undefined;
-  const category =
-    (url.searchParams.get('category') as CategoryEnum) || undefined;
-  try {
-    let response;
-    if (
-      keyword ||
-      lowestPrice ||
-      highestPrice ||
-      startDate ||
-      endDate ||
-      category
-    ) {
-      response = await postSearchTraining({
-        conditions: {
-          keyword,
-          lowestPrice,
-          highestPrice,
-          startDate,
-          endDate,
-          category,
-        },
-        pageable: { page: 0, size: 10 },
-      });
-    } else {
-      response = await getTraining();
-    }
-    if (response.status === 200) {
-      return response;
-    }
-    if (response.status === 201) {
-      const { accessToken } = response.data as refreshResData;
-      setRefreshToken(accessToken);
-      return redirect('');
-    }
-    throw new Error('server is trouble');
-  } catch (err) {
-    console.log(err, 'error called');
-    errorFunc(err);
-    return redirect('/login');
-  }
-};
 
 const categoryArray = [
   { name: '전체', value: 'ALL' },
@@ -94,8 +37,8 @@ const categoryArray = [
   { name: '크로스핏', value: 'CROSSFIT' },
 ];
 
-const Home: React.FC = () => {
-  const response = useLoaderData() as AxiosResponse<PageTrainingOutlineDto>;
+const HomePage: React.FC = () => {
+  const response = useAsyncValue() as AxiosResponse<PageTrainingOutlineDto>;
   const pageTrainersTraining = useMemo(() => response.data, [response.data]);
   const trainingInfo = pageTrainersTraining.content;
   const idList = useMemo(
@@ -140,7 +83,7 @@ const Home: React.FC = () => {
   const [last, setLast] = useState<boolean>(
     pageTrainersTraining.last as boolean,
   );
-  // const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(1);
 
   const fetchData = useCallback(
     async (page: number): Promise<TrainingOutlineDto[] | []> => {
@@ -151,7 +94,7 @@ const Home: React.FC = () => {
         const nextPageData = await getNextPageData(page);
         if (nextPageData.status === 200) {
           setLast(nextPageData.data.last as boolean);
-          // setPage(page);
+          setPage(page);
           return nextPageData.data.content || [];
         }
         return [];
@@ -175,8 +118,8 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <div className="space-y-4 md:space-y-10">
-        <section className="grid  h-56 grid-cols-2  gap-3">
+      <div className="">
+        <section className="mb-8  grid h-56  grid-cols-2 gap-3">
           <div className=" flex  ">
             <FilterSection bg={lookupFilter} to="/post">
               게시글 조회
@@ -243,7 +186,7 @@ const Home: React.FC = () => {
               </div>
             ))}
           <Outlet
-            context={{ trainingInfo, fetchData, last, usersTrainingLike }}
+            context={{ trainingInfo, fetchData, last, usersTrainingLike, page }}
           />
         </section>
       </div>
@@ -259,9 +202,9 @@ const Home: React.FC = () => {
       </DefaultModal>
       {trainingInfo && trainingInfo.length > 0 && (
         <Link
-          to="/map?fromHome=true"
+          to="/map?fromHomePage=true"
           className="fixed bottom-14 left-1/2 flex -translate-x-1/2 gap-x-1 rounded-full bg-purple-300 px-4 py-4 font-bold text-white drop-shadow-md"
-          state={{ fromHome: true }}
+          state={{ fromHomePage: true }}
         >
           <span className="material-symbols-rounded">location_on</span>
           현재 위치 주변 검색하기
@@ -270,7 +213,7 @@ const Home: React.FC = () => {
     </>
   );
 };
-export default Home;
+export default HomePage;
 
 export const action = ({ request }: ActionFunctionArgs) => {
   return null;

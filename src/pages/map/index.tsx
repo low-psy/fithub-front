@@ -1,15 +1,7 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Map } from 'react-kakao-maps-sdk';
-import {
-  Form,
-  LoaderFunction,
-  redirect,
-  useLoaderData,
-  useNavigate,
-} from 'react-router-dom';
-import { postSearchLocationTraining } from '../../apis/trainig';
-import { addressToPositions, errorFunc, fetchLocation } from '../../utils/util';
-import { LoaderData } from '../../types/common';
+import { Form, useAsyncValue, useNavigate } from 'react-router-dom';
+import { addressToPositions } from '../../utils/util';
 import { kakaoLocation } from '../../types/map';
 import EventMarkerContainer from '../../components/map/EventMarkerContainer';
 import SearchInput from '../../components/form/SearchInput';
@@ -22,28 +14,8 @@ interface mapTrainingData {
   position: kakaoLocation;
 }
 
-export const loader = (async ({ request }) => {
-  try {
-    let latitude = Number(localStorage.getItem('lat'));
-    let longitude = Number(localStorage.getItem('lng'));
-    if (!latitude && !longitude) {
-      const { coords } = await fetchLocation();
-      latitude = coords.latitude;
-      longitude = coords.longitude;
-    }
-    const res = await postSearchLocationTraining({ latitude, longitude });
-    localStorage.setItem('lat', latitude.toString());
-    localStorage.setItem('lng', longitude.toString());
-    return res;
-  } catch (error) {
-    errorFunc(error);
-    return redirect('/');
-  }
-}) satisfies LoaderFunction;
-
 const UserMap = () => {
-  const initialRes = useLoaderData() as LoaderData<typeof loader>;
-  const initialData = useMemo(() => initialRes.data, [initialRes.data]);
+  const mapData = useAsyncValue() as TrainingOutlineDto[];
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const [currentCenter, setCurrentCenter] = useState({
     lat: 33.450701,
@@ -80,13 +52,17 @@ const UserMap = () => {
     }
   };
   useEffect(() => {
-    if (initialData && initialData.length > 0) {
-      dataWithPositionHandler(initialData);
+    if (mapData && mapData.length > 0) {
+      dataWithPositionHandler(mapData);
     }
     const lat = Number(localStorage.getItem('lat') as string);
     const lng = Number(localStorage.getItem('lng') as string);
     setCurrentCenter({ lat, lng });
-  }, [initialData]);
+    return () => {
+      localStorage.removeItem('lat');
+      localStorage.removeItem('lng');
+    };
+  }, [mapData]);
 
   const handleBtnClick = (name: string) => {
     setSelectBtn(name);
@@ -99,6 +75,7 @@ const UserMap = () => {
     setSelectBtn(null);
     setMapTrainingData(originalData);
   };
+
   return (
     <div className="flex gap-x-4">
       <div className="w-[400px] shrink-0 space-y-4">

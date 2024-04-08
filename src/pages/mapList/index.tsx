@@ -1,33 +1,14 @@
+import { AxiosResponse } from 'axios';
 import { useCallback, useState } from 'react';
-import { LoaderFunction, redirect, useLoaderData } from 'react-router-dom';
+import { useAsyncValue } from 'react-router-dom';
+import { MapDto } from 'types/swagger/model/mapDto';
 import { getMapList } from '../../apis/trainer';
 import useInfiniteScroll from '../../hooks/infiniteScroll';
-import { LoaderData } from '../../types/common';
 import { MapDocumentDto } from '../../types/swagger/model/mapDocumentDto';
-import { errorFunc, fetchLocation } from '../../utils/util';
-
-export const loader = (async () => {
-  try {
-    let latitude = Number(localStorage.getItem('lat'));
-    let longitude = Number(localStorage.getItem('lng'));
-    if (!latitude && !longitude) {
-      const { coords } = await fetchLocation();
-      latitude = coords.latitude;
-      longitude = coords.longitude;
-    }
-    const req = await getMapList({ page: 1, x: latitude, y: longitude });
-    if (req.status === 200) {
-      return req;
-    }
-    throw new Error('server is trouble');
-  } catch (e) {
-    errorFunc(e);
-    return redirect('/');
-  }
-}) satisfies LoaderFunction;
+import { errorFunc } from '../../utils/util';
 
 const MapList = () => {
-  const req = useLoaderData() as LoaderData<typeof loader>;
+  const req = useAsyncValue() as AxiosResponse<MapDto>;
   const [last, setLast] = useState<boolean>(req.data.end as boolean);
   const [page, setPage] = useState<number>(1);
   const fetchData = useCallback(
