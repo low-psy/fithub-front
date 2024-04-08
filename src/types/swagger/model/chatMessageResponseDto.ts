@@ -11,26 +11,26 @@
  */
 import { Document } from './document';
 
-export interface ChatRoomResponseDto { 
+export interface ChatMessageResponseDto { 
     /**
-     * 채팅방 id
+     * 메세지 id
      */
-    roomId?: number;
+    messageId?: number;
     /**
-     * 채팅상대 이름(채팅방 이름)
+     * 발신자 id
      */
-    roomName?: string;
+    senderId?: number;
+    /**
+     * 발신자 닉네임
+     */
+    senderNickname?: string;
     senderProfileImg?: Document;
     /**
-     * 채팅방 수정일
+     * 메세지 내용
      */
-    lastMessageDate?: Date;
+    message?: string;
     /**
-     * 마지막 채팅 내용
+     * 메세지 생성일
      */
-    lastMessage?: string;
-    /**
-     * 안읽은 채팅 개수
-     */
-    unreadChatCount?: number;
+    createdDate?: Date;
 }

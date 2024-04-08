@@ -10,27 +10,22 @@
  * Do not edit the class manually.
  */
 
-export interface TrainerOutlineDto { 
+/**
+ * 트레이너 추천 dto
+ */
+export interface TrainerRecommendationDto { 
     /**
-     * 근무 중인 회사 주소
+     * 현재 일하는 장소
      */
     address?: string;
     /**
      * 트레이너 id
      */
-    id?: number;
-    /**
-     * 트레이너 소개
-     */
-    bio?: string;
+    trainerId?: number;
     /**
      * 트레이너 이름
      */
     name?: string;
-    /**
-     * 트레이너 이메일
-     */
-    email?: string;
     /**
      * 트레이너 프로필 이미지
      */
@@ -38,9 +33,17 @@ export interface TrainerOutlineDto {
     /**
      * 트레이너 전문 분야
      */
-    interests?: Array<TrainerOutlineDto.InterestsEnum>;
+    interests?: Array<TrainerRecommendationDto.InterestsEnum>;
+    /**
+     * 트레이너 평점
+     */
+    rating?: number;
+    /**
+     * 트레이너 후기 수
+     */
+    totalReviews?: number;
 }
-export namespace TrainerOutlineDto {
+export namespace TrainerRecommendationDto {
     export type InterestsEnum = 'PILATES' | 'HEALTH' | 'PT' | 'CROSSFIT' | 'YOGA';
     export const InterestsEnum = {
         PILATES: 'PILATES' as InterestsEnum,

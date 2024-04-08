@@ -9,9 +9,18 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { MapDocumentDto } from './mapDocumentDto';
 
-export interface MapDto { 
-    mapDocumentDto?: Array<MapDocumentDto>;
-    end?: boolean;
+export interface TrainerSearchCompanyDto { 
+    /**
+     * 근무 중인 회사명
+     */
+    company?: string;
+    /**
+     * 위도
+     */
+    latitude?: number;
+    /**
+     * 경도
+     */
+    longitude?: number;
 }

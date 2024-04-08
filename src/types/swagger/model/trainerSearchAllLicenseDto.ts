@@ -9,9 +9,15 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { MapDocumentDto } from './mapDocumentDto';
+import { TrainerLicenseDto } from './trainerLicenseDto';
 
-export interface MapDto { 
-    mapDocumentDto?: Array<MapDocumentDto>;
-    end?: boolean;
+export interface TrainerSearchAllLicenseDto { 
+    /**
+     * 자격 사항 수
+     */
+    totalCounts?: number;
+    /**
+     * 자격 사항 정보
+     */
+    licenses?: Array<TrainerLicenseDto>;
 }
