@@ -9,6 +9,7 @@ module.exports = {
         sub_light: '#F0E9FF',
         input_bg: '#ECEEEF ',
         accent: '#FF8B8B',
+        accent_mid: '#ffc0c0',
         accent_sub: '#FFECEC',
       },
       screens: {
@@ -19,5 +20,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [require('tailwindcss-animate')],
 };

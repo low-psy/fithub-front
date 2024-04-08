@@ -7,11 +7,8 @@ interface Props {
 const Location: FC<Props> = ({ value }) => {
   return (
     <section className="flex flex-col">
-      <div className="flex flex-row">
-        <div className=" flex w-[100px] items-center">
-          <p>위치</p>
-        </div>
-
+      <div className="flex flex-col">
+        <p className="mb-5 font-bold">위치</p>
         <div className="flex flex-1 flex-col">
           <div className="flex flex-col">
             <div className="flex justify-around">

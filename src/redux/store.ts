@@ -7,6 +7,7 @@ import userReducer from './slices/userSlice';
 import updateImageReducer from './slices/updateImageSlice';
 import userInfosReducer from './slices/userInfos';
 import chatReducer from './slices/chatSlice';
+import careerReducer from './slices/careerSlice';
 
 const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ const store = configureStore({
     images: updateImageReducer,
     userInfos: userInfosReducer,
     chat: chatReducer,
+    career: careerReducer,
   },
 });
 
