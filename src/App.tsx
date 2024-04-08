@@ -8,10 +8,7 @@ import { useDispatch } from 'react-redux';
 
 // pages
 import Root from 'pages/Root';
-import Home, {
-  loader as homeLoader,
-  action as homeAction,
-} from 'pages/home/index';
+import { action as homeAction } from 'pages/home/index';
 import FindPassword from 'pages/help/password';
 import Login from 'pages/login';
 import NewPost, {
@@ -43,7 +40,6 @@ import DetailPost, {
 import Help from 'pages/help';
 
 // components
-import NewTrainer from 'pages/trainer/new';
 import CreateTrainer, {
   action as createTrainerAction,
   loader as createTrainerLoader,
@@ -61,15 +57,22 @@ import SuccessPage, {
 import TrainerInfo from 'pages/user/trainerInfo';
 import PostHome from 'pages/post/home';
 import UserHome from 'pages/home/home';
-import UserMap, { loader as TrainingMapLoader } from 'pages/map';
 import TrainerExplore, {
   loader as TrainerExploreLoader,
-} from 'pages/home/trainerExplore';
-import TrainerDetail, {
-  loader as TrainerDetailLoader,
-} from 'pages/home/trainerDetail';
+} from 'pages/searchTrainer/trainerExplore';
+
 import Reservation from 'pages/user/Reservation';
-import MapList, { loader as MapListLoader } from 'pages/map/mapList';
+import MapRoot, { loader as TrainingMapLoader } from 'pages/map/mapRoot';
+import HomeRoot, { loader as HomeLoader } from 'pages/home/homeRoot';
+import MapListRoot, {
+  loader as MapListLoader,
+} from 'pages/mapList/mapListRoot';
+import TrainerDetailRoot, {
+  loader as TrainerDetailLoader,
+} from 'pages/searchTrainer/trainerDetailRoot';
+import TrainerRecommend, {
+  loader as RecommendTrainerLoader,
+} from 'pages/searchTrainer/TrainerRecommend';
 
 function App() {
   // 전역 로그인 상태 관리
@@ -94,8 +97,8 @@ function App() {
         // 홈
         {
           path: '/',
-          element: <Home />,
-          loader: homeLoader,
+          element: <HomeRoot />,
+          loader: HomeLoader,
           action: homeAction,
           children: [
             {
@@ -114,9 +117,15 @@ function App() {
           loader: TrainerExploreLoader,
         },
         {
+          id: 'trainer-detail',
           path: '/search/trainer/:trainerId',
-          element: <TrainerDetail />,
+          element: <TrainerDetailRoot />,
           loader: TrainerDetailLoader,
+        },
+        {
+          path: '/search/recommend',
+          element: <TrainerRecommend />,
+          loader: RecommendTrainerLoader,
         },
         // 트레이닝 예약
         {
@@ -127,12 +136,12 @@ function App() {
         // 트레이닝 지도
         {
           path: '/map',
-          element: <UserMap />,
+          element: <MapRoot />,
           loader: TrainingMapLoader,
         },
         {
           path: '/mapList',
-          element: <MapList />,
+          element: <MapListRoot />,
           loader: MapListLoader,
         },
         // 게시글 작성
@@ -258,9 +267,8 @@ function App() {
         {
           path: pageRoutes.trainer.new,
           children: [
-            { index: true, element: <NewTrainer /> },
             {
-              path: pageRoutes.trainer.create,
+              index: true,
               element: <CreateTrainer />,
               action: createTrainerAction,
               loader: createTrainerLoader,
