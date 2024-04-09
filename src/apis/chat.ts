@@ -5,6 +5,6 @@ export const fetchChatList = async () => {
   return res.data;
 };
 
-export const createChat = async () => {
-  await authAxios.get('/chatroom/create');
+export const createChat = async (receiverId: number) => {
+  await authAxios.post('/chatroom/create', { receiverId });
 };

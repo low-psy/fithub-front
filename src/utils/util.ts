@@ -211,3 +211,11 @@ export const convertDateWithDay = (date: Date) => {
   const days = ['일', '월', '화', '수', '목', '금', '토'];
   return `${newDate}(${days[day]})`;
 };
+
+export const getTime = (date: Date) => {
+  let hours = date.getHours();
+  const isAfternoon = hours > 12;
+  hours = isAfternoon ? hours - 12 : hours;
+  const minutes = date.getMinutes();
+  return `${isAfternoon ? '오후' : '오전'} ${hours}:${minutes < 10 && '0'}${minutes}`;
+};

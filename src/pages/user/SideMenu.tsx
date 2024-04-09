@@ -45,7 +45,7 @@ const SideMenu = ({ profileImg }: ISideMenuProps) => {
         <SideMenuButton
           text="취소 / 노쇼 내역"
           to={cancellationUrl}
-          clicked={clicked === 'cancellation'}
+          clicked={clicked === 'cancellations'}
         />
         {role === 'trainer' && (
           <SideMenuButton
