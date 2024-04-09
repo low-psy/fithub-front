@@ -1,9 +1,13 @@
 import { AxiosResponse } from 'axios';
 import qs from 'qs';
+import { TrainerOutlineDto } from 'types/swagger/model/trainerOutlineDto';
+import { TrainerSearchAllLicenseDto } from 'types/swagger/model/trainerSearchAllLicenseDto';
+import { TrainerRecommendationOutlineDto } from 'types/swagger/model/trainerRecommendationOutlineDto';
 import { authAxios, defaultAxios } from './axios';
 import { CareerType, TrainerInfoRes } from '../pages/user/trainerInfo/type';
 import { PageTrainerOutlineDto } from '../types/swagger/model/pageTrainerOutlineDto';
 import { TrainerSearchAllReviewDto } from '../types/swagger/model/trainerSearchAllReviewDto';
+import { MapDto } from '../types/swagger/model/mapDto';
 
 const certifyTrainer = (formData: FormData) => {
   const response = authAxios.post('/auth/trainer/certificate', formData, {
@@ -78,4 +82,34 @@ export const getTrainersReviews = async (trainerId: string) => {
   return defaultAxios.get<TrainerSearchAllReviewDto>(
     `/search/trainers/reviews?trainerId=${trainerId}`,
   );
+};
+
+export const getTrainersLicenses = async (trainerId: string) => {
+  return defaultAxios.get<TrainerSearchAllLicenseDto>(
+    `/search/trainers/licenses?trainerId=${trainerId}`,
+  );
+};
+
+export const getTrainersInfos = async (trainerId: string) => {
+  return defaultAxios.get<TrainerOutlineDto>(`/search/trainers/${trainerId}`);
+};
+
+export const getMapList = async (requestData: {
+  page: number;
+  x: number;
+  y: number;
+}) => {
+  const queryString = qs.stringify(requestData);
+  const url = `/auth/map?${queryString}`;
+  return authAxios.get<MapDto>(url);
+};
+
+export const getRecommendTrainers = async (requestData: {
+  latitude: number;
+  longitude: number;
+  size: number;
+}) => {
+  const queryString = qs.stringify(requestData);
+  const url = `/users/trainer/recommendation?${queryString}`;
+  return authAxios.get<TrainerRecommendationOutlineDto>(url);
 };

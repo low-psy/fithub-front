@@ -1,11 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
+  defer,
   LoaderFunction,
   LoaderFunctionArgs,
   useLoaderData,
   useNavigate,
 } from 'react-router-dom';
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
+import { TrainingInfoDto } from 'types/swagger/model/trainingInfoDto';
+import { TrainingReviewDto } from 'types/swagger/model/trainingReviewDto';
 import ProfileSection from '../../components/common/ProfileSection';
 import {
   getDetailTraining,
@@ -24,7 +27,6 @@ import Line from '../../components/common/Line';
 import ImageXScroll from '../../components/imageSlider/ImageXScroll';
 import withAuth from '../../hocs/withAuth';
 import SingleMap from '../../components/map/SingleMap';
-import { LoaderData } from '../../types/common';
 import ClickBtn from '../../components/btn/ClickBtn';
 import { RequestPayParams, RequestPayResponse } from '../../types/portone';
 
@@ -36,15 +38,13 @@ export interface DateObject {
   minutes: number;
 }
 
-const { kakao } = window;
-
 export const loader = (async ({ params }: LoaderFunctionArgs) => {
   const { trainingId } = params;
   try {
     const detailTraining = await getDetailTraining(Number(trainingId));
     const reviews = await getTrainingReviews(Number(trainingId));
     if (detailTraining.status === 200 && reviews.status === 200) {
-      return { detailTraining, reviews };
+      return defer({ detailTraining, reviews });
     }
     throw new Error('Server is Trouble');
   } catch (err) {
@@ -54,10 +54,13 @@ export const loader = (async ({ params }: LoaderFunctionArgs) => {
 }) satisfies LoaderFunction;
 
 const Detail = () => {
-  const response = useLoaderData() as LoaderData<typeof loader>;
-  const navigate = useNavigate();
+  const response = useLoaderData() as {
+    detailTraining: AxiosResponse<TrainingInfoDto>;
+    reviews: AxiosResponse<TrainingReviewDto[] | []>;
+  };
   const trainingInfo = response.detailTraining.data;
   const trainingReviews = response.reviews.data;
+  const navigate = useNavigate();
   const {
     images,
     startDate,

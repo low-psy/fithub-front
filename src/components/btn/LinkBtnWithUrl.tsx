@@ -13,7 +13,7 @@ const LinkBtnWithUrl: React.FunctionComponent<LinkButtonProps> = ({
     <Link
       to={to}
       style={{ backgroundImage: `url(${bg})` }}
-      className="bg flex h-full w-full items-center justify-center rounded-xl bg-cover bg-center text-2xl font-extrabold text-white drop-shadow-2xl xl:text-3xl"
+      className="bg flex h-full w-full items-center justify-center rounded-xl bg-cover bg-center text-2xl font-extrabold text-white  xl:text-3xl"
       onClick={onClick}
     >
       {children}

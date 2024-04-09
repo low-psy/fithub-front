@@ -7,68 +7,72 @@ import {
 import { useDispatch } from 'react-redux';
 
 // pages
-import Root from './pages/Root';
-import Home, {
-  loader as homeLoader,
-  action as homeAction,
-} from './pages/home/index';
-import FindPassword from './pages/help/password';
-import Login from './pages/login';
+import Root from 'pages/Root';
+import { action as homeAction } from 'pages/home/index';
+import FindPassword from 'pages/help/password';
+import Login from 'pages/login';
 import NewPost, {
   loader as newPostLoader,
   action as newPostAction,
-} from './pages/newpost/index';
-import Signup from './pages/signup';
+} from 'pages/newpost/index';
+import Signup from 'pages/signup';
 import TrainerHome, {
   action as TrainerAction,
   loader as TrainerLoader,
-} from './pages/trainer';
-import TrainerRoot from './pages/TrainerRoot';
-import Post, { loader as postLoader } from './pages/post';
-import CertifyTrainer from './pages/certifyTrainer';
-import SocialSignup from './pages/signup/SocialSignup';
-import EmailAuthentication from './pages/signup/EmailAuthentication';
-import AdditionalInfo from './pages/signup/AdditionalInfo';
-import SignupSuccess from './pages/signup/SignupSuccess';
-import User from './pages/user';
-import Profile from './pages/user/profile';
-import Posts from './pages/user/posts';
-import Cancellation from './pages/user/cancellation';
-import EditProfile from './pages/user/profile/editProfile/EditProfile';
-import profileLoader from './pages/user/loader';
+} from 'pages/trainer';
+import TrainerRoot from 'pages/TrainerRoot';
+import Post, { loader as postLoader } from 'pages/post';
+import CertifyTrainer from 'pages/certifyTrainer';
+import SocialSignup from 'pages/signup/SocialSignup';
+import EmailAuthentication from 'pages/signup/EmailAuthentication';
+import AdditionalInfo from 'pages/signup/AdditionalInfo';
+import SignupSuccess from 'pages/signup/SignupSuccess';
+import User from 'pages/user';
+import Profile from 'pages/user/profile';
+import Posts from 'pages/user/posts';
+import Cancellation from 'pages/user/cancellation';
+import EditProfile from 'pages/user/profile/editProfile/EditProfile';
+import profileLoader from 'pages/user/loader';
 import DetailPost, {
   loader as detailPostLoader,
   action as detailPostAction,
-} from './pages/post/detailPost';
-import Help from './pages/help';
+} from 'pages/post/detailPost';
+import Help from 'pages/help';
 
 // components
-import NewTrainer from './pages/trainer/new';
 import CreateTrainer, {
   action as createTrainerAction,
   loader as createTrainerLoader,
-} from './pages/trainer/create';
-import Detail, { loader as detailedTrainingLoader } from './pages/detail';
-import pageRoutes from './pageRoutes';
+} from 'pages/trainer/create';
+import Detail, { loader as detailedTrainingLoader } from 'pages/detail';
+import pageRoutes from 'pageRoutes';
 
 // hooks
-import { LOGIN, SET_TRAINER } from './redux/slices/userSlice';
-import TrainingBook, { loader as TrainingBookLoader } from './pages/book';
+import { LOGIN, SET_TRAINER } from 'redux/slices/userSlice';
+import TrainingBook, { loader as TrainingBookLoader } from 'pages/book';
 import SuccessPage, {
   loader as successPaymentLoader,
-} from './pages/detail/success';
+} from 'pages/detail/success';
 
-import TrainerInfo from './pages/user/trainerInfo';
-import PostHome from './pages/post/home';
-import UserHome from './pages/home/home';
-import UserMap, { loader as TrainingMapLoader } from './pages/map';
+import TrainerInfo from 'pages/user/trainerInfo';
+import PostHome from 'pages/post/home';
+import UserHome from 'pages/home/home';
 import TrainerExplore, {
   loader as TrainerExploreLoader,
-} from './pages/home/trainerExplore';
-import TrainerDetail, {
+} from 'pages/searchTrainer/trainerExplore';
+
+import Reservation from 'pages/user/Reservation';
+import MapRoot, { loader as TrainingMapLoader } from 'pages/map/mapRoot';
+import HomeRoot, { loader as HomeLoader } from 'pages/home/homeRoot';
+import MapListRoot, {
+  loader as MapListLoader,
+} from 'pages/mapList/mapListRoot';
+import TrainerDetailRoot, {
   loader as TrainerDetailLoader,
-} from './pages/home/trainerDetail';
-import Reservation from './pages/user/Reservation';
+} from 'pages/searchTrainer/trainerDetailRoot';
+import TrainerRecommend, {
+  loader as RecommendTrainerLoader,
+} from 'pages/searchTrainer/TrainerRecommend';
 
 function App() {
   // 전역 로그인 상태 관리
@@ -93,8 +97,8 @@ function App() {
         // 홈
         {
           path: '/',
-          element: <Home />,
-          loader: homeLoader,
+          element: <HomeRoot />,
+          loader: HomeLoader,
           action: homeAction,
           children: [
             {
@@ -108,14 +112,20 @@ function App() {
           ],
         },
         {
-          path: '/explore/trainer',
+          path: '/search/trainer',
           element: <TrainerExplore />,
           loader: TrainerExploreLoader,
         },
         {
-          path: '/explore/trainer/:trainerId',
-          element: <TrainerDetail />,
+          id: 'trainer-detail',
+          path: '/search/trainer/:trainerId',
+          element: <TrainerDetailRoot />,
           loader: TrainerDetailLoader,
+        },
+        {
+          path: '/search/recommend',
+          element: <TrainerRecommend />,
+          loader: RecommendTrainerLoader,
         },
         // 트레이닝 예약
         {
@@ -126,8 +136,13 @@ function App() {
         // 트레이닝 지도
         {
           path: '/map',
-          element: <UserMap />,
+          element: <MapRoot />,
           loader: TrainingMapLoader,
+        },
+        {
+          path: '/mapList',
+          element: <MapListRoot />,
+          loader: MapListLoader,
         },
         // 게시글 작성
         {
@@ -252,9 +267,8 @@ function App() {
         {
           path: pageRoutes.trainer.new,
           children: [
-            { index: true, element: <NewTrainer /> },
             {
-              path: pageRoutes.trainer.create,
+              index: true,
               element: <CreateTrainer />,
               action: createTrainerAction,
               loader: createTrainerLoader,

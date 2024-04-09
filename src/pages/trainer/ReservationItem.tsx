@@ -2,7 +2,7 @@ import React from 'react';
 
 const ReservationItem: React.FC<{
   title: string;
-  value: string | undefined;
+  value: string | undefined | number;
   iconString: string;
 }> = ({ title, value, iconString }) => {
   return (

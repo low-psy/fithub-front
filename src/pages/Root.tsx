@@ -10,7 +10,7 @@ const Root = () => {
   return (
     <div className="mx-4 mt-4 md:mx-10 md:mt-6">
       <NavComponent />
-      <main className="mt-8 md:mt-10">
+      <main className="mt-4 md:mt-8">
         <Outlet />
         {chattingRoomId && <ChatModal />}
       </main>

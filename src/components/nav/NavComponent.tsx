@@ -34,7 +34,7 @@ const NavComponent = () => {
   }, [navigation.state, clickHandler, inputChangeHandler]);
 
   return (
-    <nav className="flex h-14 justify-between">
+    <nav className="flex h-14 justify-between ">
       <NavTitle title={title} />
       <div className="relative  flex h-full w-full justify-center  lg:basis-1/3">
         {isNavSearch ? (

@@ -9,11 +9,15 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { UsersTrainingReviewDto } from './usersTrainingReviewDto';
+import { TrainerLicenseDto } from './trainerLicenseDto';
 
-export interface TrainerSearchAllReviewDto { 
-    trainerId?: number;
-    average?: number;
-    reviewNum?: number;
-    usersReviewList?: Array<UsersTrainingReviewDto>;
+export interface TrainerSearchAllLicenseDto { 
+    /**
+     * 자격 사항 수
+     */
+    totalCounts?: number;
+    /**
+     * 자격 사항 정보
+     */
+    licenses?: Array<TrainerLicenseDto>;
 }
