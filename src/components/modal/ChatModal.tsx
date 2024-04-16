@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { FC, useCallback, useEffect, useState } from 'react';
+import { fetchChatMsg } from 'apis/chat';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import { SET_CHATTING_ROOM_ID } from '../../redux/slices/chatSlice';
 import CloseIcon from '../../assets/icons/CloseIcon';
@@ -7,27 +8,56 @@ import PortraitIcon from '../../assets/icons/PortraitIcon';
 
 const chatData = [
   {
-    isMe: false,
-    name: '트레이너 썜',
-    img: null,
-    text: '회원님',
+    messageId: 0,
+    senderId: 0,
+    senderNickname: '트레이너 썜',
+    senderProfileImg: {
+      id: 0,
+      url: null,
+      inputName: 'string',
+      path: 'string',
+    },
+    message: '회원님',
+    createdDate: '2024-04-15T02:05:55.861Z',
   },
   {
-    isMe: false,
-    name: '트레이너 썜',
-    img: null,
-    text: '오늘 식단 보여주세요',
+    messageId: 1,
+    senderId: 0,
+    senderNickname: '트레이너 썜',
+    senderProfileImg: {
+      id: 0,
+      url: null,
+      inputName: 'string',
+      path: 'string',
+    },
+    message: '오늘 식단 보여주세요',
+    createdDate: '2024-04-15T02:05:55.861Z',
   },
   {
-    isMe: true,
-    name: '나',
-    text: '요기요',
+    messageId: 2,
+    senderId: 1,
+    senderNickname: '나',
+    senderProfileImg: {
+      id: 0,
+      url: null,
+      inputName: 'string',
+      path: 'string',
+    },
+    message: '요기요',
+    createdDate: '2024-04-15T02:05:55.861Z',
   },
   {
-    isMe: false,
-    name: '트레이너 썜',
-    img: null,
-    text: '잘하셨어요',
+    messageId: 0,
+    senderId: 1,
+    senderNickname: '트레이너 썜',
+    senderProfileImg: {
+      id: 0,
+      url: null,
+      inputName: 'string',
+      path: 'string',
+    },
+    message: '잘하셨어요',
+    createdDate: '2024-04-15T02:05:55.861Z',
   },
 ];
 
@@ -35,6 +65,14 @@ const ChatModal: FC = () => {
   const { chattingRoomId } = useAppSelector((state) => state.chat);
   const [text, setText] = useState('');
   const dispatch = useAppDispatch();
+
+  const getChatList = useCallback(async () => {
+    const res = await fetchChatMsg(Number(chattingRoomId));
+  }, [chattingRoomId]);
+
+  useEffect(() => {
+    // getChatList();
+  }, []);
 
   const handleClose = useCallback(() => {
     dispatch(SET_CHATTING_ROOM_ID(undefined));
@@ -69,7 +107,7 @@ const ChatModal: FC = () => {
   return (
     <div
       // eslint-disable-next-line
-      className="animate-in fade-in bg-sub_light fixed bottom-5 right-[10%] z-10 h-[630px] w-[360px] flex-col justify-between rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+      className="fixed bottom-5 right-[10%] z-10 h-[630px] w-[360px] flex-col justify-between rounded-lg bg-sub_light shadow-[0_3px_10px_rgb(0,0,0,0.2)] animate-in fade-in"
       style={{ display: `${chattingRoomId ? 'flex' : 'none'}` }}
     >
       {/* 상대방 정보 */}
@@ -90,7 +128,7 @@ const ChatModal: FC = () => {
             return (
               <div className="align-center flex justify-end">
                 <div className="rounded-md bg-white p-1 px-3 text-sm">
-                  {data.text}
+                  {data.message}
                 </div>
                 <div className="h-[30px] w-2 overflow-hidden">
                   <div
@@ -105,13 +143,17 @@ const ChatModal: FC = () => {
           }
           return (
             <div className="align-center my-2 flex">
-              {data?.img ? (
-                <img src={data?.img} alt="" className=" h-8 w-8" />
+              {data?.senderProfileImg.url ? (
+                <img
+                  src={data?.senderProfileImg.url}
+                  alt="profile_img"
+                  className=" h-8 w-8"
+                />
               ) : (
                 <PortraitIcon />
               )}
               <div className="ml-2 flex flex-col">
-                <p className="text-sm">{data.name}</p>
+                <p className="text-sm">{data.senderNickname}</p>
                 <div className="align-center flex">
                   <div className="h-[30px] w-2 overflow-hidden">
                     <div
@@ -122,7 +164,7 @@ const ChatModal: FC = () => {
                     />
                   </div>
                   <div className="rounded-md bg-white p-1 px-3 text-sm">
-                    {data.text}
+                    {data.message}
                   </div>
                 </div>
               </div>
