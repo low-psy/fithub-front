@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
+import { checkChatroomExist, createChat, fetchChatMsg } from 'apis/chat';
+import { ChatMessageResponseDto } from 'types/swagger/model/chatMessageResponseDto';
 import ImageSlider from '../../components/imageSlider/ImageBtnSlider';
 import DefaultModal from '../../components/modal/DefaultModal';
 import ProfileSection from '../../components/common/ProfileSection';
@@ -18,7 +20,10 @@ import { LikesInfoDto } from '../../types/swagger/model/likesInfoDto';
 import { postBook, deleteBook, deletePost } from '../../apis/post';
 import { formatDate } from '../../utils/util';
 import { useAppDispatch } from '../../hooks/reduxHooks';
-import { SET_CHATTING_ROOM_ID } from '../../redux/slices/chatSlice';
+import {
+  SET_CHATTING_ROOM_ID,
+  SET_CHAT_PARTNER,
+} from '../../redux/slices/chatSlice';
 
 interface PostItemProps extends PostInfoDto {
   bookAndLikes: LikesBookmarkStatusDto;
@@ -50,15 +55,35 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
     setModalsOpen((prev) => ({ ...prev, [modalName]: !prev[modalName] }));
   };
 
-  const handleMenuItemClick = (value: string) => {
+  const handleMenuItemClick = async (value: string) => {
     if (value === '수정하기') {
       toggleModal('editModal');
     } else if (value === '삭제하기') {
       toggleModal('deleteModal');
     } else if (value === '채팅하기') {
-      dispatch(SET_CHATTING_ROOM_ID(1)); // id TODO
+      if (!writerInfo?.id) return;
+      dispatch(
+        SET_CHAT_PARTNER({
+          name: writerInfo.nickname,
+          imgUrl: writerInfo.profileUrl,
+        }),
+      );
+      try {
+        // 채팅방이 존재하는지 체크
+        let chatRoomId = await checkChatroomExist(writerInfo?.id);
+
+        // 채팅방이 없음 생성
+        if (!chatRoomId) {
+          chatRoomId = await createChat(writerInfo.id);
+        }
+        // dispatch(SET_CHATTING_ROOM_ID(chatRoomId)); // TODO
+        dispatch(SET_CHATTING_ROOM_ID(1));
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
+
   const { isLiked, toggleLike } = useLike(
     bookAndLikes?.postId,
     bookAndLikes?.likesStatus,

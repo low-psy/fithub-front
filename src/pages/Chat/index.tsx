@@ -1,53 +1,43 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { fetchChatList } from '../../apis/chat';
-import { useAppDispatch } from '../../hooks/reduxHooks';
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import {
   SET_CHATTING_ROOM_ID,
-  SET_IS_CHATLIST_MODAL_OPEN,
+  SET_CHAT_LIST,
+  SET_CHAT_PARTNER,
 } from '../../redux/slices/chatSlice';
 import PortraitIcon from '../../assets/icons/PortraitIcon';
 
-interface ChatType {
+export interface ChatType {
   roomId: number;
-  name: string;
-  modifiedDate: string;
-  lastTime: string;
-  img: string | null;
-  newCount: number;
+  roomName: string;
+  senderProfileImg: any;
+  lastMessageDate: string;
+  lastMessage: string;
+  unreadChatCount: number;
+  hasUnreadChatMessage: boolean;
 }
 
 const Chat = () => {
-  const [chatList, setChatList] = useState<ChatType[]>();
+  const { chatList } = useAppSelector((state) => state.chat);
   const dispatch = useAppDispatch();
 
   const getChatList = async () => {
     const res = await fetchChatList();
-    // setChatList(res);
-    setChatList([
-      {
-        roomId: 1,
-        name: '트레이너1',
-        modifiedDate: '2024-03-31T23:58:17.541Z',
-        lastTime: '오후 4:38',
-        newCount: 3,
-        img: null,
-      },
-      {
-        roomId: 2,
-        name: '트레이너2',
-        modifiedDate: '2024-03-31T23:58:17.541Z',
-        lastTime: '오후 4:38',
-        newCount: 1,
-        img: null,
-      },
-    ]);
+    dispatch(SET_CHAT_LIST(res));
   };
 
-  const handleOpenChat = (id: number) => {
-    dispatch(SET_CHATTING_ROOM_ID(id));
-    dispatch(SET_IS_CHATLIST_MODAL_OPEN(false));
+  const handleOpenChat = (info: ChatType) => {
+    console.log(info);
+    dispatch(SET_CHATTING_ROOM_ID(info.roomId));
+    dispatch(
+      SET_CHAT_PARTNER({
+        name: info.roomName,
+        imgUrl: info.senderProfileImg.url,
+      }),
+    );
   };
 
   useEffect(() => {
@@ -56,30 +46,38 @@ const Chat = () => {
 
   return (
     <div className="flex flex-col">
-      {chatList?.map((chat) => {
+      {chatList?.map((chat: ChatType) => {
+        console.log(chat);
         return (
           <div
             key={chat.roomId}
-            onClick={() => handleOpenChat(chat.roomId)}
+            onClick={() => handleOpenChat(chat)}
             className="flex cursor-pointer items-center justify-between  px-2 py-4 transition duration-150 ease-in-out hover:bg-accent_sub"
           >
             <div className="flex">
               <div className="mr-5 h-10 w-11">
-                {chat.img ? <img src={chat.img} alt="img" /> : <PortraitIcon />}
+                {chat.senderProfileImg ? (
+                  <img src={chat.senderProfileImg.url} alt="senderProfileImg" />
+                ) : (
+                  <PortraitIcon />
+                )}
               </div>
               <div>
-                <p>{chat.name}</p>
-                <p className="mt-1 text-sm">마지막 대화내용</p>
+                <p>{chat.roomName}</p>
+                <p className="mt-1 text-sm">{chat.lastMessage}</p>
               </div>
             </div>
             <div className="flex flex-col items-end justify-between">
-              <p className="mb-1 text-sm">{chat.lastTime}</p>
-              {chat.newCount && (
-                // eslint-disable-next-line prettier/prettier
-                <div className="bg-accent_mid flex h-4 w-4 items-center justify-center rounded-full text-[13px] text-white">
-                  {chat.newCount}
-                </div>
+              <p className="mb-1 text-sm">{chat.lastMessageDate}</p>
+              {chat.hasUnreadChatMessage && (
+                <div className="h-3 w-3 rounded-full bg-accent" />
               )}
+              {/* 안읽은 메세지 갯수 */}
+              {/* {chat.unreadChatCount && (
+                <div className="flex h-4 w-4 items-center justify-center rounded-full bg-accent_mid text-[13px] text-white">
+                  {chat.unreadChatCount}
+                </div>
+              )} */}
             </div>
           </div>
         );

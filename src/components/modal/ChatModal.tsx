@@ -1,40 +1,29 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { FC, useCallback, useEffect, useState } from 'react';
+import { fetchChatMsg } from 'apis/chat';
+import { ChatMessageResponseDto } from 'types/swagger/model/chatMessageResponseDto';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import { SET_CHATTING_ROOM_ID } from '../../redux/slices/chatSlice';
 import CloseIcon from '../../assets/icons/CloseIcon';
 import PortraitIcon from '../../assets/icons/PortraitIcon';
 
-const chatData = [
-  {
-    isMe: false,
-    name: '트레이너 썜',
-    img: null,
-    text: '회원님',
-  },
-  {
-    isMe: false,
-    name: '트레이너 썜',
-    img: null,
-    text: '오늘 식단 보여주세요',
-  },
-  {
-    isMe: true,
-    name: '나',
-    text: '요기요',
-  },
-  {
-    isMe: false,
-    name: '트레이너 썜',
-    img: null,
-    text: '잘하셨어요',
-  },
-];
-
 const ChatModal: FC = () => {
+  // const [chatData, setChatData] = useState<ChatMessageResponseDto[] | null>( TODO
+  const [chatData, setChatData] = useState<any[] | null>(null);
+
   const { chattingRoomId } = useAppSelector((state) => state.chat);
   const [text, setText] = useState('');
   const dispatch = useAppDispatch();
+  const MOCK_MY_ID = 4; // TODO
+
+  const getChatList = useCallback(async () => {
+    const res = await fetchChatMsg(Number(chattingRoomId));
+    setChatData(res);
+  }, [chattingRoomId]);
+  const { chatPartner } = useAppSelector((state) => state.chat);
+  useEffect(() => {
+    getChatList();
+  }, []);
 
   const handleClose = useCallback(() => {
     dispatch(SET_CHATTING_ROOM_ID(undefined));
@@ -69,15 +58,23 @@ const ChatModal: FC = () => {
   return (
     <div
       // eslint-disable-next-line
-      className="animate-in fade-in bg-sub_light fixed bottom-5 right-[10%] z-10 h-[630px] w-[360px] flex-col justify-between rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+      className="fixed bottom-5 right-[10%] z-10 h-[630px] w-[360px] flex-col justify-between rounded-lg bg-sub_light shadow-[0_3px_10px_rgb(0,0,0,0.2)] animate-in fade-in"
       style={{ display: `${chattingRoomId ? 'flex' : 'none'}` }}
     >
       {/* 상대방 정보 */}
       <div className="flex justify-between">
         <div className="flex items-center justify-start p-3">
-          {/* <img className="h-12 w-12" src="" alt="상대방이미지" /> */}
-          <PortraitIcon />
-          <span className="ml-3">트레이너 쌤</span>
+          {chatPartner.imgUrl ? (
+            <img
+              className="h-12 w-12 rounded-full"
+              src={chatPartner.imgUrl}
+              alt="partnerImg"
+            />
+          ) : (
+            <PortraitIcon />
+          )}
+
+          <span className="ml-3">{chatPartner.name}</span>
         </div>
         <button type="button" onClick={closeChatModal} className="mr-4">
           <CloseIcon />
@@ -85,12 +82,13 @@ const ChatModal: FC = () => {
       </div>
       {/* 채팅 내용 */}
       <div className="flex-1 p-3">
-        {chatData.map((data: any) => {
-          if (data.isMe) {
+        {chatData?.map((data: ChatMessageResponseDto) => {
+          // if (data.isMe) { TODO
+          if (data.senderId === MOCK_MY_ID) {
             return (
               <div className="align-center flex justify-end">
                 <div className="rounded-md bg-white p-1 px-3 text-sm">
-                  {data.text}
+                  {data.message}
                 </div>
                 <div className="h-[30px] w-2 overflow-hidden">
                   <div
@@ -105,13 +103,17 @@ const ChatModal: FC = () => {
           }
           return (
             <div className="align-center my-2 flex">
-              {data?.img ? (
-                <img src={data?.img} alt="" className=" h-8 w-8" />
+              {data?.senderProfileImg?.url ? (
+                <img
+                  src={data?.senderProfileImg.url}
+                  alt="profile_img"
+                  className=" h-8 w-8 rounded-full"
+                />
               ) : (
                 <PortraitIcon />
               )}
               <div className="ml-2 flex flex-col">
-                <p className="text-sm">{data.name}</p>
+                <p className="text-sm">{data.senderNickname}</p>
                 <div className="align-center flex">
                   <div className="h-[30px] w-2 overflow-hidden">
                     <div
@@ -122,7 +124,7 @@ const ChatModal: FC = () => {
                     />
                   </div>
                   <div className="rounded-md bg-white p-1 px-3 text-sm">
-                    {data.text}
+                    {data.message}
                   </div>
                 </div>
               </div>
