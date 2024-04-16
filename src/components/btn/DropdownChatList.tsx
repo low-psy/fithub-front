@@ -4,18 +4,20 @@ import { createChat, fetchChatList } from 'apis/chat';
 import DefaultModal from 'components/modal/DefaultModal';
 import ChatIcon from '../../assets/icons/ChatIcon';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
-import { SET_IS_CHATLIST_MODAL_OPEN } from '../../redux/slices/chatSlice';
+import { SET_IS_DROPDOWN_CHAT_OPEN } from '../../redux/slices/chatSlice';
 import Chat from '../../pages/Chat';
 import PlusIcon from '../../assets/icons/PlusIcon';
 
 const DropdownChatList = () => {
-  const { isChatListOpen } = useAppSelector((state) => state.chat);
+  const { isDropdownChatOpen: isChatListOpen } = useAppSelector(
+    (state) => state.chat,
+  );
   const dispatch = useAppDispatch();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [receiverId, setReceiverId] = useState<string | undefined>();
 
   const handleOpen = () => {
-    dispatch(SET_IS_CHATLIST_MODAL_OPEN(!isChatListOpen));
+    dispatch(SET_IS_DROPDOWN_CHAT_OPEN(!isChatListOpen));
   };
 
   const addChat = async (e: any) => {
@@ -70,14 +72,14 @@ const DropdownChatList = () => {
             <div className="flex flex-col px-5">
               <div className="mb-5 flex items-center justify-between">
                 <h1 className="text-[20px] ">채팅</h1>
-                <button
+                {/* <button
                   type="button"
                   onClick={() => setIsOpen(true)}
                   // eslint-disable-next-line prettier/prettier
                   className=" flex h-8 w-8 items-center justify-center rounded-full bg-accent text-[33px] font-bold text-white transition-colors hover:bg-accent_mid"
                 >
                   <PlusIcon />
-                </button>
+                </button> */}
               </div>
               <div className="h-[200px] overflow-y-auto">
                 <Chat />

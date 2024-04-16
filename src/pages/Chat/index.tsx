@@ -1,23 +1,23 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect } from 'react';
-import { getTime, handleDateToString } from 'utils/util';
 import { fetchChatList } from '../../apis/chat';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import {
   SET_CHATTING_ROOM_ID,
   SET_CHAT_LIST,
-  SET_IS_CHATLIST_MODAL_OPEN,
+  SET_CHAT_PARTNER,
 } from '../../redux/slices/chatSlice';
 import PortraitIcon from '../../assets/icons/PortraitIcon';
 
 export interface ChatType {
   roomId: number;
   roomName: string;
-  senderProfileImg: string | null;
-  lastMessageDate: Date;
+  senderProfileImg: any;
+  lastMessageDate: string;
   lastMessage: string;
   unreadChatCount: number;
+  hasUnreadChatMessage: boolean;
 }
 
 const Chat = () => {
@@ -26,32 +26,18 @@ const Chat = () => {
 
   const getChatList = async () => {
     const res = await fetchChatList();
-    // dispatch(SET_CHAT_LIST(res));
-    dispatch(
-      SET_CHAT_LIST([
-        {
-          roomId: 1,
-          roomName: '트레이너1',
-          senderProfileImg: null,
-          lastMessageDate: new Date('2024-04-09T08:06:23.825Z'),
-          lastMessage: '마지막 메시지',
-          unreadChatCount: 3,
-        },
-        {
-          roomId: 2,
-          roomName: '트레이너2',
-          senderProfileImg: null,
-          lastMessageDate: new Date('2024-04-19T08:06:23.825Z'),
-          lastMessage: '마지막 메시지2',
-          unreadChatCount: 1,
-        },
-      ]),
-    );
+    dispatch(SET_CHAT_LIST(res));
   };
 
-  const handleOpenChat = (id: number) => {
-    dispatch(SET_CHATTING_ROOM_ID(id));
-    dispatch(SET_IS_CHATLIST_MODAL_OPEN(false));
+  const handleOpenChat = (info: ChatType) => {
+    console.log(info);
+    dispatch(SET_CHATTING_ROOM_ID(info.roomId));
+    dispatch(
+      SET_CHAT_PARTNER({
+        name: info.roomName,
+        imgUrl: info.senderProfileImg.url,
+      }),
+    );
   };
 
   useEffect(() => {
@@ -61,16 +47,17 @@ const Chat = () => {
   return (
     <div className="flex flex-col">
       {chatList?.map((chat: ChatType) => {
+        console.log(chat);
         return (
           <div
             key={chat.roomId}
-            onClick={() => handleOpenChat(chat.roomId)}
+            onClick={() => handleOpenChat(chat)}
             className="flex cursor-pointer items-center justify-between  px-2 py-4 transition duration-150 ease-in-out hover:bg-accent_sub"
           >
             <div className="flex">
               <div className="mr-5 h-10 w-11">
                 {chat.senderProfileImg ? (
-                  <img src={chat.senderProfileImg} alt="senderProfileImg" />
+                  <img src={chat.senderProfileImg.url} alt="senderProfileImg" />
                 ) : (
                   <PortraitIcon />
                 )}
@@ -81,16 +68,16 @@ const Chat = () => {
               </div>
             </div>
             <div className="flex flex-col items-end justify-between">
-              <p className="mb-1 text-sm">
-                {handleDateToString(chat.lastMessageDate)}{' '}
-                {getTime(chat.lastMessageDate)}
-              </p>
-              {chat.unreadChatCount && (
-                // eslint-disable-next-line prettier/prettier
+              <p className="mb-1 text-sm">{chat.lastMessageDate}</p>
+              {chat.hasUnreadChatMessage && (
+                <div className="h-3 w-3 rounded-full bg-accent" />
+              )}
+              {/* 안읽은 메세지 갯수 */}
+              {/* {chat.unreadChatCount && (
                 <div className="flex h-4 w-4 items-center justify-center rounded-full bg-accent_mid text-[13px] text-white">
                   {chat.unreadChatCount}
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         );

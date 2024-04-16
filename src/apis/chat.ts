@@ -6,7 +6,8 @@ export const fetchChatList = async () => {
 };
 
 export const createChat = async (receiverId: number) => {
-  await authAxios.post('/chatroom/create', { receiverId });
+  const res = await authAxios.post('/chatroom/create', { receiverId });
+  return res;
 };
 
 /**
@@ -14,8 +15,8 @@ export const createChat = async (receiverId: number) => {
  * @param userId
  * @returns 존재하면 true
  */
-export const checkChatroomExist = async (userId: number) => {
-  const res = await authAxios.get(`/chatroom/check?userId=${userId}`);
+export const checkChatroomExist = async (receiverId: number) => {
+  const res = await authAxios.get(`/chatroom/check?receiverId=${receiverId}`);
   return res;
 };
 
@@ -25,5 +26,5 @@ export const checkChatroomExist = async (userId: number) => {
  */
 export const fetchChatMsg = async (chatRoomId: number) => {
   const res = await authAxios.get(`/chatroom/message?chatRoomId=${chatRoomId}`);
-  return res;
+  return res.data;
 };

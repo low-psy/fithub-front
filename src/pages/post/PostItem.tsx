@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { checkChatroomExist, createChat, fetchChatMsg } from 'apis/chat';
 import { ChatMessageResponseDto } from 'types/swagger/model/chatMessageResponseDto';
 import ImageSlider from '../../components/imageSlider/ImageBtnSlider';
@@ -20,7 +20,10 @@ import { LikesInfoDto } from '../../types/swagger/model/likesInfoDto';
 import { postBook, deleteBook, deletePost } from '../../apis/post';
 import { formatDate } from '../../utils/util';
 import { useAppDispatch } from '../../hooks/reduxHooks';
-import { SET_CHATTING_ROOM_ID } from '../../redux/slices/chatSlice';
+import {
+  SET_CHATTING_ROOM_ID,
+  SET_CHAT_PARTNER,
+} from '../../redux/slices/chatSlice';
 
 interface PostItemProps extends PostInfoDto {
   bookAndLikes: LikesBookmarkStatusDto;
@@ -59,20 +62,25 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
       toggleModal('deleteModal');
     } else if (value === '채팅하기') {
       if (!writerInfo?.id) return;
+      dispatch(
+        SET_CHAT_PARTNER({
+          name: writerInfo.nickname,
+          imgUrl: writerInfo.profileUrl,
+        }),
+      );
       try {
         // 채팅방이 존재하는지 체크
-        const chatRoomId = await checkChatroomExist(writerInfo?.id);
+        let chatRoomId = await checkChatroomExist(writerInfo?.id);
+
+        // 채팅방이 없음 생성
         if (!chatRoomId) {
-          // 채팅방이 없음 생성
-          await createChat(writerInfo.id);
-        } else {
-          // 있으면 채팅메세지 조회
-          // const msgArr: ChatMessageResponseDto = await getChatMessage(chatRoomId);
+          chatRoomId = await createChat(writerInfo.id);
         }
+        // dispatch(SET_CHATTING_ROOM_ID(chatRoomId)); // TODO
+        dispatch(SET_CHATTING_ROOM_ID(1));
       } catch (error) {
         console.error(error);
       }
-      dispatch(SET_CHATTING_ROOM_ID(1));
     }
   };
 

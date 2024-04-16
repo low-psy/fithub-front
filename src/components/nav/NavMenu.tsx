@@ -1,11 +1,11 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { SET_IS_DROPDOWN_CHAT_OPEN } from 'redux/slices/chatSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import NavDropdown from './NavDropdown';
 import BookmarkIcon from '../../assets/icons/BookmarkIcon';
 import DropdownChatList from '../btn/DropdownChatList';
-import { SET_IS_CHATLIST_MODAL_OPEN } from '../../redux/slices/chatSlice';
 
 const NavMenu = () => {
   const { isLogin, role } = useAppSelector((state) => state.user);
@@ -28,7 +28,7 @@ const NavMenu = () => {
   }
 
   useEffect(() => {
-    dispatch(SET_IS_CHATLIST_MODAL_OPEN(false));
+    dispatch(SET_IS_DROPDOWN_CHAT_OPEN(false));
   }, [dispatch, location.pathname]);
 
   return (

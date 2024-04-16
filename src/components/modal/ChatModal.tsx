@@ -1,77 +1,28 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { fetchChatMsg } from 'apis/chat';
+import { ChatMessageResponseDto } from 'types/swagger/model/chatMessageResponseDto';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import { SET_CHATTING_ROOM_ID } from '../../redux/slices/chatSlice';
 import CloseIcon from '../../assets/icons/CloseIcon';
 import PortraitIcon from '../../assets/icons/PortraitIcon';
 
-const chatData = [
-  {
-    messageId: 0,
-    senderId: 0,
-    senderNickname: '트레이너 썜',
-    senderProfileImg: {
-      id: 0,
-      url: null,
-      inputName: 'string',
-      path: 'string',
-    },
-    message: '회원님',
-    createdDate: '2024-04-15T02:05:55.861Z',
-  },
-  {
-    messageId: 1,
-    senderId: 0,
-    senderNickname: '트레이너 썜',
-    senderProfileImg: {
-      id: 0,
-      url: null,
-      inputName: 'string',
-      path: 'string',
-    },
-    message: '오늘 식단 보여주세요',
-    createdDate: '2024-04-15T02:05:55.861Z',
-  },
-  {
-    messageId: 2,
-    senderId: 1,
-    senderNickname: '나',
-    senderProfileImg: {
-      id: 0,
-      url: null,
-      inputName: 'string',
-      path: 'string',
-    },
-    message: '요기요',
-    createdDate: '2024-04-15T02:05:55.861Z',
-  },
-  {
-    messageId: 0,
-    senderId: 1,
-    senderNickname: '트레이너 썜',
-    senderProfileImg: {
-      id: 0,
-      url: null,
-      inputName: 'string',
-      path: 'string',
-    },
-    message: '잘하셨어요',
-    createdDate: '2024-04-15T02:05:55.861Z',
-  },
-];
-
 const ChatModal: FC = () => {
+  // const [chatData, setChatData] = useState<ChatMessageResponseDto[] | null>( TODO
+  const [chatData, setChatData] = useState<any[] | null>(null);
+
   const { chattingRoomId } = useAppSelector((state) => state.chat);
   const [text, setText] = useState('');
   const dispatch = useAppDispatch();
+  const MOCK_MY_ID = 4; // TODO
 
   const getChatList = useCallback(async () => {
     const res = await fetchChatMsg(Number(chattingRoomId));
+    setChatData(res);
   }, [chattingRoomId]);
-
+  const { chatPartner } = useAppSelector((state) => state.chat);
   useEffect(() => {
-    // getChatList();
+    getChatList();
   }, []);
 
   const handleClose = useCallback(() => {
@@ -113,9 +64,17 @@ const ChatModal: FC = () => {
       {/* 상대방 정보 */}
       <div className="flex justify-between">
         <div className="flex items-center justify-start p-3">
-          {/* <img className="h-12 w-12" src="" alt="상대방이미지" /> */}
-          <PortraitIcon />
-          <span className="ml-3">트레이너 쌤</span>
+          {chatPartner.imgUrl ? (
+            <img
+              className="h-12 w-12 rounded-full"
+              src={chatPartner.imgUrl}
+              alt="partnerImg"
+            />
+          ) : (
+            <PortraitIcon />
+          )}
+
+          <span className="ml-3">{chatPartner.name}</span>
         </div>
         <button type="button" onClick={closeChatModal} className="mr-4">
           <CloseIcon />
@@ -123,8 +82,9 @@ const ChatModal: FC = () => {
       </div>
       {/* 채팅 내용 */}
       <div className="flex-1 p-3">
-        {chatData.map((data: any) => {
-          if (data.isMe) {
+        {chatData?.map((data: ChatMessageResponseDto) => {
+          // if (data.isMe) { TODO
+          if (data.senderId === MOCK_MY_ID) {
             return (
               <div className="align-center flex justify-end">
                 <div className="rounded-md bg-white p-1 px-3 text-sm">
@@ -143,11 +103,11 @@ const ChatModal: FC = () => {
           }
           return (
             <div className="align-center my-2 flex">
-              {data?.senderProfileImg.url ? (
+              {data?.senderProfileImg?.url ? (
                 <img
                   src={data?.senderProfileImg.url}
                   alt="profile_img"
-                  className=" h-8 w-8"
+                  className=" h-8 w-8 rounded-full"
                 />
               ) : (
                 <PortraitIcon />
