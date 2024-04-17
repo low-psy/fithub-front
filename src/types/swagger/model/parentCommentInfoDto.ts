@@ -27,6 +27,10 @@ export interface ParentCommentInfoDto {
      */
     writerNickName?: string;
     /**
+     * 
+     */
+    writerEmail?: string;
+    /**
      * 댓글 내용
      */
     content?: string;
