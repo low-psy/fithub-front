@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, redirect, useLocation, useNavigate } from 'react-router-dom';
 import { AxiosError, AxiosResponse } from 'axios';
 import { checkChatroomExist, createChat, fetchChatMsg } from 'apis/chat';
 import { ChatMessageResponseDto } from 'types/swagger/model/chatMessageResponseDto';
@@ -103,7 +103,12 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
     try {
       const res = await deletePost(postId as number);
       if (res.status === 200) {
-        navigate('/post');
+        console.log(window.location.pathname);
+        if (window.location.pathname === '/user/posts') {
+          navigate('/user/posts');
+        } else {
+          navigate('/post');
+        }
       } else {
         throw new Error(`Server is trouble with${res.status}`);
       }
@@ -124,7 +129,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
         <div className="flex items-center justify-between ">
           <DropdownMenu
             onMenuItemClick={handleMenuItemClick}
-            menuArray={['게시글 보기', '채팅하기']}
+            menuArray={['채팅하기']}
             className="left-14 top-0 cursor-pointer"
           >
             <ProfileSection
