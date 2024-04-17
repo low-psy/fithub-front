@@ -133,7 +133,6 @@ const Comment: React.FC<CommentsProps> = ({ comments, postId }) => {
   };
 
   const userEmail = localStorage.getItem('email');
-  console.log(userEmail);
   return (
     <ul className="space-y-4">
       {comments?.map((comment) => (

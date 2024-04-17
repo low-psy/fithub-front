@@ -103,7 +103,6 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
     try {
       const res = await deletePost(postId as number);
       if (res.status === 200) {
-        console.log(window.location.pathname);
         if (window.location.pathname === '/user/posts') {
           navigate('/user/posts');
         } else {
