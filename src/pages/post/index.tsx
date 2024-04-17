@@ -165,16 +165,17 @@ const Post = () => {
       title = `해시태그: ${keyword} 검색결과`;
     }
   }
+
   return (
     <div className="flex gap-8 space-y-4 md:space-y-0">
       <FilterLayout>
         <div className="space-y-12">
           <div>
             <Link
-              to="/newpost"
+              to={isLogin ? '/newPost' : '/login'}
               className=" block break-keep bg-accent_sub p-4 text-center text-3xl font-extrabold text-accent"
             >
-              게시물 작성하기
+              게시글 작성하기
             </Link>
           </div>
           <Chat />
