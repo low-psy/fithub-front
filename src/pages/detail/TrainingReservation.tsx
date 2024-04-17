@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Calendar from '../../components/calendar/Calendar';
 import { formatPriceToKRW } from '../../utils/util';
 import { TrainingAvailableDateDto } from '../../types/swagger/model/trainingAvailableDateDto';
@@ -12,6 +13,7 @@ interface ReservationSectionProps {
   selectedTimeId?: number | null;
   price?: number;
   onPay: () => void;
+  isLogin: boolean;
 }
 
 const ReservationSection: React.FC<ReservationSectionProps> = ({
@@ -22,6 +24,7 @@ const ReservationSection: React.FC<ReservationSectionProps> = ({
   selectedTimeId,
   price,
   onPay,
+  isLogin,
 }) => {
   const selectedDate = availableDates?.find(
     (date) => date.id === selectedDateId,
@@ -29,6 +32,11 @@ const ReservationSection: React.FC<ReservationSectionProps> = ({
   const enableTimes = selectedDate?.availableTimes?.filter(
     (time) => time.enabled,
   );
+
+  const navigate = useNavigate();
+  const goToLogIn = () => {
+    navigate('/login');
+  };
 
   return (
     <div className="w-[450px] shrink-0 space-y-8 rounded-md bg-white lg:w-[500px]">
@@ -64,13 +72,23 @@ const ReservationSection: React.FC<ReservationSectionProps> = ({
               {price && formatPriceToKRW(price)}원
             </h3>
           </div>
-          <button
-            type="button"
-            className="block w-full rounded-md bg-main p-4 text-center text-xl font-bold text-white"
-            onClick={onPay}
-          >
-            트레이닝 결제하기
-          </button>
+          {isLogin ? (
+            <button
+              type="button"
+              className="block w-full rounded-md bg-main p-4 text-center text-xl font-bold text-white"
+              onClick={onPay}
+            >
+              트레이닝 결제하기
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="block w-full rounded-md bg-main p-4 text-center text-xl font-bold text-white"
+              onClick={goToLogIn}
+            >
+              로그인
+            </button>
+          )}
         </div>
       )}
     </div>
