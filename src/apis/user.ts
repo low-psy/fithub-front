@@ -164,14 +164,12 @@ export const updateProfile = async (
   gender: Gender,
   bio: string,
 ) => {
-  const response = await authAxios.put('/users/profile/update', null, {
-    params: {
-      name,
-      nickname,
-      phone,
-      gender,
-      bio,
-    },
+  const response = await authAxios.put('/users/profile/update', {
+    name,
+    nickname,
+    phone,
+    gender,
+    bio,
   });
 
   return response;

@@ -209,7 +209,11 @@ export const convertDateWithDay = (date: Date) => {
   const newDate = isoStr.split('T')[0].split('-').join('.');
   const day = dateObj.getDay();
   const days = ['일', '월', '화', '수', '목', '금', '토'];
-  return `${newDate}(${days[day]})`;
+  const hour = dateObj.getHours();
+  const min = dateObj.getMinutes();
+  const sec = dateObj.getSeconds();
+
+  return `${newDate}(${days[day]}) ${hour < 10 ? `0${hour}` : hour}:${min < 10 ? `0${min}` : min}:${sec < 10 ? `0${sec}` : sec}`;
 };
 
 export const getTime = (date: Date) => {

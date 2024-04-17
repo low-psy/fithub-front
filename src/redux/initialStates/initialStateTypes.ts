@@ -33,4 +33,5 @@ export interface IDropdownState {
 export interface IUserState {
   isLogin: boolean;
   role: ROLE;
+  profileUrl: string;
 }
