@@ -273,7 +273,10 @@ export const updateTraining = async (
     title: string;
     content: string;
     price: number;
-    trainingImgUpdate: TrainingImgUpdateDto;
+    imgDeleted?: boolean;
+    unModifiedImgList?: Array<string>;
+    imgAdded?: boolean;
+    newImgList?: Array<Blob>;
   },
 ) => {
   return authAxios.put(`/trainers/training?trainingId=${trainingId}`, data, {
