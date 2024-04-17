@@ -79,6 +79,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
     if (res && res.status === 200) {
       console.log('success');
+      console.log(window.location.pathname);
+      if (window.location.pathname === '/user/posts') {
+        return redirect('/user/posts');
+      }
       return redirect('/post');
     }
   } catch (err) {
