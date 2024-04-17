@@ -55,6 +55,7 @@ const SingleCareer: FC<Prop> = ({ careerId }) => {
 
   const getCareerInfo = useCallback(async () => {
     const res = await fetchCareerInfo(careerId);
+    setIsChecked(res.working);
     setData(res);
   }, [careerId]);
 
