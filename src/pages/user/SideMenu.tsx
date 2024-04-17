@@ -4,11 +4,7 @@ import ProfileImage from './ProfileImage';
 import SideMenuButton from './SideMenuButton';
 import { useAppSelector } from '../../hooks/reduxHooks';
 
-interface ISideMenuProps {
-  profileImg: string;
-}
-
-const SideMenu = ({ profileImg }: ISideMenuProps) => {
+const SideMenu = () => {
   const location = useLocation();
   const clicked = location.pathname.split('/')[2];
 
@@ -23,7 +19,7 @@ const SideMenu = ({ profileImg }: ISideMenuProps) => {
     <div className="hidden h-fit w-full max-w-[400px] rounded border shadow-slate-500 sm:block">
       {/* 프로필 이미지 */}
       <div className="flex justify-center">
-        <ProfileImage imageSrc={profileImg} />
+        <ProfileImage />
       </div>
       {/* 메뉴 리스트 */}
       <div className="flex flex-col">

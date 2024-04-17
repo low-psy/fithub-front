@@ -41,6 +41,7 @@ export const initialDropdownState: IDropdownState = {
 export const initialUserState: IUserState = {
   isLogin: false,
   role: 'guest',
+  profileUrl: '',
 };
 
 export const initialUserInfos: ProfileDto = {

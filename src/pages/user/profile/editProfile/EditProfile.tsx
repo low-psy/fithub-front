@@ -1,15 +1,21 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import axios from 'axios';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useLoaderData, useNavigate } from 'react-router-dom';
-import { authAxios } from '../../../../apis/axios';
+import { useAppDispatch } from 'hooks/reduxHooks';
+import { SET_PROFILE_URL } from 'redux/slices/userSlice';
 import { updateProfile, updateProfileImg } from '../../../../apis/user';
 import { IProfile } from '../../../../types/profile';
 import { Gender } from '../../../../types/user';
+
+const interestArr = ['PILATES', 'HEALTH', 'PT', 'CROSSFIT', 'YOGA'];
 
 const EditProfile = () => {
   const navigate = useNavigate();
   const prevProfile = useLoaderData() as IProfile;
   const [profileImgFile, setProfileImgFile] = useState<File | undefined>();
+  const [selectedInterest, setSelectedInterest] = useState<string[]>([]);
 
   // 프로필(nickname, email, phone, gender, bio, profileImg)
   const [profile, setProfile] = useState<IProfile>(prevProfile);
@@ -17,6 +23,11 @@ const EditProfile = () => {
   const [profileImage, setProfileImage] = useState<string>(
     prevProfile.profileImg,
   );
+  useEffect(() => {
+    setSelectedInterest(profile.interests);
+  }, []);
+
+  const dispatch = useAppDispatch();
 
   // 이미지 업로드를 위한 ref
   const inputRef = useRef<HTMLInputElement>(null);
@@ -63,7 +74,7 @@ const EditProfile = () => {
       try {
         const response = await updateProfileImg(formData);
         if (response && response.status === 200) {
-          alert('프로필 이미지 변경 성공');
+          dispatch(SET_PROFILE_URL(profileImage));
         }
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -83,8 +94,17 @@ const EditProfile = () => {
         console.log(error);
       }
     }
+    navigate('/user/profile');
   };
 
+  const handleInterestClick = (interest: string) => {
+    // 관심사 선택 취소
+    if (selectedInterest.includes(interest)) {
+      setSelectedInterest((prev) => prev.filter((e) => e !== interest));
+    } else {
+      setSelectedInterest((prev) => [...prev, interest]);
+    }
+  };
   return (
     <div>
       <p className="mb-4 text-lg font-semibold">프로필 수정</p>
@@ -151,6 +171,24 @@ const EditProfile = () => {
             value={profile.bio}
             onChange={handleInfo}
           />
+        </div>
+        {/* 관심사 */}
+        <div>
+          <p className="mb-1 font-semibold">관심사</p>
+          <div className="flex">
+            {interestArr.map((interest) => (
+              <div
+                key={interest}
+                className="mr-5 flex h-10 w-[100px] cursor-pointer items-center justify-center rounded-full  pl-5 pr-5"
+                style={{
+                  background: `${selectedInterest.includes(interest) ? '#E0D1FF' : '#ECEEEF'}`,
+                }}
+                onClick={() => handleInterestClick(interest)}
+              >
+                <p className="font-semibold">{interest}</p>
+              </div>
+            ))}
+          </div>
         </div>
         {/* 성별 */}
         <div className="mb-4">

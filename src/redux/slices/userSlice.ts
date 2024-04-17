@@ -19,9 +19,13 @@ export const userSlice = createSlice({
     SET_INITAILIZE: (state) => {
       state = initialUserState;
     },
+    SET_PROFILE_URL: (state, { payload }) => {
+      state.profileUrl = payload;
+    },
   },
 });
 
-export const { LOGIN, LOGOUT, SET_TRAINER, SET_INITAILIZE } = userSlice.actions;
+export const { LOGIN, LOGOUT, SET_TRAINER, SET_INITAILIZE, SET_PROFILE_URL } =
+  userSlice.actions;
 
 export default userSlice.reducer;
