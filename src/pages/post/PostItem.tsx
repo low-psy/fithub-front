@@ -174,7 +174,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
         <div>
           {postCommentsCount && postCommentsCount > 0 ? (
             <div>
-              <Link to={`${postId}`} state={{ isModal: true }}>
+              <Link to={`/post/${postId}`} state={{ isModal: true }}>
                 {`댓글 ${postCommentsCount}개 보기...`}
               </Link>
             </div>
