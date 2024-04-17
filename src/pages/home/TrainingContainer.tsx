@@ -23,7 +23,7 @@ const TrainingContainer: React.FC<TrainingContainerProps> = ({
             return (
               <UserTrainingItem
                 key={value.id}
-                trainerInfoDto={value}
+                trainingOutlineDto={value}
                 usersTrainingLike={userTrainingLike}
               />
             );

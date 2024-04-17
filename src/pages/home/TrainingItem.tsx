@@ -6,32 +6,32 @@ import { deleteTrainingLike, postTrainingLike } from '../../apis/trainig';
 import { formatDate } from '../../utils/util';
 
 export interface UsersTrainingItemProps {
-  trainerInfoDto: TrainingOutlineDto;
+  trainingOutlineDto: TrainingOutlineDto;
   usersTrainingLike?: boolean;
 }
 
 const UserTrainingItem: React.FC<UsersTrainingItemProps> = ({
-  trainerInfoDto,
+  trainingOutlineDto,
   usersTrainingLike,
 }) => {
   const { isBooked, toggleBook } = useBook(
-    trainerInfoDto.id,
+    trainingOutlineDto.id,
     usersTrainingLike,
     postTrainingLike,
     deleteTrainingLike,
   );
-  const startDate = formatDate(trainerInfoDto.startDate);
-  const endDate = formatDate(trainerInfoDto.endDate);
+  const startDate = formatDate(trainingOutlineDto.startDate);
+  const endDate = formatDate(trainingOutlineDto.endDate);
   return (
     <LinkBtnWithImg
-      {...trainerInfoDto}
-      to={`/detail/${trainerInfoDto.id}`}
+      {...trainingOutlineDto}
+      to={`/detail/${trainingOutlineDto.id}`}
       defaultIconState={isBooked}
       toggleBook={toggleBook}
-      img={trainerInfoDto.trainerInfoDto?.trainerProfileImg}
+      img={trainingOutlineDto.trainerInfoDto?.trainerProfileImg}
       startDate={startDate}
       endDate={endDate}
-      categories={trainerInfoDto.categories}
+      categories={trainingOutlineDto.categories}
     />
   );
 };
