@@ -115,6 +115,7 @@ const HomePage: React.FC = () => {
   };
 
   const mapTo = isLogin ? '/mapList' : '/login';
+  const postWriteTo = isLogin ? 'newPost' : '/login';
 
   return (
     <>
@@ -126,7 +127,7 @@ const HomePage: React.FC = () => {
             </FilterSection>
           </div>
           <div className=" flex">
-            <FilterSection bg={newpostFilter} to="newpost">
+            <FilterSection bg={newpostFilter} to={postWriteTo}>
               게시글 작성
             </FilterSection>
           </div>

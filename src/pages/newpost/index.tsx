@@ -31,7 +31,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const images = formData.getAll('image') as File[];
   const hashtag = formData.get('hashtag') as string;
   const postId = formData.get('id') as string;
-  const imgDeleted = formData.get('imgDeleted') as string;
+  const imageDeleted = (formData.get('imgDeleted') as string) === 'true';
 
   const validationErrors = validatePostData(content, images, hashtag);
   console.log(content, images, hashtag);
@@ -54,31 +54,34 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       res = await createPost(data);
     } else {
       const documentDto = getImages(store.getState());
-      const unModifiedImages: string[] = [];
+      const existingImages: string[] = [];
       const newImages: Blob[] = [];
       documentDto.forEach((document) => {
         if (document.image) {
           newImages.push(document.image);
         } else {
-          unModifiedImages.push(document.awsS3Url as string);
+          existingImages.push(document.awsS3Url as string);
         }
       });
-      const imgAdded = newImages.length > 1;
-      const imgChanged = !!documentDto[0].image;
+      const imageAdded = newImages.length > 0;
+      const imageChanged = imageDeleted || imageAdded;
       const data = {
         id: Number(postId),
         content,
-        newImages,
-        unModifiedImages,
         hashTags: hashtag,
-        imgChanged,
-        imgAdded,
-        imgDeleted,
+        newImages,
+        existingImages,
+        imageDeleted,
+        imageAdded,
+        imageChanged,
       };
       res = await updatePost(data);
     }
     if (res && res.status === 200) {
       console.log('success');
+      if (window.location.pathname === '/user/posts') {
+        return redirect('/user/posts');
+      }
       return redirect('/post');
     }
   } catch (err) {

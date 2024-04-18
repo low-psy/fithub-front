@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { useAppSelector } from 'hooks/reduxHooks';
 import {
   defer,
   LoaderFunction,
@@ -182,6 +183,8 @@ const Detail = () => {
       return [...prev, id];
     });
   };
+
+  const isLogin = useAppSelector((state) => state.user);
   return (
     <div className="mb-8 space-y-4">
       <h1 className=" break-keep  text-3xl font-bold">{trainingInfo.title}</h1>
@@ -282,10 +285,11 @@ const Detail = () => {
           selectedTimeId={selectedTimeId}
           price={price}
           onPay={payBtnCliHandler}
+          isLogin={isLogin.isLogin}
         />
       </div>
     </div>
   );
 };
 
-export default withAuth(Detail, 'user');
+export default Detail;

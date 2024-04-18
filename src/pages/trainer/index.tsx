@@ -290,7 +290,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         unModifiedImgList.push(document.awsS3Url as string);
       }
     });
-    const imgAdded = newImgList[0];
+    const imgAdded = newImgList.length > 0;
     const updateImgDto = {
       imgDeleted: !!imgDeleted,
       imgAdded: !!imgAdded,
@@ -317,7 +317,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const trainingObj = {
       title,
       content,
-      trainingImgUpdate: updateImgDto,
+      imgDeleted: updateImgDto.imgDeleted,
+      unModifiedImgList: updateImgDto.unModifiedImgList,
+      imgAdded: updateImgDto.imgAdded,
+      newImgList: updateImgDto.newImgList,
       price: priceNumber,
     };
 

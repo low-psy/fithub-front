@@ -83,12 +83,14 @@ const CommentForm: React.FC<CommentFormProps> = ({
         value={parentCommentId}
       />
       <div>
-        <button
-          type="submit"
-          className="block w-[80px] rounded-full bg-sub py-2 "
-        >
-          {method === 'post' ? '제출' : '수정'}
-        </button>
+        {inputValue !== '' && (
+          <button
+            type="submit"
+            className="block w-[80px] rounded-full bg-sub py-2 "
+          >
+            {method === 'post' ? '제출' : '수정'}
+          </button>
+        )}
       </div>
     </fetcher.Form>
   );

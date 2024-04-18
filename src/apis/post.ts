@@ -13,6 +13,15 @@ import { PostCreateDto } from '../types/swagger/model/postCreateDto';
 import { PostSearchFilterDto } from '../types/swagger/model/postSearchFilterDto';
 import { CommentUpdateDto } from '../types/swagger/model/commentUpdateDto';
 
+export const getUsersPost = async (
+  page: number,
+): Promise<AxiosResponse<PagePostInfoDto>> => {
+  const res = await authAxios.get<PagePostInfoDto>(
+    `/users/posts?page=${page}&size=10`,
+  );
+  return res;
+};
+
 /**
  * [POST] 게시물 생성
  * content, image, hashtag를 받아서 서버로 전달

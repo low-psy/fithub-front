@@ -33,7 +33,7 @@ const TrainerReservation: React.FC<{
     try {
       const res = await postTrainerNoShow(reservationId as number);
       if (res.status === 200) {
-        navigate(0);
+        navigate('/trainer/home?status=COMPLETE');
         noShowModal.toggle();
       } else {
         throw new Error(`Server is Troubling : ${res.status}`);
@@ -51,7 +51,7 @@ const TrainerReservation: React.FC<{
         alert(
           '트레이닝이 예정 중이거나 진행중입니다. 트레이닝이 완료된 후 다시 시도해 주세요',
         );
-        navigate(0);
+        navigate('/trainer/home?status=COMPLETE');
       } else {
         alert('존재하지 않는 예약압니다');
         navigate(0);

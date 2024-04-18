@@ -26,6 +26,7 @@ export interface CommentInfoDto {
      * 답글 작성자의 닉네임
      */
     writerNickName?: string;
+    writerEmail?: string;
     /**
      * 답글 작성자의 프로필 url
      */

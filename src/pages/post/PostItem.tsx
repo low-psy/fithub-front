@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, redirect, useLocation, useNavigate } from 'react-router-dom';
 import { AxiosError, AxiosResponse } from 'axios';
 import { checkChatroomExist, createChat, fetchChatMsg } from 'apis/chat';
 import { ChatMessageResponseDto } from 'types/swagger/model/chatMessageResponseDto';
@@ -103,7 +103,11 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
     try {
       const res = await deletePost(postId as number);
       if (res.status === 200) {
-        navigate('/post');
+        if (window.location.pathname === '/user/posts') {
+          navigate('/user/posts');
+        } else {
+          navigate('/post');
+        }
       } else {
         throw new Error(`Server is trouble with${res.status}`);
       }
@@ -124,7 +128,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
         <div className="flex items-center justify-between ">
           <DropdownMenu
             onMenuItemClick={handleMenuItemClick}
-            menuArray={['게시글 보기', '채팅하기']}
+            menuArray={['채팅하기']}
             className="left-14 top-0 cursor-pointer"
           >
             <ProfileSection
@@ -174,7 +178,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
         <div>
           {postCommentsCount && postCommentsCount > 0 ? (
             <div>
-              <Link to={`${postId}`} state={{ isModal: true }}>
+              <Link to={`/post/${postId}`} state={{ isModal: true }}>
                 {`댓글 ${postCommentsCount}개 보기...`}
               </Link>
             </div>

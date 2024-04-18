@@ -129,7 +129,7 @@ const UserMap = () => {
                 return (
                   <UserTrainingItem
                     key={value.trainingData.id}
-                    trainerInfoDto={value.trainingData}
+                    trainingOutlineDto={value.trainingData}
                   />
                 );
               })}

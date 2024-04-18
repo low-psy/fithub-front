@@ -191,7 +191,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
   } catch (err) {
     const error = err as unknown as AxiosError;
-    alert(error.message);
+    const status = error.response?.status;
+    if (status === 401) {
+      alert('로그인한 사용자만 사용 가능한 기능입니다');
+    } else {
+      alert(error.message);
+    }
   }
   return null;
 };

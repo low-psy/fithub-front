@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 import { TrainingCategoryUpdateDto } from './trainingCategoryUpdateDto';
-import { TrainingImgUpdateDto } from './trainingImgUpdateDto';
+// import { TrainingImgUpdateDto } from './trainingImgUpdateDto';
 
 /**
  * 트레이닝 내용 수정 요청 Dto
@@ -19,6 +19,9 @@ export interface TrainingContentUpdateDto {
     title: string;
     content: string;
     price: number;
-    trainingImgUpdateDto?: TrainingImgUpdateDto;
+    imgDeleted?: boolean;
+    unModifiedImgList?: Array<string>;
+    imgAdded?: boolean;
+    newImgList?: Array<Blob>;
     trainingCategoryUpdateDto?: TrainingCategoryUpdateDto;
 }

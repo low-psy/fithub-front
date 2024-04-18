@@ -132,26 +132,29 @@ const Comment: React.FC<CommentsProps> = ({ comments, postId }) => {
     );
   };
 
+  const userEmail = localStorage.getItem('email');
   return (
     <ul className="space-y-4">
       {comments?.map((comment) => (
         <li key={comment.commentId} className="space-y-2">
           <div className="flex justify-between">
             <CommentItem comment={comment} onReplyClick={handleReplyClick} />
-            <DropdownMenu
-              menuArray={['수정하기', '삭제하기']}
-              onMenuItemClick={(value: string) => {
-                if (value === '수정하기') {
-                  editHandler(
-                    comment.writerNickName,
-                    comment.content,
-                    comment.commentId,
-                  );
-                } else {
-                  deleteHandler(comment.commentId);
-                }
-              }}
-            />
+            {comment.writerEmail === userEmail && (
+              <DropdownMenu
+                menuArray={['수정하기', '삭제하기']}
+                onMenuItemClick={(value: string) => {
+                  if (value === '수정하기') {
+                    editHandler(
+                      comment.writerNickName,
+                      comment.content,
+                      comment.commentId,
+                    );
+                  } else {
+                    deleteHandler(comment.commentId);
+                  }
+                }}
+              />
+            )}
           </div>
           {comment.hasChildComment && (
             <button

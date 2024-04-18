@@ -29,7 +29,7 @@ import AdditionalInfo from 'pages/signup/AdditionalInfo';
 import SignupSuccess from 'pages/signup/SignupSuccess';
 import User from 'pages/user';
 import Profile from 'pages/user/profile';
-import Posts from 'pages/user/posts';
+import Posts, { loader as usersPostLoader } from 'pages/user/posts';
 import Cancellation from 'pages/user/cancellation';
 import EditProfile from 'pages/user/profile/editProfile/EditProfile';
 import profileLoader from 'pages/user/loader';
@@ -73,6 +73,7 @@ import TrainerDetailRoot, {
 import TrainerRecommend, {
   loader as RecommendTrainerLoader,
 } from 'pages/searchTrainer/TrainerRecommend';
+import UsersPost from 'pages/user/posts/UsersPostHome';
 
 function App() {
   // 전역 로그인 상태 관리
@@ -190,7 +191,9 @@ function App() {
             },
             {
               path: pageRoutes.user.posts,
+              loader: usersPostLoader,
               element: <Posts />,
+              children: [{ path: '', element: <UsersPost /> }],
             },
             {
               path: pageRoutes.user.reservations,
