@@ -269,3 +269,18 @@ export const updateReview = async ({
     },
   );
 };
+/**
+ * 관심사 수정
+ */
+export const editInterest = async ({
+  interestsUpdated,
+  interests,
+}: {
+  interestsUpdated: boolean;
+  interests: string[];
+}) => {
+  await authAxios.put('/users/interest', {
+    interestsUpdated,
+    interests,
+  });
+};

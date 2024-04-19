@@ -5,7 +5,11 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'hooks/reduxHooks';
 import { SET_PROFILE_URL } from 'redux/slices/userSlice';
-import { updateProfile, updateProfileImg } from '../../../../apis/user';
+import {
+  editInterest,
+  updateProfile,
+  updateProfileImg,
+} from '../../../../apis/user';
 import { IProfile } from '../../../../types/profile';
 import { Gender } from '../../../../types/user';
 
@@ -83,10 +87,12 @@ const EditProfile = () => {
       }
     }
 
+    // 관심사 수정
+    await editInterest({ interestsUpdated: true, interests: selectedInterest });
+
     try {
       const response = await updateProfile(name, nickname, phone, gender, bio);
       if (response && response.status === 200) {
-        // eslint-disable-next-line
         alert('수정 완료');
       }
     } catch (error) {
@@ -98,10 +104,11 @@ const EditProfile = () => {
   };
 
   const handleInterestClick = (interest: string) => {
-    // 관심사 선택 취소
+    // 관심사 삭제
     if (selectedInterest.includes(interest)) {
       setSelectedInterest((prev) => prev.filter((e) => e !== interest));
     } else {
+      // 관심사 추가
       setSelectedInterest((prev) => [...prev, interest]);
     }
   };
