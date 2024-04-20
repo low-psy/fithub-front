@@ -27,8 +27,7 @@ const userRoutes = {
 const trainerRoutes = {
   base: '/trainer',
   index: 'home',
-  new: 'new',
-  create: 'create',
+  new: 'newTraining',
 };
 
 const helpRoutes = {

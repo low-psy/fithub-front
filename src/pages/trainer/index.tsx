@@ -224,7 +224,7 @@ const TrainerHome = () => {
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">트레이닝</h1>
           <Link
-            to="/trainer/new"
+            to="/trainer/newTraining"
             className="shrink-0 rounded-full bg-slate-50 px-4 py-4"
           >
             트레이닝 생성하기
@@ -334,7 +334,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     } catch (err) {
       const error = err as AxiosError<ErrorResponseDto>;
       errorFunc(error);
-      return redirect('/trainer/new/create');
+      return redirect('/trainer/newTraining');
     }
   } else if (type === 'calendar') {
     const startDate = formData.get('startDate') as string;

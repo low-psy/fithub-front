@@ -62,6 +62,7 @@ export interface FormErrors {
   quota?: string;
   price?: string;
   dateTime?: string;
+  time?: string;
 }
 
 export type LoaderData<TLoaderFn extends LoaderFunction> =
