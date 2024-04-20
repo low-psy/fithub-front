@@ -105,13 +105,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const response = await createTraining(trainingObj);
 
     if (response && response.status === 200) {
-      return redirect('/');
+      return redirect('/trainer/home');
     }
   } catch (err) {
     const error = err as AxiosError<ErrorResponseDto>;
     errorFunc(error);
     if (error.response?.data.code === 'PERMISSION_DENIED') {
-      return redirect('/');
+      return redirect('/trainer/home');
     }
     return redirect('/trainer/newTraining');
   }

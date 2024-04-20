@@ -329,7 +329,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
       if (response && response.status === 200) {
         console.log('success');
-        return redirect('/');
+        return redirect('/trainer/home');
       }
     } catch (err) {
       const error = err as AxiosError<ErrorResponseDto>;
@@ -357,10 +357,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const res = await updateTrainingCalendar(Number(id), requestData);
       if (res.status === 200) {
         console.log('success');
-        return redirect('/');
-      }
-      if (res.status === 201) {
-        return redirect('/login');
+        return redirect('/trainer/home');
       }
       throw new Error(`server is trobule with${res.status}`);
     } catch (err) {
