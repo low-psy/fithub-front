@@ -6,7 +6,7 @@ const TrainerHeader = () => {
   const location = useLocation().pathname;
   let to = '/';
   let isNew = false;
-  if (location.startsWith('/trainer/new')) {
+  if (location.startsWith('/trainer/newTraining')) {
     isNew = true;
     to = '/';
   }

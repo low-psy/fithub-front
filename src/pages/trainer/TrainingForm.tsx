@@ -12,7 +12,7 @@ import FormInput from '../../components/form/FormInput';
 import FormError from '../../components/form/FormError';
 import CheckBoxInput from '../../components/form/CheckboxInput';
 
-const TrainerForm: React.FC<{ dateList?: string[] }> = ({ dateList }) => {
+const TrainingForm: React.FC<{ dateList?: string[] }> = ({ dateList }) => {
   const errors = useActionData() as FormErrors;
   const [selectedDates, setSelectedDates] = useState<SelectedDates>({
     startDate: '',
@@ -43,7 +43,7 @@ const TrainerForm: React.FC<{ dateList?: string[] }> = ({ dateList }) => {
   return (
     <Form
       method="POST"
-      action="/trainer/new/create"
+      action="/trainer/newTraining"
       className="space-y-16 pb-6 pt-4"
       encType="multipart/form-data"
     >
@@ -83,7 +83,6 @@ const TrainerForm: React.FC<{ dateList?: string[] }> = ({ dateList }) => {
         <FormLabel htmlFor="categories">
           <h2 className="mb-4 text-3xl text-zinc-800">카테고리</h2>
           <CheckBoxInput options={options} />
-          {errors?.title && <FormError>{errors?.title}</FormError>}
         </FormLabel>
       </div>
       <div>
@@ -133,6 +132,7 @@ const TrainerForm: React.FC<{ dateList?: string[] }> = ({ dateList }) => {
         <FormLabel htmlFor="endHour">
           <TimeSelector inputName="lastHour" />
         </FormLabel>
+        {errors?.time && <FormError>{errors?.time}</FormError>}
       </div>
 
       <div>
@@ -148,4 +148,4 @@ const TrainerForm: React.FC<{ dateList?: string[] }> = ({ dateList }) => {
   );
 };
 
-export default TrainerForm;
+export default TrainingForm;
