@@ -7,6 +7,7 @@ import {
   SET_CHATTING_ROOM_ID,
   SET_CHAT_LIST,
   SET_CHAT_PARTNER,
+  SET_IS_DROPDOWN_CHAT_OPEN,
 } from '../../redux/slices/chatSlice';
 import PortraitIcon from '../../assets/icons/PortraitIcon';
 
@@ -30,7 +31,6 @@ const Chat = () => {
   };
 
   const handleOpenChat = (info: ChatType) => {
-    console.log(info);
     dispatch(SET_CHATTING_ROOM_ID(info.roomId));
     dispatch(
       SET_CHAT_PARTNER({
@@ -38,6 +38,7 @@ const Chat = () => {
         imgUrl: info.senderProfileImg.url,
       }),
     );
+    dispatch(SET_IS_DROPDOWN_CHAT_OPEN(false));
   };
 
   useEffect(() => {
@@ -47,7 +48,6 @@ const Chat = () => {
   return (
     <div className="flex flex-col">
       {chatList?.map((chat: ChatType) => {
-        console.log(chat);
         return (
           <div
             key={chat.roomId}
@@ -55,9 +55,13 @@ const Chat = () => {
             className="flex cursor-pointer items-center justify-between  px-2 py-4 transition duration-150 ease-in-out hover:bg-accent_sub"
           >
             <div className="flex">
-              <div className="mr-5 h-10 w-11">
+              <div className="mr-5">
                 {chat.senderProfileImg ? (
-                  <img src={chat.senderProfileImg.url} alt="senderProfileImg" />
+                  <img
+                    src={chat.senderProfileImg.url}
+                    alt="senderProfileImg"
+                    className="h-12 w-12 rounded-full"
+                  />
                 ) : (
                   <PortraitIcon />
                 )}

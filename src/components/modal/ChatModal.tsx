@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { fetchChatMsg } from 'apis/chat';
 import { ChatMessageResponseDto } from 'types/swagger/model/chatMessageResponseDto';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
@@ -8,13 +8,12 @@ import CloseIcon from '../../assets/icons/CloseIcon';
 import PortraitIcon from '../../assets/icons/PortraitIcon';
 
 const ChatModal: FC = () => {
-  // const [chatData, setChatData] = useState<ChatMessageResponseDto[] | null>( TODO
-  const [chatData, setChatData] = useState<any[] | null>(null);
+  const [chatData, setChatData] = useState<any | null>(null);
+  const msgBottom = useRef<HTMLDivElement>(null); // 채팅창 맨 밑으로 스크롤
 
   const { chattingRoomId } = useAppSelector((state) => state.chat);
   const [text, setText] = useState('');
   const dispatch = useAppDispatch();
-  const MOCK_MY_ID = 4; // TODO
 
   const getChatList = useCallback(async () => {
     const res = await fetchChatMsg(Number(chattingRoomId));
@@ -49,10 +48,56 @@ const ChatModal: FC = () => {
   const closeChatModal = () => {
     dispatch(SET_CHATTING_ROOM_ID(undefined));
   };
-  const sendText = () => {
-    console.log(text);
-    // await
+
+  // 채팅시 스크롤 맨아래로 내리기
+  useEffect(() => {
+    if (msgBottom && msgBottom.current) {
+      msgBottom.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [chatData]);
+
+  // 채팅 전송
+  const { ws } = useAppSelector((state) => state.chat);
+
+  const sendChat = () => {
+    const accessToken = localStorage.getItem('accessToken') as string;
+
+    ws.publish({
+      destination: '/app/chatroom',
+      headers: {
+        Authorization: accessToken,
+      },
+      body: JSON.stringify({ message: text, roomId: chattingRoomId }),
+    });
+  };
+
+  const sendText = async () => {
+    if (text.trim() === '') return;
+    sendChat();
+    const nickname = localStorage.getItem('nickname');
+    const profileImg = localStorage.getItem('profileImg');
+    setChatData((prev: any, i: number) => [
+      ...prev,
+      {
+        messageId: i + 1,
+        senderNickname: nickname,
+        me: true,
+        senderProfileImg: {
+          url: profileImg,
+        },
+        message: text,
+        createdDate: new Date(),
+      },
+    ]);
     setText('');
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === 'Enter') {
+      if (text.trim().length) {
+        sendText();
+      }
+    }
   };
 
   return (
@@ -81,12 +126,11 @@ const ChatModal: FC = () => {
         </button>
       </div>
       {/* 채팅 내용 */}
-      <div className="flex-1 p-3">
-        {chatData?.map((data: ChatMessageResponseDto) => {
-          // if (data.isMe) { TODO
-          if (data.senderId === MOCK_MY_ID) {
+      <div className=" max-h-[360px] flex-1 overflow-y-auto p-3">
+        {chatData?.map((data: any) => {
+          if (data.me) {
             return (
-              <div className="align-center flex justify-end">
+              <div className="align-center my-2 flex justify-end">
                 <div className="rounded-md bg-white p-1 px-3 text-sm">
                   {data.message}
                 </div>
@@ -131,6 +175,7 @@ const ChatModal: FC = () => {
             </div>
           );
         })}
+        <div ref={msgBottom} />
       </div>
       <div>
         <textarea
@@ -138,6 +183,7 @@ const ChatModal: FC = () => {
           onChange={handleChat}
           className="relative bottom-[-6px] h-[8rem] w-[100%] resize-none border-b-2 border-t-2 p-[1rem] text-sm outline-none"
           placeholder="채팅내용을 입력해 주세요!"
+          onKeyDown={handleKeyPress}
         />
         <div className="flex justify-end bg-white px-5 py-2 pb-3 ">
           <button

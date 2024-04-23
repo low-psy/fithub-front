@@ -5,7 +5,7 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-
+import * as StompJs from '@stomp/stompjs';
 // pages
 import Root from 'pages/Root';
 import { action as homeAction } from 'pages/home/index';
@@ -74,6 +74,7 @@ import TrainerRecommend, {
   loader as RecommendTrainerLoader,
 } from 'pages/searchTrainer/TrainerRecommend';
 import UsersPost from 'pages/user/posts/UsersPostHome';
+import { SET_WS } from 'redux/slices/chatSlice';
 
 function App() {
   // 전역 로그인 상태 관리
@@ -281,6 +282,45 @@ function App() {
       ],
     },
   ]);
+
+  // ============= 채팅 =============
+  const wsBaseURL = 'wss://fithub-ec2.duckdns.org/ws/stomp';
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken') as string;
+
+    // ws연결설정
+    const wsClient = new StompJs.Client({
+      brokerURL: wsBaseURL,
+      connectHeaders: {
+        Authorization: accessToken,
+      },
+      debug(str) {
+        console.log(str);
+      },
+      reconnectDelay: 5000, // 자동 재 연결
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+    });
+
+    // ws연결
+    wsClient.activate();
+    dispatch(SET_WS(wsClient));
+
+    const email = localStorage.getItem('email')?.split('@')[0];
+
+    // 구독
+    wsClient.onConnect = () => {
+      wsClient.subscribe(`/topic/alarm/${email}`, (message) => {
+        if (message.body) {
+          const msg = JSON.parse(message.body);
+          console.log(msg);
+          // setChatList((chats) => [...chats, msg]);
+        }
+      });
+    };
+  }, []);
+
   return <RouterProvider router={router} />;
 }
 
