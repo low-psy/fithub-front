@@ -69,6 +69,8 @@ function Login() {
         if (res.status === 200) {
           // dispatch(SET_USER_INFOS({ userInfos: res.data }));
           localStorage.setItem('email', res.data.email as string);
+          localStorage.setItem('profileImg', res.data.profileImg as string);
+          localStorage.setItem('nickname', res.data.nickname as string);
           const isTrainer = res.data.trainer;
           if (isTrainer) {
             dispatch(SET_TRAINER());
