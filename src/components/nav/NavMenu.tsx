@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { SET_IS_DROPDOWN_CHAT_OPEN } from 'redux/slices/chatSlice';
+import Notify from 'components/Notify';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import NavDropdown from './NavDropdown';
 import BookmarkIcon from '../../assets/icons/BookmarkIcon';
@@ -53,6 +54,9 @@ const NavMenu = () => {
           <ChatIcon />
         </Link> */}
         <DropdownChatList />
+      </li>
+      <li key="notify">
+        <Notify />
       </li>
       <li key="user" className="">
         <Link to={profileTo}>

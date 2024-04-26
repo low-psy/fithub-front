@@ -7,7 +7,6 @@ function FormInput({ error, isTextArea, className, ...rest }: IInputProps) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (rest.onChange) {
       rest.onChange(rest.id, event.target.value);
-      console.log(event.target.value);
     }
   };
 

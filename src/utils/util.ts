@@ -203,7 +203,7 @@ export const getYesterday = (date: Date) => {
 };
 
 // 2024-03-05 03:11:29 => 2024.03.05(화)
-export const convertDateWithDay = (date: Date) => {
+export const convertDateWithDay = (date: Date, noTime = false) => {
   const dateObj = new Date(date);
   const isoStr = dateObj.toISOString();
   const newDate = isoStr.split('T')[0].split('-').join('.');
@@ -213,6 +213,9 @@ export const convertDateWithDay = (date: Date) => {
   const min = dateObj.getMinutes();
   const sec = dateObj.getSeconds();
 
+  if (noTime) {
+    return `${newDate}(${days[day]})`;
+  }
   return `${newDate}(${days[day]}) ${hour < 10 ? `0${hour}` : hour}:${min < 10 ? `0${min}` : min}:${sec < 10 ? `0${sec}` : sec}`;
 };
 

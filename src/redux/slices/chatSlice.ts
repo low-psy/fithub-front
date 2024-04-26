@@ -10,6 +10,7 @@ interface InitialType {
     imgUrl: string | null;
   };
   ws: any;
+  currChatData: any;
 }
 
 const initialState: InitialType = {
@@ -21,6 +22,7 @@ const initialState: InitialType = {
     imgUrl: null,
   },
   ws: null,
+  currChatData: [],
 };
 
 export const chatSlice = createSlice({
@@ -42,6 +44,9 @@ export const chatSlice = createSlice({
     SET_WS: (state, { payload }) => {
       state.ws = payload;
     },
+    SET_CURR_CHAT_DATA: (state, { payload }) => {
+      state.currChatData = payload;
+    },
   },
 });
 
@@ -51,6 +56,7 @@ export const {
   SET_CHAT_LIST,
   SET_CHAT_PARTNER,
   SET_WS,
+  SET_CURR_CHAT_DATA,
 } = chatSlice.actions;
 
 export const getChattingRoomId = (state: RootState) =>
@@ -60,5 +66,6 @@ export const getIsChatListModalOpen = (state: RootState) =>
 export const getChatList = (state: RootState) => state.chat.chatList;
 export const getChatPartner = (state: RootState) => state.chat.chatPartner;
 export const getWS = (state: RootState) => state.chat.ws;
+export const getCurrChatData = (state: RootState) => state.chat.currChatData;
 
 export default chatSlice.reducer;
