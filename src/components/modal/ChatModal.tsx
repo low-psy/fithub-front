@@ -3,25 +3,28 @@ import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { fetchChatMsg } from 'apis/chat';
 import { ChatMessageResponseDto } from 'types/swagger/model/chatMessageResponseDto';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
-import { SET_CHATTING_ROOM_ID } from '../../redux/slices/chatSlice';
+import {
+  SET_CHATTING_ROOM_ID,
+  SET_CURR_CHAT_DATA,
+} from '../../redux/slices/chatSlice';
 import CloseIcon from '../../assets/icons/CloseIcon';
 import PortraitIcon from '../../assets/icons/PortraitIcon';
 
 const ChatModal: FC = () => {
-  const [chatData, setChatData] = useState<any | null>(null);
   const msgBottom = useRef<HTMLDivElement>(null); // 채팅창 맨 밑으로 스크롤
-
+  const { currChatData } = useAppSelector((state) => state.chat);
   const { chattingRoomId } = useAppSelector((state) => state.chat);
   const [text, setText] = useState('');
   const dispatch = useAppDispatch();
 
-  const getChatList = useCallback(async () => {
+  const getChatData = useCallback(async () => {
     const res = await fetchChatMsg(Number(chattingRoomId));
-    setChatData(res);
+    dispatch(SET_CURR_CHAT_DATA(res));
   }, [chattingRoomId]);
   const { chatPartner } = useAppSelector((state) => state.chat);
+
   useEffect(() => {
-    getChatList();
+    getChatData();
   }, []);
 
   const handleClose = useCallback(() => {
@@ -54,7 +57,7 @@ const ChatModal: FC = () => {
     if (msgBottom && msgBottom.current) {
       msgBottom.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [chatData]);
+  }, [currChatData]);
 
   // 채팅 전송
   const { ws } = useAppSelector((state) => state.chat);
@@ -74,21 +77,6 @@ const ChatModal: FC = () => {
   const sendText = async () => {
     if (text.trim() === '') return;
     sendChat();
-    const nickname = localStorage.getItem('nickname');
-    const profileImg = localStorage.getItem('profileImg');
-    setChatData((prev: any, i: number) => [
-      ...prev,
-      {
-        messageId: i + 1,
-        senderNickname: nickname,
-        me: true,
-        senderProfileImg: {
-          url: profileImg,
-        },
-        message: text,
-        createdDate: new Date(),
-      },
-    ]);
     setText('');
   };
 
@@ -127,10 +115,10 @@ const ChatModal: FC = () => {
       </div>
       {/* 채팅 내용 */}
       <div className=" max-h-[360px] flex-1 overflow-y-auto p-3">
-        {chatData?.map((data: any) => {
+        {currChatData?.map((data: any, i: number) => {
           if (data.me) {
             return (
-              <div className="align-center my-2 flex justify-end">
+              <div className="align-center my-2 flex justify-end" key={i}>
                 <div className="rounded-md bg-white p-1 px-3 text-sm">
                   {data.message}
                 </div>
@@ -146,7 +134,7 @@ const ChatModal: FC = () => {
             );
           }
           return (
-            <div className="align-center my-2 flex">
+            <div className="align-center my-2 flex" key={i}>
               {data?.senderProfileImg?.url ? (
                 <img
                   src={data?.senderProfileImg.url}

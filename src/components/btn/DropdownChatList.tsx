@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { createChat, fetchChatList } from 'apis/chat';
 import DefaultModal from 'components/modal/DefaultModal';
+import { SET_IS_NOTIFY_OPEN } from 'redux/slices/notifySlice';
 import ChatIcon from '../../assets/icons/ChatIcon';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import { SET_IS_DROPDOWN_CHAT_OPEN } from '../../redux/slices/chatSlice';
@@ -13,10 +14,14 @@ const DropdownChatList = () => {
     (state) => state.chat,
   );
   const dispatch = useAppDispatch();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [receiverId, setReceiverId] = useState<string | undefined>();
+  const { isNotifyOpen } = useAppSelector((state) => state.notify);
 
-  const handleOpen = () => {
+  const handleOpenDropdown = () => {
+    if (isNotifyOpen) {
+      dispatch(SET_IS_NOTIFY_OPEN(false));
+    }
     dispatch(SET_IS_DROPDOWN_CHAT_OPEN(!isChatListOpen));
   };
 
@@ -31,7 +36,7 @@ const DropdownChatList = () => {
     } catch (error) {
       console.error(error);
     }
-    setIsOpen(false);
+    setIsModalOpen(false);
   };
 
   const addChatContent = () => {
@@ -64,7 +69,7 @@ const DropdownChatList = () => {
   return (
     <>
       <div>
-        <button type="button" onClick={handleOpen}>
+        <button type="button" onClick={handleOpenDropdown}>
           <ChatIcon />
         </button>
         {isChatListOpen && (
@@ -89,8 +94,8 @@ const DropdownChatList = () => {
         )}
       </div>
       <DefaultModal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
         children={addChatContent()}
       />
     </>

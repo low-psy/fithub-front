@@ -74,11 +74,15 @@ import TrainerRecommend, {
   loader as RecommendTrainerLoader,
 } from 'pages/searchTrainer/TrainerRecommend';
 import UsersPost from 'pages/user/posts/UsersPostHome';
-import { SET_WS } from 'redux/slices/chatSlice';
+import { SET_CURR_CHAT_DATA, SET_WS } from 'redux/slices/chatSlice';
+import { useAppSelector } from 'hooks/reduxHooks';
 
 function App() {
   // 전역 로그인 상태 관리
   const dispatch = useDispatch();
+  const { currChatData, chattingRoomId } = useAppSelector(
+    (state) => state.chat,
+  );
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     const trainerNum = localStorage.getItem('trainer');
@@ -302,19 +306,46 @@ function App() {
     wsClient.activate();
     dispatch(SET_WS(wsClient));
 
-    const email = localStorage.getItem('email')?.split('@')[0];
+    const userEmail = localStorage.getItem('email');
 
-    // 구독
     wsClient.onConnect = () => {
-      wsClient.subscribe(`/topic/alarm/${email}`, (message) => {
-        if (message.body) {
-          const msg = JSON.parse(message.body);
-          console.log(msg);
-          // setChatList((chats) => [...chats, msg]);
-        }
+      // 로그인할때 전체 알람 구독
+      wsClient.subscribe(`/topic/alarm/${userEmail}`, (message) => {
+        console.log(message.body);
+        // 채팅방id
       });
+      // 채팅방 구독
+      wsClient.subscribe(
+        `/topic/chatroom/${chattingRoomId}`,
+        (message: any) => {
+          if (message.body) {
+            // const { email, name, msg, url } = message.body;
+            dispatch(
+              SET_CURR_CHAT_DATA([
+                ...currChatData,
+                // {
+                //   me: userEmail === email,
+                //   message: msg,
+                //   senderNickname: name,
+                //   senderProfileImg: {
+                //     url,
+                //   },
+                // },
+                {
+                  me: true,
+                  message: message.body,
+                  senderNickname: 'name',
+                  senderProfileImg: {
+                    url: 'https://fithub-bucket.s3.ap-northeast-2.amazonaws.com/profiles/646f3f7a-5d3e-4a04-a25c-2143a320d079',
+                  },
+                },
+              ]),
+            );
+          }
+        },
+      );
     };
-  }, []);
+  }, [chattingRoomId, currChatData, dispatch]);
 
   return <RouterProvider router={router} />;
 }

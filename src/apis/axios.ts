@@ -9,7 +9,7 @@ const baseUrl = `${process.env.REACT_APP_BASE_SERVER_URL}`.trim();
 
 // authorization이 필요없는 axios 인스턴스
 export const defaultAxios = axios.create({
-  baseURL: baseUrl,
+  baseURL: 'https://fithub-ec2.duckdns.org',
   withCredentials: true,
 });
 
@@ -17,7 +17,7 @@ console.log(process.env.REACT_APP_BASE_SERVER_URL);
 
 // authorization이 필요한 authAxios
 export const authAxios = axios.create({
-  baseURL: baseUrl,
+  baseURL: 'https://fithub-ec2.duckdns.org',
   withCredentials: true,
 });
 
