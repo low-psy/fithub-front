@@ -224,7 +224,7 @@ const TrainerHome = () => {
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">트레이닝</h1>
           <Link
-            to="/trainer/new"
+            to="/trainer/newTraining"
             className="shrink-0 rounded-full bg-slate-50 px-4 py-4"
           >
             트레이닝 생성하기
@@ -329,12 +329,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
       if (response && response.status === 200) {
         console.log('success');
-        return redirect('/');
+        return redirect('/trainer/home');
       }
     } catch (err) {
       const error = err as AxiosError<ErrorResponseDto>;
       errorFunc(error);
-      return redirect('/trainer/new/create');
+      return redirect('/trainer/newTraining');
     }
   } else if (type === 'calendar') {
     const startDate = formData.get('startDate') as string;
@@ -357,10 +357,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const res = await updateTrainingCalendar(Number(id), requestData);
       if (res.status === 200) {
         console.log('success');
-        return redirect('/');
-      }
-      if (res.status === 201) {
-        return redirect('/login');
+        return redirect('/trainer/home');
       }
       throw new Error(`server is trobule with${res.status}`);
     } catch (err) {

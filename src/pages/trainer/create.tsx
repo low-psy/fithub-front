@@ -6,7 +6,7 @@ import {
   useLoaderData,
 } from 'react-router-dom';
 import { AxiosError } from 'axios';
-import TrainerForm from './TrainerForm';
+import TrainingForm from './TrainingForm';
 import { FormErrors, LoaderData } from '../../types/common';
 import { createTraining, getTrainersDateList } from '../../apis/trainig';
 import { errorFunc } from '../../utils/util';
@@ -26,11 +26,11 @@ export const loader = (async () => {
   }
 }) satisfies LoaderFunction;
 
-const CreateTrainer = () => {
+const CreateTraining = () => {
   const res = useLoaderData() as LoaderData<typeof loader>;
   return (
     <div className="space-y-8">
-      <TrainerForm dateList={res?.data} />
+      <TrainingForm dateList={res?.data} />
     </div>
   );
 };
@@ -68,15 +68,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (!content) errors.content = '내용을 입력해야 합니다.';
   if (images.length === 0) errors.images = '이미지를 업로드해야 합니다.';
   if (!price) errors.price = '가격을 입력해야 합니다.';
-  if (!startDate || !endDate || !startHour || !endHour) {
-    errors.dateTime = '날짜와 시간을 입력해야 합니다';
+  if (!startDate || !endDate) {
+    errors.dateTime = '날짜를 입력해야 합니다.';
+  }
+  if (!startHour || !endHour) {
+    errors.time = '시간을 입력해야 합니다.';
   }
 
   const startDateTime = new Date(`${startDate}T${startHour}`);
   const endDateTime = new Date(`${endDate}T${endHour}`);
   if (startDateTime >= endDateTime) {
-    errors.dateTime =
-      '시작 날짜 및 시간이 종료 날짜 및 시간보다 빨라야 합니다.';
+    errors.dateTime = '시작 날짜가 종료 날짜보다 빨라야 합니다.';
+  }
+  if (startHour >= endHour) {
+    errors.time = '종료 시간이 시작 시간보다 늦어야 합니다.';
   }
 
   if (Object.keys(errors).length > 0) {
@@ -100,17 +105,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const response = await createTraining(trainingObj);
 
     if (response && response.status === 200) {
-      return redirect('/');
+      return redirect('/trainer/home');
     }
   } catch (err) {
     const error = err as AxiosError<ErrorResponseDto>;
     errorFunc(error);
     if (error.response?.data.code === 'PERMISSION_DENIED') {
-      return redirect('/');
+      return redirect('/trainer/home');
     }
-    return redirect('/trainer/new/create');
+    return redirect('/trainer/newTraining');
   }
   return null;
 };
 
-export default CreateTrainer;
+export default CreateTraining;

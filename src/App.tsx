@@ -40,7 +40,7 @@ import DetailPost, {
 import Help from 'pages/help';
 
 // components
-import CreateTrainer, {
+import CreateTraining, {
   action as createTrainerAction,
   loader as createTrainerLoader,
 } from 'pages/trainer/create';
@@ -274,14 +274,9 @@ function App() {
         // 트레이너 생성
         {
           path: pageRoutes.trainer.new,
-          children: [
-            {
-              index: true,
-              element: <CreateTrainer />,
-              action: createTrainerAction,
-              loader: createTrainerLoader,
-            },
-          ],
+          element: <CreateTraining />,
+          action: createTrainerAction,
+          loader: createTrainerLoader,
         },
       ],
     },

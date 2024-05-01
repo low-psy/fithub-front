@@ -9,7 +9,10 @@ import FormLabel from '../../components/form/FormLabel';
 import FormError from '../../components/form/FormError';
 import { SelectedDates } from '../../redux/initialStates/initialStateTypes';
 import { TrainingDateReservationNumDto } from '../../types/swagger/model/trainingDateReservationNumDto';
-import { getTrainersReserveCount } from '../../apis/trainig';
+import {
+  getTrainersDateList,
+  getTrainersReserveCount,
+} from '../../apis/trainig';
 import Calendar from '../../components/calendar/Calendar';
 import MultipleDateInput from '../../components/calendar/MultipleDate';
 
@@ -18,6 +21,7 @@ const TrainerCalendarUpdateForm: React.FC<{ trainingId: number }> = ({
 }) => {
   const [trainingCalendarDto, setTrainingCalendarDto] =
     useState<TrainingDateReservationNumDto[]>();
+  const [selectUnabledDates, setSelectUnabledDates] = useState<string[]>();
   const errors = useActionData() as FormErrors;
 
   const dates = trainingCalendarDto?.map((training) => training.date);
@@ -46,10 +50,14 @@ const TrainerCalendarUpdateForm: React.FC<{ trainingId: number }> = ({
     const trainingFetch = async () => {
       try {
         const res = await getTrainersReserveCount(trainingId);
+        const dateList = await getTrainersDateList();
         if (res.status === 200) {
           setTrainingCalendarDto(res.data);
         } else {
           throw new Error(`server is trouble with${res.status}`);
+        }
+        if (dateList.status === 200) {
+          setSelectUnabledDates(dateList.data);
         }
       } catch (err) {
         const error = err as AxiosError<ErrorResponseDto>;
@@ -81,6 +89,7 @@ const TrainerCalendarUpdateForm: React.FC<{ trainingId: number }> = ({
           <div className="w-[500px]">
             <Calendar
               onSelectedDates={onSelectDateHandler}
+              unavailabeDates={selectUnabledDates}
               defaultStartDate={defaultStartDate}
               defaultEndDate={defaultEndDate}
             />

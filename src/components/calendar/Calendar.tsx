@@ -101,12 +101,15 @@ const Calendar: React.FC<CalendarProps> = ({
   };
 
   const isActiveDate = (dateString: string) => {
+    if (unavailabeDates) {
+      return !unavailabeDates?.some((d) => {
+        if (new Date() >= new Date(dateString)) return true;
+        return d === dateString;
+      });
+    }
     if (!availableDates) {
       const date = new Date();
       return new Date(dateString) >= date;
-    }
-    if (unavailabeDates) {
-      return unavailabeDates?.some((d) => d !== dateString);
     }
     return availableDates?.some((d) => d.date === dateString && d.enabled);
   };
