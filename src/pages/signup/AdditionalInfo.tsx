@@ -1,4 +1,6 @@
-import React from 'react';
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+import React, { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import FormInput from '../../components/form/FormInput';
 import FormLabel from '../../components/form/FormLabel';
@@ -11,15 +13,34 @@ interface IAdditionalInfoProps {
   errorMsg: ISignupFormError;
   handleGender: (e: React.MouseEvent<HTMLButtonElement>) => void;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
+  // handleInterest: (e: any) => void;
 }
+const interestArr = ['PILATES', 'HEALTH', 'PT', 'CROSSFIT', 'YOGA'];
 
 function AdditionalInfo() {
-  const { formValue, handleFormInput, errorMsg, handleGender, handleSubmit } =
-    useOutletContext<IAdditionalInfoProps>();
+  const {
+    formValue,
+    handleFormInput,
+    errorMsg,
+    handleGender,
+    handleSubmit,
+    // handleInterest,
+  } = useOutletContext<IAdditionalInfoProps>();
 
   const selectedButtonStyle = 'bg-[#BC9CFF] text-white ';
   const unSelectedButtonStyle = ' border border-[#BC9CFF] text-[#7F7F7F]';
 
+  const [selectedInterest, setSelectedInterest] = useState<string[]>([]);
+
+  const handleInterestClick = (interest: string) => {
+    // 관심사 삭제
+    if (selectedInterest.includes(interest)) {
+      setSelectedInterest((prev) => prev.filter((e) => e !== interest));
+    } else {
+      // 관심사 추가
+      setSelectedInterest((prev) => [...prev, interest]);
+    }
+  };
   return (
     <form className="flex flex-col gap-4 " onSubmit={handleSubmit} noValidate>
       <FormLabel htmlFor="password" text="비밀번호">
@@ -112,6 +133,23 @@ function AdditionalInfo() {
           </button>
         </div>
       </FormLabel>
+      {/* 관심사 */}
+      {/* <FormLabel htmlFor="interest" text="관심사">
+        <div className="mt-3 flex">
+          {interestArr.map((interest) => (
+            <div
+              key={interest}
+              className="mr-5 flex h-10 w-[100px] cursor-pointer items-center justify-center rounded-full  pl-5 pr-5"
+              style={{
+                background: `${selectedInterest.includes(interest) ? '#E0D1FF' : '#ECEEEF'}`,
+              }}
+              onClick={() => handleInterestClick(interest)}
+            >
+              <p className="font-semibold">{interest}</p>
+            </div>
+          ))}
+        </div>
+      </FormLabel> */}
       <div className="absolute bottom-4 left-1/2 w-full -translate-x-1/2 sm:bottom-8 md:px-2">
         <div className="mx-2 flex flex-row justify-center gap-4">
           <button

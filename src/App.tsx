@@ -295,7 +295,7 @@ function App() {
         Authorization: accessToken,
       },
       debug(str) {
-        console.log(str);
+        // console.log(str);
       },
       reconnectDelay: 5000, // 자동 재 연결
       heartbeatIncoming: 4000,
@@ -311,7 +311,6 @@ function App() {
     wsClient.onConnect = () => {
       // 로그인할때 전체 알람 구독
       wsClient.subscribe(`/topic/alarm/${userEmail}`, (message) => {
-        console.log(message.body);
         // 채팅방id
       });
       // 채팅방 구독
@@ -319,24 +318,21 @@ function App() {
         `/topic/chatroom/${chattingRoomId}`,
         (message: any) => {
           if (message.body) {
-            // const { email, name, msg, url } = message.body;
+            const {
+              senderProfileImg: { url },
+              senderNickname,
+              message: msg,
+              senderEmail,
+            } = JSON.parse(message.body);
             dispatch(
               SET_CURR_CHAT_DATA([
                 ...currChatData,
-                // {
-                //   me: userEmail === email,
-                //   message: msg,
-                //   senderNickname: name,
-                //   senderProfileImg: {
-                //     url,
-                //   },
-                // },
                 {
-                  me: true,
-                  message: message.body,
-                  senderNickname: 'name',
+                  me: userEmail === senderEmail,
+                  message: msg,
+                  senderNickname,
                   senderProfileImg: {
-                    url: 'https://fithub-bucket.s3.ap-northeast-2.amazonaws.com/profiles/646f3f7a-5d3e-4a04-a25c-2143a320d079',
+                    url,
                   },
                 },
               ]),

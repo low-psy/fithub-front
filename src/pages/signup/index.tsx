@@ -17,6 +17,7 @@ const initFormValue: ISignupInputForm = {
   nickname: '',
   phone: '',
   gender: 'M',
+  // interests: [],
 };
 
 const initError: ISignupFormError = {

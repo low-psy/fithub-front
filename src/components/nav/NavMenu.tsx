@@ -49,15 +49,19 @@ const NavMenu = () => {
           <BookmarkIcon />
         </Link>
       </li>
-      <li key="chat">
-        {/* <Link to="/chat">
+      {isLogin && (
+        <>
+          <li key="chat">
+            {/* <Link to="/chat">
           <ChatIcon />
         </Link> */}
-        <DropdownChatList />
-      </li>
-      <li key="notify">
-        <Notify />
-      </li>
+            <DropdownChatList />
+          </li>
+          <li key="notify">
+            <Notify />
+          </li>
+        </>
+      )}
       <li key="user" className="">
         <Link to={profileTo}>
           <NavDropdown menuArray={menuArray} iconString={defaultProfileIcon} />
