@@ -47,7 +47,7 @@ const pageRoutes = {
   login: '/login',
   help: helpRoutes,
   signup: signupRoutes,
-  socialSignup: 'ouath2/regist',
+  socialSignup: 'oauth2/regist',
   certifyTrainer: 'certify-trainer',
   user: userRoutes,
   userPost: userPostRoutes,
