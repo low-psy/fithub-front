@@ -17,6 +17,7 @@ export interface ISignupInputForm {
   nickname: string;
   phone: string;
   gender: Gender;
+  // interests: [];
 }
 
 export interface ISignupFormError {

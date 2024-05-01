@@ -40,21 +40,29 @@ const Notify = () => {
         <img src={bell} alt="bell" className="relative top-[3px]" />
       </button>
       {isNotifyOpen && (
-        <div className=" absolute right-[100px] z-10 h-[300px] w-[440px] rounded-lg bg-white p-5 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
-          {notiArr?.map((e) => (
-            <Link
-              key={e.id}
-              to={`http://${host}${e.url}`}
-              onClick={() => readNotification(e.id)}
-              style={{ color: `${e.read ? 'lightgray' : 'black'}` }}
-              className="border-lightgray-300 flex cursor-pointer justify-between border-b py-4"
-            >
-              <span>{e.content}</span>
-              <span>
-                {e.createDate && convertDateWithDay(e.createDate, true)}
-              </span>
-            </Link>
-          ))}
+        <div className="absolute right-[100px] z-10 h-[300px] w-[440px]  rounded-lg bg-white p-5 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+          <div className="h-[100%] overflow-auto">
+            {notiArr && notiArr.length ? (
+              notiArr?.map((e) => (
+                <Link
+                  key={e.id}
+                  to={`http://${host}${e.url}`}
+                  onClick={() => readNotification(e.id)}
+                  style={{ color: `${e.read ? 'lightgray' : 'black'}` }}
+                  className="border-lightgray-300 flex cursor-pointer justify-between border-b py-4"
+                >
+                  <span>{e.content}</span>
+                  <span>
+                    {e.createDate && convertDateWithDay(e.createDate, true)}
+                  </span>
+                </Link>
+              ))
+            ) : (
+              <div className="flex h-[100%] items-center justify-center ">
+                알림내용이 없습니다.
+              </div>
+            )}
+          </div>
         </div>
       )}
     </>

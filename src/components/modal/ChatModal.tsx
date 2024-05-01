@@ -52,12 +52,12 @@ const ChatModal: FC = () => {
     dispatch(SET_CHATTING_ROOM_ID(undefined));
   };
 
-  // 채팅시 스크롤 맨아래로 내리기
-  useEffect(() => {
-    if (msgBottom && msgBottom.current) {
-      msgBottom.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [currChatData]);
+  // // 채팅시 스크롤 맨아래로 내리기
+  // useEffect(() => {
+  //   if (msgBottom && msgBottom.current) {
+  //     msgBottom.current.scrollIntoView({ behavior: 'smooth' });
+  //   }
+  // }, [currChatData]);
 
   // 채팅 전송
   const { ws } = useAppSelector((state) => state.chat);
